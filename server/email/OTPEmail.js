@@ -1,90 +1,62 @@
-import {
-  Body,
-  Container,
-  Head,
-  Heading,
-  Hr,
-  Html,
-  Img,
-  Link,
-  Preview,
-  Section,
-  Tailwind,
-  Text,
-} from "@react-email/components";
-// import tailwindConfig from '../tailwind.config';
+import mjml2html from "mjml";
 
-export default function OTPEmail() {
-  return (
-    <Html>
-      <Head />
-      {/* <Tailwind config={tailwindConfig}> */}
-      <Body className="bg-white font-aws text-[#212121]">
-        <Preview>AWS Email Verification</Preview>
-        <Container className="p-5 mx-auto bg-[#eee]">
-          <Section className="bg-white">
-            <Section className="bg-[#252f3d] flex py-5 items-center justify-center">
-              <Img
-                src={`${baseUrl}/static/aws-logo.png`}
-                width="75"
-                height="45"
-                alt="AWS's Logo"
-              />
-            </Section>
-            <Section className="py-[25px] px-[35px]">
-              <Heading className="text-[#333] text-[20px] font-bold mb-[15px]">
-                Verify your email address
-              </Heading>
-              <Text className="text-[#333] text-[14px] leading-[24px] mt-6 mb-[14px] mx-0">
-                Thanks for starting the new AWS account creation process. We
-                want to make sure it's really you. Please enter the following
-                verification code when prompted. If you don&apos;t want to
-                create an account, you can ignore this message.
-              </Text>
-              <Section className="flex items-center justify-center">
-                <Text className="text-[#333] m-0 font-bold text-center text-[14px]">
-                  Verification code
-                </Text>
+export function OTPEmail() {
+  const { html, errors } = mjml2html(`
+   <mjml>
+      <mj-head>
+        <mj-attributes>
+          <mj-all font-family="Arial, sans-serif" />
+        </mj-attributes>
+      </mj-head>
 
-                <Text className="text-[#333] text-[36px] my-[10px] mx-0 font-bold text-center"></Text>
-                <Text className="text-[#333] text-[14px] m-0 text-center">
-                  (This code is valid for 10 minutes)
-                </Text>
-              </Section>
-            </Section>
-            <Hr />
-            <Section className="py-[25px] px-[35px]">
-              <Text className="text-[#333] text-[14px] m-0">
-                Amazon Web Services will never email you and ask you to disclose
-                or verify your password, credit card, or banking account number.
-              </Text>
-            </Section>
-          </Section>
-          <Text className="text-[#333] text-[12px] my-[24px] mx-0 px-5 py-0">
-            This message was produced and distributed by Amazon Web Services,
-            Inc., 410 Terry Ave. North, Seattle, WA 98109. © 2022, Amazon Web
-            Services, Inc.. All rights reserved. AWS is a registered trademark
-            of{" "}
-            <Link
-              href="https://amazon.com"
-              target="_blank"
-              className="text-[#2754C5] underline text-[14px]"
-            >
-              Amazon.com
-            </Link>
-            , Inc. View our{" "}
-            <Link
-              href="https://amazon.com"
-              target="_blank"
-              className="text-[#2754C5] underline text-[14px]"
-            >
-              privacy policy
-            </Link>
-            .
-          </Text>
-        </Container>
-      </Body>
-      {/* </Tailwind> */}
-    </Html>
-  );
+      <mj-body background-color="#f4f4f5">
+
+        <!-- Header -->
+        <mj-section background-color="black" padding="24px">
+          <mj-column>
+              <mj-image width="100px" src="https://res.cloudinary.com/da0fscj4t/image/upload/v1774354304/logo_kiwjpw.png"></mj-image>
+          </mj-column>
+        </mj-section>
+
+        <!-- Body -->
+        <mj-section background-color="#ffffff" padding="32px">
+          <mj-column>
+            <mj-text font-size="20px" font-weight="bold" color="#111111">
+            Verify your email address
+            </mj-text>
+            <mj-text font-size="15px" color="#555555" line-height="24px">
+             Thanks for creating a Circle account creation process. We want to make sure it's really you. Please enter the following verification code when prompted. If you don't want to create an account, you can ignore this message.
+            </mj-text>
+            <mj-text font-weight="bold" font-size="18px" align="center">
+              Verification code
+            </mj-text>
+            
+            <mj-text align="center" font-weight="bold" font-size="20px">
+              596853
+            </mj-text>
+            <mj-text align="center">
+              (This code is valid for 5 minutes)
+            </mj-text>
+  
+          </mj-column>
+        </mj-section>
+
+        <!-- Footer -->
+        <mj-section padding="16px">
+          <mj-column>
+            <mj-text align="center" font-size="12px" color="#aaaaaa">
+              If you didn't sign up, ignore this email.
+            </mj-text>
+          </mj-column>
+        </mj-section>
+
+      </mj-body>
+    </mjml>
+  `);
+
+  if (errors.length > 0) {
+    console.error("MJML errors:", errors);
+  }
+
+  return html;
 }

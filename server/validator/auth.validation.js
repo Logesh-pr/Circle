@@ -13,3 +13,24 @@ export const usernameValidation = checkSchema({
     },
   },
 });
+
+export const signupValidation = checkSchema({
+  email: {
+    isEmail: {
+      errorMessage: "Invalid email",
+    },
+    normalizeEmail: true,
+  },
+  password: {
+    notEmpty: {
+      errorMessage: "Please enter the password field",
+    },
+    isString: {
+      errorMessage: "Password must be a string",
+    },
+    isLength: {
+      options: { min: 6 },
+      errorMessage: "Password must be alteast 6 characters",
+    },
+  },
+});

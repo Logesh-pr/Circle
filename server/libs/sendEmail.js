@@ -1,22 +1,30 @@
-import { Resend } from "resend";
-import { render } from "@react-email/render";
+import { OTPEmail } from "../email/OTPEmail.js";
+import nodemailer from "nodemailer";
 
-import OTPEmail from "../email/OTPEmail.js";
 import "dotenv/config.js";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-// const html = render(OTPEmail());
-export async function sendOTPEmail() {
-  const { data, error } = await resend.emails.send({
-    from: "onboarding@resend.dev",
-    to: "loki.webdeveloper@gmail.com",
-    subject: "hello world",
-    react: OTPEmail(),
-  });
+const transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true, // true for 465, false for other ports
+  auth: {
+    user: process.env.GMAIL,
+    pass: process.env.GMAILPASSWORD,
+  },
+});
 
-  if (error) {
-    return console.log(error);
+export async function sendOTP() {
+  const html = OTPEmail();
+  try {
+    const info = await transporter.sendMail({
+      from: `"Circle"`,
+      to: email,
+      subject: "Email verification",
+      html,
+    });
+
+    console.log("Message sent:", info.messageId);
+  } catch (error) {
+    console.log(error.message);
   }
-
-  return console.log(data);
 }
