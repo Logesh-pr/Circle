@@ -34,6 +34,14 @@ userSchema.pre("save", async function () {
   this.password = await bcryptjs.hash(this.password, 12);
 });
 
+userSchema.methods.comparePassword = async function (userPassword) {
+  try {
+    return await bcryptjs.compare(userPassword, this.password);
+  } catch (error) {
+    return flase;
+  }
+};
+
 userSchema.methods.toSafeObject = function () {
   return {
     username: this.username,

@@ -195,3 +195,51 @@ export const verifyOTP = catchAsync(async (req, res, next) => {
     return next(new AppError("something went wrong, Try signup again", 400));
   }
 });
+
+export const login = catchAsync(async (req, res, next) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return next(
+      new AppError(
+        errors
+          .array()
+          .map((err) => err.msg)
+          .join(", "),
+        400,
+      ),
+    );
+  }
+
+  const { email, password } = req.body;
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    return next(new AppError("Invalid credentials", 400));
+  }
+
+  const checkPassword = user.comparePassword(password);
+
+  if (!checkPassword) {
+    return next(new AppError("Invalid credentials", 400));
+  }
+
+  const sessionId = crypto.randomUUID();
+  const refreshToken = generateRefreshToken(sessionId, user._id);
+  const hashedToken = await generateHash(refreshToken);
+  const hashedUserId = await generateHash(user._id);
+
+  await Session.create({
+    _id: sessionId,
+    useId: hashedUserId,
+    refreshToken: hashedToken,
+  });
+
+  const accessToken = await generateAccessToken(user);
+  setCookies(res, accessToken, refreshToken);
+
+  return res
+    .status(200)
+    .json({ status: 200, message: "Successfully logged in" });
+});

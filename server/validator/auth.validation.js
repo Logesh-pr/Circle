@@ -26,7 +26,7 @@ export const signupValidation = checkSchema({
       errorMessage: "Please enter the password field",
     },
     isString: {
-      errorMessage: "Password must be a string",
+      errorMessage: "Password is required",
     },
     isLength: {
       options: { min: 6 },
@@ -57,5 +57,26 @@ export const verifyOTPValidation = checkSchema({
       errorMessage: "OTP must be exactly 6 digits",
     },
     trim: true,
+  },
+});
+
+export const loginValidation = checkSchema({
+  email: {
+    isEmail: {
+      errorMessage: "Invalid email",
+    },
+    normalizeEmail: true,
+  },
+  password: {
+    notEmpty: {
+      errorMessage: "Please enter the password field",
+    },
+    isString: {
+      errorMessage: "Password is required",
+    },
+    isLength: {
+      options: { min: 6 },
+      errorMessage: "Password must be alteast 6 characters",
+    },
   },
 });
