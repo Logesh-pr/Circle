@@ -34,3 +34,28 @@ export const signupValidation = checkSchema({
     },
   },
 });
+
+export const resendOTPValidation = checkSchema({
+  email: {
+    isEmail: {
+      errorMessage: "Invalid email",
+    },
+    normalizeEmail: true,
+  },
+});
+
+export const verifyOTPValidation = checkSchema({
+  email: {
+    isEmail: {
+      errorMessage: "Invalid email",
+    },
+    normalizeEmail: true,
+  },
+  otp: {
+    matches: {
+      options: [/^\d{6}$/],
+      errorMessage: "OTP must be exactly 6 digits",
+    },
+    trim: true,
+  },
+});

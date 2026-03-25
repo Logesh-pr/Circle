@@ -9,6 +9,6 @@ export const hashOTP = async (otp) => {
   return await bcryptjs.hash(otp, 12);
 };
 
-export const verifyOTP = async (otp, hashedOTP) => {
+export const verifyHashedOTP = async (otp, hashedOTP) => {
   return await bcryptjs.compare(otp, hashedOTP);
 };

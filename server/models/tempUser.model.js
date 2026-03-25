@@ -4,11 +4,11 @@ import bcryptjs from "bcryptjs";
 const tempUserSchema = Schema({
   email: { type: String, unique: true, required: true, trim: true },
   password: { type: String, required: true, min: 6 },
-  opt: { type: String },
-  otpAttempts: { type: Number, default: 0 },
+  otp: { type: String },
   otpExpires: { type: Date },
   resendAvailableAt: { type: Date },
-  resendAttempta: { type: Number, default: 0 },
+  resendAttempts: { type: Number, default: 0 },
+  otpAttempts: { type: Number, default: 0 },
   createdAt: {
     type: Date,
     default: Date.now,

@@ -1,16 +1,22 @@
+import crypto from "crypto";
+
 //utilis
-import AppError from "../libs/AppError.js";
-import catchAsync from "../libs/catchAsync.js";
-import { generateOTP } from "../libs/otp.js";
+import AppError from "../utils/AppError.js";
+import catchAsync from "../utils/catchAsync.js";
+import { generateOTP, hashOTP, verifyHashedOTP } from "../utils/otp.js";
+import { generateHash } from "../utils/hash.js";
 
 //model
 import User from "../models/user.model.js";
 import TempUser from "../models/tempUser.model.js";
+import Session from "../models/session.model.js";
 
 //express validation
 import { validationResult } from "express-validator";
 
-import { sendOTP } from "../libs/sendEmail.js";
+//libs
+import { sendOTP, resendOTPEmail } from "../libs/sendEmail.js";
+import setCookies from "../libs/setCookies.js";
 
 export const checkUsername = catchAsync(async (req, res, next) => {
   const errors = validationResult(req);
@@ -60,18 +66,132 @@ export const signup = catchAsync(async (req, res, next) => {
   const checkUser = await TempUser.findOne({ email });
 
   if (checkUser) {
-    return next(AppError("user is already exists", 409));
+    return next(new AppError("user is already exists", 409));
   }
-  const otp = generateOTP();
-  const user = await TempUser.create({ email, password, otp });
 
-  if (user) {
-    return res
-      .status(200)
-      .json({ status: 200, message: "user successfully created" });
-  }
+  const otp = generateOTP();
+  const hashedOTP = await hashOTP(otp);
+  const user = await TempUser.create({
+    email,
+    password,
+    otp: hashedOTP,
+    otpExpires: Date.now() + 5 * 60 * 1000,
+    resendAvailableAt: Date.now(),
+  });
+  await sendOTP(email, otp, next, res);
 });
 
-export const email = catchAsync(async (req, res, next) => {
-  sendOTP();
+export const resendOTP = catchAsync(async (req, res, next) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return next(
+      new AppError(
+        errors
+          .array()
+          .map((err) => err.msg)
+          .join(", "),
+        400,
+      ),
+    );
+  }
+  const { email } = req.body;
+
+  const user = await TempUser.findOne({ email });
+
+  if (!user) {
+    return next(new AppError("user expired. signup again", 400));
+  }
+
+  if (user.resendAttempts >= 3) {
+    return next(
+      new AppError("You reached the maximum otp limit, Try signup again"),
+    );
+  }
+
+  if (Date.now() < user.resendAvailableAt) {
+    return next(new AppError("wait for 30 seconds", 400));
+  }
+
+  const otp = generateOTP();
+  const hashedOTP = await hashOTP(otp);
+
+  user.otp = hashedOTP;
+  user.otpExpires = Date.now() + 5 * 60 * 1000;
+  user.resendAttempts += 1;
+  user.resendAvailableAt = Date.now() + 30 * 1000;
+
+  await user.save();
+
+  await resendOTPEmail(email, otp, res, next);
+});
+
+export const verifyOTP = catchAsync(async (req, res, next) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return next(
+      new AppError(
+        errors
+          .array()
+          .map((err) => err.msg)
+          .join(", "),
+        400,
+      ),
+    );
+  }
+
+  const { email, otp } = req.body;
+
+  const tempUser = await TempUser.findOne({ email });
+
+  if (!tempUser) {
+    return next(new AppError("user expired, Try signup again", 400));
+  }
+
+  if (Date.now > tempUser.otpExpires) {
+    return next(new AppError("OTP expired, Try signup again", 400));
+  }
+
+  const verify = await verifyHashedOTP(otp, tempUser.otp);
+
+  if (!verify) {
+    tempUser.otpAttemps += 1;
+    await tempUser.save();
+    return next(new AppError("Invalid OTP", 400));
+  }
+
+  const username = `circle_${crypto.randomInt(1000, 9999)}${crypto.randomInt(10, 99)}`;
+
+  const user = await User.create({
+    username,
+    email: tempUser.email,
+    password: tempUser.password,
+    isVerified: true,
+    authType: "credentials",
+  });
+
+  await TempUser.deleteOne({ email });
+
+  if (user) {
+    const sessionId = crypto.randomUUID();
+    const refreshToken = generateRefreshToken(sessionId, user._id);
+    const hashedToken = await generateHash(refreshToken);
+    const hashedUserId = await generateHash(user._id);
+
+    await Session.create({
+      _id: sessionId,
+      useId: hashedUserId,
+      refreshToken: hashedToken,
+    });
+
+    const accessToken = await generateAccessToken(user);
+    setCookies(res, accessToken, refreshToken);
+
+    res
+      .status(200)
+      .json({ status: 200, message: "Successfully created token" });
+  } else {
+    return next(new AppError("something went wrong, Try signup again", 400));
+  }
 });

@@ -3,12 +3,15 @@ setServers(["1.1.1.1", "8.8.8.8"]);
 
 import express from "express";
 import "dotenv/config.js";
+import cookieParser from "cookie-parser";
+
+//config
 import connectDB from "./config/connectDB.js";
 
 //routes
 import router from "./routes/routes.js";
 
-//libs
+//middleware
 import successHandler from "./middlewares/successHandler.js";
 import errorHandler from "./middlewares/errorHandler.js";
 
@@ -25,6 +28,7 @@ app.listen(PORT, () => {
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 //success handler
 app.use(successHandler);

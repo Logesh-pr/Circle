@@ -1,8 +1,8 @@
 import mjml2html from "mjml";
 
-export function OTPEmail({ otp }) {
+export function resendOTP({ otp }) {
   const { html, errors } = mjml2html(`
-   <mjml>
+  <mjml>
       <mj-head>
         <mj-attributes>
           <mj-all font-family="Arial, sans-serif" />
@@ -25,7 +25,15 @@ export function OTPEmail({ otp }) {
             Verify your email address
             </mj-text>
             <mj-text font-size="15px" color="#555555" line-height="24px">
-             Thanks for creating a Circle account creation process. We want to make sure it's really you. Please enter the following verification code when prompted. If you don't want to create an account, you can ignore this message.
+            This is your final OTP attempt for account verification.
+
+You have only 1 attempt remaining. If the verification fails, your request will be temporarily blocked.
+
+
+Please ensure you enter the correct OTP.
+
+If you didn’t request this, please ignore this email.
+
             </mj-text>
             <mj-text font-weight="bold" font-size="18px" align="center">
               Verification code
