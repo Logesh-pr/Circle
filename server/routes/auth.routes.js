@@ -7,6 +7,8 @@ import {
   resendOTP,
   verifyOTP,
   login,
+  refresh,
+  logout,
 } from "../controllers/auth.controller.js";
 
 //validators
@@ -25,5 +27,7 @@ router.post("/signup", signupValidation, signup);
 router.post("/resend-otp", resendOTPValidation, resendOTP);
 router.post("/verify-otp", verifyOTPValidation, verifyOTP);
 router.post("/login", loginValidation, login);
+router.post("/refresh", refresh);
+router.post("/logout", logout);
 
 export default router;
