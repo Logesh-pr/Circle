@@ -7,12 +7,12 @@ const uploadImage = async (file) => {
     .webp({ quality: 80 })
     .toBuffer();
 
-  return new Promise((resolver, reject) => {
+  return new Promise((resolve, reject) => {
     cloudinary.uploader
       .upload_stream({ folder: "circle_posts" }, (err, result) => {
         if (err) return reject(err);
 
-        resolver({
+        resolve({
           url: result.secure_url,
           publicId: result.public_id,
           width: result.width,

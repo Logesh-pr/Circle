@@ -9,3 +9,13 @@ export const postValidation = checkSchema({
     },
   },
 });
+
+export const commentValidation = checkSchema({
+  content: {
+    isString: true,
+    isLength: {
+      options: { min: 3, max: 200 },
+      errorMessage: "content must be 3 t0 200 characters only allowed",
+    },
+  },
+});

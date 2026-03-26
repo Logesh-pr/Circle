@@ -14,12 +14,11 @@ const postSchema = Schema(
   { timestamps: true },
 );
 
-postSchema.pre("save", async function (next) {
+postSchema.pre("save", async function () {
   if (!this.slug) {
     this.slug =
       slugify(this.content?.slice(0, 50) || "post") + "-" + Date.now();
   }
-  next();
 });
 
 export default model("Post", postSchema);

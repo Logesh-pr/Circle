@@ -4,7 +4,7 @@ const commentSchema = Schema(
   {
     user: Schema.Types.ObjectId,
     post: Schema.Types.ObjectId,
-    context: { type: String, max: 100, min: 2 },
+    content: { type: String, max: 100, min: 2 },
   },
   { timestamps: true },
 );
