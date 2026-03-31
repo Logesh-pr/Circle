@@ -4,6 +4,7 @@ setServers(["1.1.1.1", "8.8.8.8"]);
 import express from "express";
 import "dotenv/config.js";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 
 //config
 import connectDB from "./config/connectDB.js";
@@ -26,6 +27,14 @@ app.listen(PORT, () => {
 
 //******************Middleware***************//
 
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL,
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+  }),
+);
+console.log(process.env.FRONTEND_URL);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());

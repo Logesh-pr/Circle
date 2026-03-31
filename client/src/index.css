@@ -1,17 +1,68 @@
-:root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+@import url("https://fonts.googleapis.com/css2?family=Reddit+Sans:ital,wght@0,200..900;1,200..900&display=swap");
 
-  --sans: system-ui, "Segoe UI", Roboto, sans-serif;
-  --heading: system-ui, "Segoe UI", Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-display: "Reddit Sans", sans-serif;
+
+  /* colors */
+
+  --color-accent: #00a6fb;
+  --color-card-border: #27272a;
+  --color-input: #52525c;
+  --color-form-input: ##e4e4e7;
+  --color-border: #1e2939;
+  --color-dark-secondary: #f4f4f5;
+
+  /* Fluid font sizes — clamp(MIN, PREFERRED, MAX) */
+  --text-2xs: clamp(0.625rem, 0.6rem + 0.1vw, 0.7rem);
+  --text-xs: clamp(0.7rem, 0.65rem + 0.2vw, 0.8rem);
+  --text-sm: clamp(0.8rem, 0.75rem + 0.25vw, 0.9rem);
+  --text-base: clamp(0.9rem, 0.85rem + 0.3vw, 1rem);
+  --text-lg: clamp(1rem, 0.9rem + 0.5vw, 1.2rem);
+  --text-xl: clamp(1.2rem, 1rem + 1vw, 1.5rem);
+  --text-2xl: clamp(1.4rem, 1.1rem + 1.5vw, 2rem);
+  --text-logo: clamp(1.3rem, 1.1rem + 1vw, 1.6rem);
+
+  --border-radius: 12px;
+  --border-input-radius: 6px;
 }
+
+.dark {
+  --color-bg: #000000;
+  --color-post-bg: #000000;
+  --color-border: #1e2939;
+  --color-post-username: #f4f4f5;
+}
+
+@layer components {
+  .form-label {
+    @apply text-sm font-semibold;
+  }
+
+  .form-input {
+    @apply border-2 border-input rounded-lg p-2 text-form-input focus:border-zinc-400;
+  }
+
+  .error-message {
+    @apply text-sm text-red-500;
+  }
+}
+html {
+  scroll-behavior: smooth;
+}
+input {
+  outline: none;
+}
+
+/* body {
+  width: 100%;
+  min-height: 100vh;
+  font-family: "Reddit Sans", sans-serif;
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
+  -webkit-font-smoothing: antialiased;
+} */

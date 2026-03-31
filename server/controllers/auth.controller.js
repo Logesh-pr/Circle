@@ -7,8 +7,9 @@ import { generateOTP, hashOTP, verifyHashedOTP } from "../utils/otp.js";
 import { generateHash } from "../utils/hash.js";
 import {
   generateAccessToken,
+  generateOTPToken,
   generateRefreshToken,
-  verifyRefreshToken,
+  verifyToken,
 } from "../utils/token.js";
 
 //model
@@ -71,9 +72,9 @@ export const signup = catchAsync(async (req, res, next) => {
 
   const checkUser =
     (await TempUser.findOne({ email })) || (await User.findOne({ email }));
-
+  console.log(checkUser);
   if (checkUser) {
-    return next(new AppError("user is already exists", 409));
+    return next(new AppError("There is an account in this email", 409));
   }
 
   const otp = generateOTP();
@@ -85,7 +86,8 @@ export const signup = catchAsync(async (req, res, next) => {
     otpExpires: Date.now() + 5 * 60 * 1000,
     resendAvailableAt: Date.now(),
   });
-  await sendOTP(email, otp, next, res);
+  const otpToken = generateOTPToken(email);
+  await sendOTP(email, otp, next, res, otpToken);
 });
 
 export const resendOTP = catchAsync(async (req, res, next) => {
@@ -298,7 +300,7 @@ export const logout = catchAsync(async (req, res) => {
   const token = req.cookies.refreshToken;
 
   if (token) {
-    const decoded = verifyRefreshToken(token);
+    const decoded = verifyToken(token, process.env.JWT_REFRESH_SECRET);
 
     await Session.deleteOne({ _id: decoded.sessionId });
   }

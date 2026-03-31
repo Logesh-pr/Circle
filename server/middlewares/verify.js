@@ -5,7 +5,7 @@ import User from "../models/user.model.js";
 import catchAsync from "../utils/catchAsync.js";
 
 //utils
-import { verifyAccessToken } from "../utils/token.js";
+import { verifyToken } from "../utils/token.js";
 import AppError from "../utils/AppError.js";
 
 const verify = catchAsync(async (req, res, next) => {
@@ -14,7 +14,7 @@ const verify = catchAsync(async (req, res, next) => {
   if (!token) {
     return next(new AppError("no token", 401));
   }
-  const decoded = await verifyAccessToken(token);
+  const decoded = await verifyToken(token, process.env.JWT_ACCESS_SECRET);
 
   const user = await User.findById(decoded.sub);
 

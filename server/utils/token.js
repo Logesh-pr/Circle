@@ -17,10 +17,26 @@ export const generateRefreshToken = (sessionId, userId) => {
   });
 };
 
-export const verifyAccessToken = (token) => {
-  return jwt.verify(token, process.env.JWT_ACCESS_SECRET);
+export const generateOTPToken = (email) => {
+  return jwt.sign(
+    { email, purpose: "otp_verification" },
+    process.env.JWT_OTP_TOKEN_SECRET,
+    {
+      expiresIn: "10m",
+    },
+  );
 };
 
-export const verifyRefreshToken = (token) => {
-  return jwt.verify(token, process.env.JWT_REFRESH_SECRET);
+export const generateUsernameToken = (userId) => {
+  return jwt.sign(
+    { userId, purpose: "username_verification" },
+    process.env.JWT_USERNAME_TOKEN_SECRET,
+    {
+      expiresIn: "5m",
+    },
+  );
+};
+
+export const verifyToken = (token, secret) => {
+  return jwt.verify(token, secret);
 };

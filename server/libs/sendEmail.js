@@ -15,7 +15,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export async function sendOTP(email, otp, next, res) {
+export async function sendOTP(email, otp, next, res, token) {
   const html = OTPEmail({ otp });
   try {
     const info = await transporter.sendMail({
@@ -24,7 +24,9 @@ export async function sendOTP(email, otp, next, res) {
       subject: "Email verification",
       html,
     });
-    res.status(200).json({ status: 200, message: "OTP Send successfully" });
+    res
+      .status(200)
+      .json({ status: 200, message: "OTP Send successfully", token });
     console.log("Message sent:", info.messageId);
   } catch (error) {
     next(new AppError("something went wrong, Try again later", 500));
