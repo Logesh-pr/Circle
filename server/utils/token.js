@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import "dotenv/config.js";
+import AppError from "./AppError.js";
 
 export const generateAccessToken = (user) => {
   return jwt.sign(
@@ -37,6 +38,10 @@ export const generateUsernameToken = (userId) => {
   );
 };
 
-export const verifyToken = (token, secret) => {
-  return jwt.verify(token, secret);
+export const verifyToken = async (token, secret, next) => {
+  try {
+    return jwt.verify(token, secret);
+  } catch (err) {
+    next(new AppError("Invalid or expired token", 500));
+  }
 };

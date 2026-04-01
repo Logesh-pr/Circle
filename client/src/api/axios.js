@@ -5,6 +5,8 @@ const api = axios.create({
     import.meta.env.VITE_MODE === "development"
       ? import.meta.env.VITE_BACKEND_URL_DEVELOPMENT
       : import.meta.env.VITE_BACKEND_URL_PRODUCTION,
+
+  withCredentials: true,
 });
 
 const signup = async (data) => {
@@ -13,4 +15,19 @@ const signup = async (data) => {
   return res.data;
 };
 
-export { signup };
+const resendOTP = async (token) => {
+  console.log(token);
+  const res = await api.post(
+    "/auth/resend-otp",
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+
+  return res.data;
+};
+
+export { signup, resendOTP };

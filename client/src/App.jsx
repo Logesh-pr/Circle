@@ -7,7 +7,10 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 //pages
 import Layout from "./Layout.jsx";
 import Home from "./pages/Home.jsx";
-import Auth from "./pages/Auth.jsx";
+import Signup from "./pages/Signup.jsx";
+import OTP from "./pages/OTP.jsx";
+import OTPRoute from "./protectRoutes/OTPRoute.jsx";
+//components
 
 //react query
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
@@ -30,8 +33,16 @@ function App() {
         },
 
         {
-          path: "/auth",
-          element: <Auth />,
+          path: "/signup",
+          element: <Signup />,
+        },
+        {
+          path: "/otp",
+          element: (
+            <OTPRoute>
+              <OTP />
+            </OTPRoute>
+          ),
         },
       ],
     },

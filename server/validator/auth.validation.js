@@ -35,14 +35,14 @@ export const signupValidation = checkSchema({
   },
 });
 
-export const resendOTPValidation = checkSchema({
-  email: {
-    isEmail: {
-      errorMessage: "Invalid email",
-    },
-    normalizeEmail: true,
-  },
-});
+// export const resendOTPValidation = checkSchema({
+//   email: {
+//     isEmail: {
+//       errorMessage: "Invalid email",
+//     },
+//     normalizeEmail: true,
+//   },
+// });
 
 export const verifyOTPValidation = checkSchema({
   email: {

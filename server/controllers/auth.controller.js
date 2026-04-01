@@ -1,4 +1,5 @@
 import crypto from "crypto";
+import "dotenv/config.js";
 
 //utilis
 import AppError from "../utils/AppError.js";
@@ -11,6 +12,7 @@ import {
   generateRefreshToken,
   verifyToken,
 } from "../utils/token.js";
+import extractBearerToken from "../utils/extractToken.js";
 
 //model
 import User from "../models/user.model.js";
@@ -91,23 +93,15 @@ export const signup = catchAsync(async (req, res, next) => {
 });
 
 export const resendOTP = catchAsync(async (req, res, next) => {
-  const errors = validationResult(req);
-
-  if (!errors.isEmpty()) {
-    return next(
-      new AppError(
-        errors
-          .array()
-          .map((err) => err.msg)
-          .join(", "),
-        400,
-      ),
-    );
-  }
-  const { email } = req.body;
-
+  const token = extractBearerToken(req);
+  const decoded = await verifyToken(
+    token,
+    process.env.JWT_OTP_TOKEN_SECRET,
+    next,
+  );
+  const email = decoded.email;
   const user = await TempUser.findOne({ email });
-
+  console.log(user);
   if (!user) {
     return next(new AppError("user expired. signup again", 400));
   }
