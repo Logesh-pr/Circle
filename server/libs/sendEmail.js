@@ -15,7 +15,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export async function sendOTP(email, otp, next, res, token) {
+export async function sendOTP(email, otp, next, res, data, token) {
   const html = OTPEmail({ otp });
   try {
     const info = await transporter.sendMail({
@@ -26,7 +26,7 @@ export async function sendOTP(email, otp, next, res, token) {
     });
     res
       .status(200)
-      .json({ status: 200, message: "OTP Send successfully", token });
+      .json({ status: 200, message: "OTP Send successfully", data, token });
     console.log("Message sent:", info.messageId);
   } catch (error) {
     next(new AppError("something went wrong, Try again later", 500));
@@ -34,7 +34,7 @@ export async function sendOTP(email, otp, next, res, token) {
   }
 }
 
-export async function resendOTPEmail(email, otp, res, next) {
+export async function resendOTPEmail(email, otp, res, data, next) {
   const html = resendOTP({ otp });
   try {
     const info = await transporter.sendMail({
@@ -43,7 +43,9 @@ export async function resendOTPEmail(email, otp, res, next) {
       subject: "Email verification",
       html,
     });
-    res.status(200).json({ status: 200, message: "OTP Send successfully" });
+    res
+      .status(200)
+      .json({ status: 200, message: "OTP Send successfully", data });
     console.log("Message sent:", info.messageId);
   } catch (error) {
     next(new AppError("something went wrong, Try again later", 500));

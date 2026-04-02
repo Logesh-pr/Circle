@@ -8,12 +8,15 @@ import { useSignup } from "../hooks/useAuthQuery";
 import FormField from "../components/FormField";
 
 //zustand
-import { useToken } from "../store/useAuthStore";
+import { useResendOTPStore, useTokenStore } from "../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
-export default function Auth() {
+export default function Signup() {
   const { mutate, isPending } = useSignup();
   const navigate = useNavigate();
-  const setOTPToken = useToken((state) => state.setOTPToken);
+  const setOTPToken = useTokenStore((state) => state.setOTPToken);
+  const setOTPResendAvailableAt = useResendOTPStore(
+    (state) => state.setOTPResendAvailableAt,
+  );
   const {
     register,
     formState: { errors },
@@ -27,8 +30,14 @@ export default function Auth() {
   async function onSubmit(user) {
     mutate(user, {
       onSuccess: (data) => {
-        console.log("success:", data.token);
+        console.log("success:", data.data, data.token);
         setOTPToken(data.token);
+        sessionStorage.setItem(
+          "resendAvailableAt",
+          data.data.resendAvailableAt,
+        );
+        sessionStorage.setItem("resendAttempts", data.data.resendAttempt);
+        setOTPResendAvailableAt(data.data.resendAvailableAt);
         navigate("/otp", { replace: true });
         reset();
       },

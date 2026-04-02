@@ -85,11 +85,15 @@ export const signup = catchAsync(async (req, res, next) => {
     email,
     password,
     otp: hashedOTP,
-    otpExpires: Date.now() + 5 * 60 * 1000,
+    otpExpires: Date.now() + 10 * 60 * 1000,
     resendAvailableAt: Date.now(),
   });
   const otpToken = generateOTPToken(email);
-  await sendOTP(email, otp, next, res, otpToken);
+  const data = {
+    resendAvailableAt: user.resendAvailableAt,
+    resendAttempts: user.resendAttempts,
+  };
+  await sendOTP(email, otp, next, res, data, otpToken);
 });
 
 export const resendOTP = catchAsync(async (req, res, next) => {
@@ -108,7 +112,7 @@ export const resendOTP = catchAsync(async (req, res, next) => {
 
   if (user.resendAttempts >= 3) {
     return next(
-      new AppError("You reached the maximum otp limit, Try signup again"),
+      new AppError("You reached the maximum otp limit, Try signup again", 409),
     );
   }
 
@@ -125,8 +129,11 @@ export const resendOTP = catchAsync(async (req, res, next) => {
   user.resendAvailableAt = Date.now() + 30 * 1000;
 
   await user.save();
-
-  await resendOTPEmail(email, otp, res, next);
+  const data = {
+    resendAvailableAt: user.resendAvailableAt,
+    resendAttempts: user.resendAttempts,
+  };
+  await resendOTPEmail(email, otp, res, data, next);
 });
 
 export const verifyOTP = catchAsync(async (req, res, next) => {
@@ -152,14 +159,14 @@ export const verifyOTP = catchAsync(async (req, res, next) => {
     return next(new AppError("user expired, Try signup again", 400));
   }
 
-  if (Date.now > tempUser.otpExpires) {
+  if (Date.now() > tempUser.otpExpires) {
     return next(new AppError("OTP expired, Try signup again", 400));
   }
 
   const verify = await verifyHashedOTP(otp, tempUser.otp);
 
   if (!verify) {
-    tempUser.otpAttemps += 1;
+    tempUser.otpAttempts += 1;
     await tempUser.save();
     return next(new AppError("Invalid OTP", 400));
   }
@@ -254,7 +261,11 @@ export const refresh = catchAsync(async (req, res, next) => {
     return next(new AppError("Invalid token", 401));
   }
 
-  const decoded = await jwt.verify(token, process.env.JWT_REFRESH_SECRET);
+  const decoded = await jwt.verifyToken(
+    token,
+    process.env.JWT_REFRESH_SECRET,
+    next,
+  );
 
   const session = await Session.findById(decoded.sessionId);
   if (!session) {
