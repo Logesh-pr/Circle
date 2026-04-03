@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 import { useForm } from "react-hook-form";
 
@@ -9,6 +9,12 @@ export default function OTP() {
   const inputRef = useRef([]);
 
   const { handleSubmit, setError, setValue, clearErrors } = useForm();
+
+  useEffect(() => {
+    inputRef.current[0]?.focus();
+    console.log(inputRef.current);
+  }, []);
+
   function handleChange(value, index) {
     if (!/^[0-9]?$/.test(value)) return;
 
@@ -28,8 +34,9 @@ export default function OTP() {
     <div className="w-full min-h-screen flex justify-center items-center">
       <div className="max-w-[450px]   mx-auto rounded-lg border border-card-border p-8 bg-zinc-950 ">
         <h4 className="text-xl font-semibold ">Check your Email</h4>
-        <p className="mt-2 text-sm">
-          We send 6 digit code to your email. Enter it below
+        <p className="mt-2 text-sm text-zinc-400">
+          We send 6 digit code to your{" "}
+          <span className="text-zinc-100">you@email.com</span>. Enter it below
         </p>
         <form>
           <div className="w-full flex gap-x-3 mt-8">

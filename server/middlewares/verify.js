@@ -8,7 +8,7 @@ import catchAsync from "../utils/catchAsync.js";
 import { verifyToken } from "../utils/token.js";
 import AppError from "../utils/AppError.js";
 
-const verify = catchAsync(async (req, res, next) => {
+export const verify = catchAsync(async (req, res, next) => {
   const token = req.cookies.accessToken;
 
   if (!token) {
@@ -27,4 +27,20 @@ const verify = catchAsync(async (req, res, next) => {
   next();
 });
 
-export default verify;
+export const verifyOTPToken = catchAsync(async (req, res, next) => {
+  const token = req.cookies.otpToken;
+
+  if (!token) {
+    return next(new AppError("opt section expiry, Try signup again", 401));
+  }
+
+  const decoded = await verifyToken(token, process.env.JWT_OTP_TOKEN_SECRET);
+
+  const user = await tempUser.findById(decoded.email);
+
+  if (!user) {
+    next(new AppError("user expiry, Try signup again", 401));
+  }
+
+  req.user = decoded.email;
+});

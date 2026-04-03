@@ -25,7 +25,7 @@ import { validationResult } from "express-validator";
 
 //libs
 import { sendOTP, resendOTPEmail } from "../libs/sendEmail.js";
-import setCookies from "../libs/setCookies.js";
+import { setCookies, setOTPCookie } from "../libs/setCookies.js";
 import clearCookies from "../libs/clearCookies.js";
 
 export const checkUsername = catchAsync(async (req, res, next) => {
@@ -78,11 +78,12 @@ export const signup = catchAsync(async (req, res, next) => {
     resendAvailableAt: Date.now(),
   });
   const otpToken = generateOTPToken(email);
+  setOTPCookie(res, otpToken);
   const data = {
     resendAvailableAt: user.resendAvailableAt,
     resendAttempts: user.resendAttempts,
   };
-  await sendOTP(email, otp, next, res, data, otpToken);
+  await sendOTP(email, otp, next, res, data);
 });
 
 export const resendOTP = catchAsync(async (req, res, next) => {

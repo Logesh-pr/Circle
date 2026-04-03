@@ -9,7 +9,7 @@ const cookiesOptions = {
   path: "/",
 };
 
-const setCookies = (res, accessToken, refreshToken) => {
+export const setCookies = (res, accessToken, refreshToken) => {
   res.cookie("accessToken", accessToken, {
     ...cookiesOptions,
     maxAge: 15 * 60 * 1000,
@@ -21,4 +21,9 @@ const setCookies = (res, accessToken, refreshToken) => {
   });
 };
 
-export default setCookies;
+export const setOTPCookie = (res, otpToken) => {
+  res.cookie("otpToken", otpToken, {
+    ...cookiesOptions,
+    maxAge: 10 * 60 * 1000,
+  });
+};
