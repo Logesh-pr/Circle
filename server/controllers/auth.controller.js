@@ -13,6 +13,7 @@ import {
   verifyToken,
 } from "../utils/token.js";
 import extractBearerToken from "../utils/extractToken.js";
+import handleValidationError from "../utils/handleValidationErrors.js";
 
 //model
 import User from "../models/user.model.js";
@@ -28,19 +29,7 @@ import setCookies from "../libs/setCookies.js";
 import clearCookies from "../libs/clearCookies.js";
 
 export const checkUsername = catchAsync(async (req, res, next) => {
-  const errors = validationResult(req);
-
-  if (!errors.isEmpty()) {
-    return next(
-      new AppError(
-        errors
-          .array()
-          .map((err) => err.msg)
-          .join(", "),
-        400,
-      ),
-    );
-  }
+  if (handleValidationError(req, next)) return;
 
   const { username } = req.body;
 

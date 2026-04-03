@@ -59,16 +59,16 @@ export default function Signup() {
   }
 
   return (
-    <div className="w-full min-h-screen max-w-150 mx-auto  flex justify-center items-center">
-      <div className="w-full h-auto border border-card-border p-4 rounded-(--border-radius) py-12">
-        <div className="w-full">
-          <h5 className="font-bold text-center text-xl">Signup</h5>
-          <p className="text-center mt-2 text-dark-secondary">
-            Create an account to join a Circle community
+    <div className="w-full min-h-screen max-w-[450px] mx-auto  flex justify-center items-center">
+      <div className="w-full h-auto border border-card-border bg-zinc-950 px-4 rounded-(--border-radius) py-12">
+        <div className="w-full ">
+          <h5 className="font-bold text-center text-xl">Create your account</h5>
+          <p className="text-center max-w-[80%] mx-auto mt-2 text-dark-secondary">
+            Enter your email and choose your password to get started with circle
           </p>
           <form
             action=""
-            className="w-full max-w-[300px] mx-auto flex flex-col  mt-12 "
+            className="w-full max-w-[300px] mx-auto flex flex-col   mt-8 "
             onSubmit={handleSubmit(onSubmit)}
           >
             <fieldset disabled={isPending}>
@@ -76,6 +76,7 @@ export default function Signup() {
                 label="Email"
                 name="email"
                 type="email"
+                placeholder="you@email.com"
                 error={errors.email}
                 register={register}
                 disabled={isPending}
@@ -93,6 +94,7 @@ export default function Signup() {
                 label="Password"
                 name="password"
                 type="password"
+                placeholder="At least 6 characters"
                 error={errors.password}
                 register={register}
                 disabled={isPending}
@@ -109,6 +111,7 @@ export default function Signup() {
                 label="Confirm password"
                 name="confirmPassword"
                 type="password"
+                placeholder="Repeat your password"
                 error={errors.confirmPassword}
                 register={register}
                 disabled={isPending}
