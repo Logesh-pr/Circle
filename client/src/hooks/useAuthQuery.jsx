@@ -1,5 +1,5 @@
-import { useMutation } from "@tanstack/react-query";
-import { signup, resendOTP } from "../api/axios";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { signup, resendOTP, checkOTPStatus } from "../api/axios";
 
 export const useSignup = () => {
   return useMutation({
@@ -7,6 +7,12 @@ export const useSignup = () => {
   });
 };
 
+export const useCheckOTPStatus = () => {
+  return useQuery({
+    mutationKey: ["otp"],
+    mutationFn: checkOTPStatus,
+  });
+};
 export const useResendOTP = () => {
   return useMutation({
     mutationFn: resendOTP,

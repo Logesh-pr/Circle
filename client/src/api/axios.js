@@ -15,6 +15,11 @@ const signup = async (data) => {
   return res.data;
 };
 
+const checkOTPStatus = async () => {
+  const res = await api.get("/auth/otpStatus");
+  return res.data;
+};
+
 const resendOTP = async (token) => {
   console.log(token);
   const res = await api.post(
@@ -30,4 +35,4 @@ const resendOTP = async (token) => {
   return res.data;
 };
 
-export { signup, resendOTP };
+export { signup, resendOTP, checkOTPStatus };

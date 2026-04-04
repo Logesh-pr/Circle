@@ -15,7 +15,7 @@ import {
 } from "../controllers/post.controller.js";
 
 //middleware
-import verify from "../middlewares/verify.js";
+import { verify } from "../middlewares/verify.js";
 import upload from "../middlewares/upload.js";
 
 const router = express.Router();

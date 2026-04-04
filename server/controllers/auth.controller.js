@@ -12,7 +12,6 @@ import {
   generateRefreshToken,
   verifyToken,
 } from "../utils/token.js";
-import extractBearerToken from "../utils/extractToken.js";
 import handleValidationError from "../utils/handleValidationErrors.js";
 
 //model
@@ -74,8 +73,8 @@ export const signup = catchAsync(async (req, res, next) => {
     email,
     password,
     otp: hashedOTP,
-    otpExpires: Date.now() + 10 * 60 * 1000,
-    resendAvailableAt: Date.now(),
+    otpExpires: new Date(Date.now() + 10 * 60 * 1000),
+    resendAvailableAt: new Date(Date.now()),
   });
   const otpToken = generateOTPToken(email);
   setOTPCookie(res, otpToken);
@@ -87,41 +86,38 @@ export const signup = catchAsync(async (req, res, next) => {
 });
 
 export const resendOTP = catchAsync(async (req, res, next) => {
-  const token = extractBearerToken(req);
-  const decoded = await verifyToken(
-    token,
-    process.env.JWT_OTP_TOKEN_SECRET,
-    next,
-  );
-  const email = decoded.email;
-  const user = await TempUser.findOne({ email });
-  console.log(user);
-  if (!user) {
-    return next(new AppError("user expired. signup again", 400));
+  const email = req.user;
+  const tempUser = await TempUser.findOne({ email });
+  console.log(tempUser);
+  if (!tempUser) {
+    return next(new AppError("user expired. signup again", 410));
   }
 
-  if (user.resendAttempts >= 3) {
+  if (tempUser.resendAttempts >= 3) {
     return next(
-      new AppError("You reached the maximum otp limit, Try signup again", 409),
+      new AppError("You reached the maximum otp limit, Try signup again", 429),
     );
   }
 
-  if (Date.now() < user.resendAvailableAt) {
-    return next(new AppError("wait for 30 seconds", 400));
+  if (Date.now() < tempUser.resendAvailableAt.getTime()) {
+    const waitSeconds = Math.ceil(
+      (tempUser.resendAvailableAt.getTime() - Date.now()) / 1000,
+    );
+    return next(new AppError(`wait for ${waitSeconds}s seconds`, 400));
   }
 
   const otp = generateOTP();
   const hashedOTP = await hashOTP(otp);
 
-  user.otp = hashedOTP;
-  user.otpExpires = Date.now() + 5 * 60 * 1000;
-  user.resendAttempts += 1;
-  user.resendAvailableAt = Date.now() + 30 * 1000;
+  tempUser.otp = hashedOTP;
+  tempUser.otpExpires = new Date(Date.now() + 5 * 60 * 1000);
+  tempUser.resendAttempts += 1;
+  tempUser.resendAvailableAt = new Date(Date.now() + 30 * 1000);
 
-  await user.save();
+  await tempUser.save();
   const data = {
-    resendAvailableAt: user.resendAvailableAt,
-    resendAttempts: user.resendAttempts,
+    resendAvailableAt: tempUser.resendAvailableAt,
+    resendAttempts: tempUser.resendAttempts,
   };
   await resendOTPEmail(email, otp, res, data, next);
 });
@@ -141,15 +137,16 @@ export const verifyOTP = catchAsync(async (req, res, next) => {
     );
   }
 
-  const { email, otp } = req.body;
+  const email = req.user;
+  const { otp } = req.body;
 
   const tempUser = await TempUser.findOne({ email });
 
   if (!tempUser) {
-    return next(new AppError("user expired, Try signup again", 400));
+    return next(new AppError("user expired, Try signup again", 410));
   }
 
-  if (Date.now() > tempUser.otpExpires) {
+  if (Date.now() > tempUser.otpExpires.getTime()) {
     return next(new AppError("OTP expired, Try signup again", 400));
   }
 
@@ -188,9 +185,13 @@ export const verifyOTP = catchAsync(async (req, res, next) => {
     const accessToken = await generateAccessToken(user);
     setCookies(res, accessToken, refreshToken);
 
-    res
-      .status(200)
-      .json({ status: 200, message: "Successfully created token" });
+    res.status(200).json({
+      status: 200,
+      message: "Successfully created token",
+      data: {
+        username,
+      },
+    });
   } else {
     return next(new AppError("something went wrong, Try signup again", 400));
   }
