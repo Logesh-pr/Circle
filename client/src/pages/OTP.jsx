@@ -29,7 +29,12 @@ export default function OTP() {
     }
   }
 
-  //   function handleBackButton ( )
+  function handleKey(e, index) {
+    console.log(e.key === "Backspace" && !input[index] && index > 0);
+
+    if (e.key === "Backspace" && !input[index] && index > 0) {
+    }
+  }
   return (
     <div className="w-full min-h-screen flex justify-center items-center">
       <div className="max-w-[450px]   mx-auto rounded-lg border border-card-border p-8 bg-zinc-950 ">
@@ -49,6 +54,7 @@ export default function OTP() {
                 className="w-12 h-12 text-center p-2 rounded-lg border border-card-border focus:border-zinc-500"
                 value={item}
                 onChange={(e) => handleChange(e.target.value, index)}
+                onKeyDown={(e) => handleKey(e, index)}
               />
             ))}
           </div>

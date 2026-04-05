@@ -9,6 +9,7 @@ import {
   login,
   refresh,
   logout,
+  checkOTPStatus,
 } from "../controllers/auth.controller.js";
 
 //validators
@@ -24,7 +25,7 @@ const router = express.Router();
 
 router.post("/checkUsername", usernameValidation, checkUsername);
 router.post("/signup", signupValidation, signup);
-router.get("/otpStatus", verifyOTPToken);
+router.get("/otpStatus", verifyOTPToken, checkOTPStatus);
 router.post("/resend-otp", verifyOTPToken, resendOTP);
 router.post("/verify-otp", verifyOTPToken, verifyOTP);
 router.post("/login", loginValidation, login);

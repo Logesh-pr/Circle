@@ -22,6 +22,7 @@ export const setCookies = (res, accessToken, refreshToken) => {
 };
 
 export const setOTPCookie = (res, otpToken) => {
+  console.log("otp cookie");
   res.cookie("otpToken", otpToken, {
     ...cookiesOptions,
     maxAge: 10 * 60 * 1000,

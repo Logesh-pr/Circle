@@ -9,8 +9,8 @@ export const useSignup = () => {
 
 export const useCheckOTPStatus = () => {
   return useQuery({
-    mutationKey: ["otp"],
-    mutationFn: checkOTPStatus,
+    queryKey: ["otp"],
+    queryFn: checkOTPStatus,
   });
 };
 export const useResendOTP = () => {

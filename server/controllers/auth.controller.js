@@ -85,6 +85,17 @@ export const signup = catchAsync(async (req, res, next) => {
   await sendOTP(email, otp, next, res, data);
 });
 
+export const checkOTPStatus = catchAsync(async (req, res, next) => {
+  const email = req.user;
+  console.log("email", email);
+  if (!email) {
+    return next(new AppError("unauthorized", 410));
+  }
+  return res
+    .status(200)
+    .json({ status: 200, message: "Successfully verify otp" });
+});
+
 export const resendOTP = catchAsync(async (req, res, next) => {
   const email = req.user;
   const tempUser = await TempUser.findOne({ email });
