@@ -1,5 +1,7 @@
 import crypto from "crypto";
 import "dotenv/config.js";
+import jwt from "jsonwebtoken";
+import "dotenv/config.js";
 
 //utilis
 import AppError from "../utils/AppError.js";
@@ -62,7 +64,6 @@ export const signup = catchAsync(async (req, res, next) => {
 
   const checkUser =
     (await TempUser.findOne({ email })) || (await User.findOne({ email }));
-  console.log(checkUser);
   if (checkUser) {
     return next(new AppError("There is an account in this email", 409));
   }
@@ -85,16 +86,77 @@ export const signup = catchAsync(async (req, res, next) => {
   await sendOTP(email, otp, next, res, data);
 });
 
-export const checkOTPStatus = catchAsync(async (req, res, next) => {
-  const email = req.user;
-  console.log("email", email);
-  if (!email) {
+export const signupStatus = catchAsync(async (req, res, next) => {
+  const otpToken = req.cookies.otpToken;
+
+  if (!otpToken) {
+    next(new AppError("unauthorized", 410));
+  }
+
+  if (otpToken) {
+    try {
+      const decoded = await verifyToken(
+        otpToken,
+        process.env.JWT_OTP_TOKEN_SECRET,
+        next,
+      );
+
+      const tempUser = await TempUser.findOne({ email: decoded.email });
+
+      if (tempUser && tempUser.status === "pending_otp") {
+        return res.status(200).json({
+          status: 200,
+          step: "otp",
+          data: {
+            email: tempUser.email,
+            resendAvailableAt: tempUser.resendAvailableAt,
+            resendOTPAttempts: tempUser.resendOTPAttempts,
+            maxResendOTPAttempts: 3,
+            otpAttempts: tempUser.otpAttempts,
+            maxOTPAttempts: 3,
+          },
+        });
+      }
+    } catch (error) {}
+  }
+
+  const usernameToken = req.cookies.usernameToken;
+
+  if (!usernameToken) {
     return next(new AppError("unauthorized", 410));
   }
+
+  if (usernameToken) {
+    try {
+      const decoded = await verifyToken(
+        usernameToken,
+        process.env.JWT_USERNAME_TOKEN_SECRET,
+        next,
+      );
+
+      const tempUser = await TempUser.findById(decoded.userId);
+
+      if (tempUser && tempUser.status === "pending_username") {
+        return res.status(200).json({ status: 200, step: "username" });
+      }
+    } catch (error) {}
+  }
+
   return res
-    .status(200)
-    .json({ status: 200, message: "Successfully verify otp" });
+    .staus(401)
+    .json({ status: 401, step: "none", message: "no active signup session" });
 });
+
+// export const checkOTPStatus = catchAsync(async (req, res, next) => {
+//   const email = req.user;
+//   console.log("email", email);
+//   if (!email) {
+//     return next(new AppError("unauthorized", 410));
+//   }
+//   return res
+//     .status(200)
+//     .json({ status: 200, message: "Successfully verify otp" });
+// });
 
 export const resendOTP = catchAsync(async (req, res, next) => {
   const email = req.user;

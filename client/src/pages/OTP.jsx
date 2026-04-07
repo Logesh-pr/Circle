@@ -25,7 +25,8 @@ export default function OTP() {
     clearErrors("otp");
 
     if (value && index < input.length - 1) {
-      inputRef.current[index + 1].focus();
+      console.log(value && index < input.length - 1);
+      inputRef.current[index + 1]?.focus();
     }
   }
 
@@ -33,6 +34,15 @@ export default function OTP() {
     console.log(e.key === "Backspace" && !input[index] && index > 0);
 
     if (e.key === "Backspace" && !input[index] && index > 0) {
+      inputRef.current[index - 1]?.focus();
+    }
+
+    if (e.key === "ArrowLeft" && index > 0) {
+      inputRef.current[index - 1]?.focus();
+    }
+
+    if (e.key === "ArrowRight" && index < OTP_LENGTH - 1) {
+      inputRef.current[index + 1]?.focus();
     }
   }
   return (
@@ -50,8 +60,9 @@ export default function OTP() {
                 key={index}
                 type="text"
                 maxLength="1"
-                ref={(el) => (inputRef[index] = el)}
-                className="w-12 h-12 text-center p-2 rounded-lg border border-card-border focus:border-zinc-500"
+                inputMode="numeric"
+                ref={(el) => (inputRef.current[index] = el)}
+                className="w-12 h-12 text-center p-2 rounded-lg border border-card-border focus:border-zinc-500 caret-transparent"
                 value={item}
                 onChange={(e) => handleChange(e.target.value, index)}
                 onKeyDown={(e) => handleKey(e, index)}

@@ -7,8 +7,15 @@ const tempUserSchema = Schema({
   otp: { type: String },
   otpExpires: { type: Date },
   resendAvailableAt: { type: Date },
-  resendAttempts: { type: Number, default: 0 },
+  resendOTPAttempts: { type: Number, default: 0 },
   otpAttempts: { type: Number, default: 0 },
+  maxOTPAttempts: { type: Number, default: 3 },
+  maxResendOTPAttempts: { type: Number, default: 3 },
+  status: {
+    type: String,
+    enum: ["pending_otp", "pending_username"],
+    default: "pending_otp",
+  },
   createdAt: {
     type: Date,
     default: Date.now,

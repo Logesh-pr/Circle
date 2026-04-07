@@ -17,6 +17,7 @@ const signup = async (data) => {
 
 const checkOTPStatus = async () => {
   const res = await api.get("/auth/otpStatus");
+  console.log(res.data);
   return res.data;
 };
 
