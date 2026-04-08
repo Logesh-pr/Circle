@@ -9,7 +9,9 @@ import Layout from "./Layout.jsx";
 import Home from "./pages/Home.jsx";
 import Signup from "./pages/Signup.jsx";
 import OTP from "./pages/OTP.jsx";
-import OTPRoute from "./protectRoutes/OTPRoute.jsx";
+import SignupProtect from "./protectRoutes/SignupProtect.jsx";
+import UsernameSelection from "./pages/usernameSelection.jsx";
+
 //components
 
 //react query
@@ -39,9 +41,17 @@ function App() {
         {
           path: "/otp",
           element: (
-            <OTPRoute>
+            <SignupProtect allowedStep="otp">
               <OTP />
-            </OTPRoute>
+            </SignupProtect>
+          ),
+        },
+        {
+          path: "/username",
+          element: (
+            <SignupProtect allowedStep="username">
+              <UsernameSelection />
+            </SignupProtect>
           ),
         },
       ],

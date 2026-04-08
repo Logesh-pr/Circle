@@ -1,38 +1,46 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 
-export const useTokenStore = create(
+export const useAuthStore = create(
   devtools((set) => ({
-    otpToken: sessionStorage.getItem("otpToken") || null,
+    user: null,
+    isAuthenticated: false,
 
-    setOTPToken: (token) => {
-      sessionStorage.setItem("otpToken", token);
-
-      set({ otpToken: token });
-    },
-
-    usenameToken: (token) => {
-      sessionStorage.removeItem("otpToken");
-      sessionStorage.setItem("usernameToken", token);
-      set({ otpToken: null, usernameToken: token });
-    },
-    clearToken: () => {
-      sessionStorage.removeItem("usernameToken");
-      set({ usenameToken: null });
-    },
+    setUser: (user) => set({ user, isAuthenticated: true }),
+    clearUser: () => set({ user: null, isAuthenticated: false }),
   })),
 );
 
 export const useResendOTPStore = create(
   devtools((set) => ({
-    otpResendAvailableAt: null,
-    otpResendAttempts: 0,
-
-    setOTPResendAvailableAt: (time) => {
-      set({ otpResendAvailableAt: time });
+    resendAvailableAt: sessionStorage.getItem("resendAvailableAt") || null,
+    resendAttempts: Number(sessionStorage.getItem("resendAttempts")) || 0,
+    maxOTPResendAttempts: 3,
+    setResendData: (resendAvailableAt, resendAttempts) => {
+      sessionStorage.setItem("resendAvailableAt", resendAvailableAt);
+      sessionStorage.setItem("resendAttempts", String(resendAttempts));
+      set({ resendAvailableAt, resendAttempts });
     },
-    setOTPResendAttempts: (attempt) => {
-      set({ otpResendAttempts: attempt });
+
+    clearResendData: () => {
+      sessionStorage.removeItem("resendAvailableAt");
+      sessionStorage.removeItem("resendAttempts");
+
+      set({ resendAvailableAt: null, resendAttempts: 0 });
+    },
+  })),
+);
+
+export const useTempUserStore = create(
+  devtools((set) => ({
+    tempUsername: null,
+
+    setTempUsername: (username) => {
+      set({ tempUsername: username });
+    },
+
+    clearTempUsername: () => {
+      set({ tempUsername: null });
     },
   })),
 );

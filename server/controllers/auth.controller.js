@@ -12,6 +12,7 @@ import {
   generateAccessToken,
   generateOTPToken,
   generateRefreshToken,
+  generateUsernameToken,
   verifyToken,
 } from "../utils/token.js";
 import handleValidationError from "../utils/handleValidationErrors.js";
@@ -26,7 +27,11 @@ import { validationResult } from "express-validator";
 
 //libs
 import { sendOTP, resendOTPEmail } from "../libs/sendEmail.js";
-import { setCookies, setOTPCookie } from "../libs/setCookies.js";
+import {
+  setCookies,
+  setOTPCookie,
+  setusernameCookie,
+} from "../libs/setCookies.js";
 import clearCookies from "../libs/clearCookies.js";
 
 export const checkUsername = catchAsync(async (req, res, next) => {
@@ -100,8 +105,9 @@ export const signupStatus = catchAsync(async (req, res, next) => {
         process.env.JWT_OTP_TOKEN_SECRET,
         next,
       );
-
+      console.log(decoded);
       const tempUser = await TempUser.findOne({ email: decoded.email });
+      console.log(tempUser);
 
       if (tempUser && tempUser.status === "pending_otp") {
         return res.status(200).json({
@@ -159,7 +165,7 @@ export const signupStatus = catchAsync(async (req, res, next) => {
 // });
 
 export const resendOTP = catchAsync(async (req, res, next) => {
-  const email = req.user;
+  const { email } = req.user;
   const tempUser = await TempUser.findOne({ email });
   console.log(tempUser);
   if (!tempUser) {
@@ -210,7 +216,7 @@ export const verifyOTP = catchAsync(async (req, res, next) => {
     );
   }
 
-  const email = req.user;
+  const { email } = req.user;
   const { otp } = req.body;
 
   const tempUser = await TempUser.findOne({ email });
@@ -231,7 +237,42 @@ export const verifyOTP = catchAsync(async (req, res, next) => {
     return next(new AppError("Invalid OTP", 400));
   }
 
+  ((tempUser.status = "pending_username"),
+    (tempUser.otp = undefined),
+    (tempUser.otpExpires = undefined),
+    await tempUser.save());
+
+  res.clearCookie("otpToken");
+
   const username = `circle_User_${crypto.randomInt(1000, 9999)}${crypto.randomInt(10, 99)}`;
+  const usernameToken = generateUsernameToken(tempUser._id);
+
+  setusernameCookie(res, usernameToken);
+
+  return res.status(200).json({
+    status: 200,
+    message: "OTP Verified successfully",
+    step: "username",
+    tempUsername: username,
+    usernameToken,
+  });
+});
+
+export const setUsername = catchAsync(async (req, res, next) => {
+  const { userId } = req.user;
+  const { username } = req.body;
+
+  const tempUser = await TempUser.findById(userId);
+
+  if (tempUser.stauts !== "pending_username") {
+    return next(new AppError("Invalid signup", 400));
+  }
+
+  const existingUser = await User.findOne({ username });
+
+  if (existingUser) {
+    return next(new AppError("username is already taken", 409));
+  }
 
   const user = await User.create({
     username,
@@ -243,7 +284,9 @@ export const verifyOTP = catchAsync(async (req, res, next) => {
 
   await TempUser.deleteOne({ email });
 
-  if (user) {
+  res.clearCookie("usernameToken");
+
+  try {
     const sessionId = crypto.randomUUID();
     const refreshToken = generateRefreshToken(sessionId, user._id.toString());
     const hashedToken = await generateHash(refreshToken);
@@ -265,7 +308,7 @@ export const verifyOTP = catchAsync(async (req, res, next) => {
         username,
       },
     });
-  } else {
+  } catch {
     return next(new AppError("something went wrong, Try signup again", 400));
   }
 });

@@ -7,7 +7,7 @@ const tempUserSchema = Schema({
   otp: { type: String },
   otpExpires: { type: Date },
   resendAvailableAt: { type: Date },
-  resendOTPAttempts: { type: Number, default: 0 },
+  resendAttempts: { type: Number, default: 0 },
   otpAttempts: { type: Number, default: 0 },
   maxOTPAttempts: { type: Number, default: 3 },
   maxResendOTPAttempts: { type: Number, default: 3 },

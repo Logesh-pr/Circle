@@ -40,17 +40,45 @@ export const verifyOTPToken = catchAsync(async (req, res, next) => {
   const user = await TempUser.findOne({ email: decoded.email });
 
   if (!user) {
-    next(new AppError("user expiry, Try signup again", 401));
+    return next(new AppError("user expiry, Try signup again", 401));
   }
 
   console.log(decoded);
 
-  const userDate = {
+  const userData = {
     email: decoded.email,
     purpose: decoded.purpose,
   };
 
-  req.user = userDate;
+  req.user = userData;
+
+  next();
+});
+
+export const verifyUsernameToken = catchAsync(async (req, res, next) => {
+  const usernameToken = req.cookies.usernameToken;
+
+  if (!usernameToken) {
+    return next(new AppError("unauthorized", 410));
+  }
+
+  const decoded = await verifyToken(
+    usernameToken,
+    process.env.JWT_USERNAME_TOKEN_SECRET,
+  );
+
+  const user = await TempUser.findById(decoded.userId);
+
+  if (!user) {
+    return next(new AppError("user expires, Try signup again", 401));
+  }
+
+  const userData = {
+    userId: decoded.userId,
+    purpose: decoded.purpose,
+  };
+
+  res.user = userData;
 
   next();
 });

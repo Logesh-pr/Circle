@@ -8,15 +8,12 @@ import { useSignup } from "../hooks/useAuthQuery";
 import FormField from "../components/FormField";
 
 //zustand
-import { useResendOTPStore, useTokenStore } from "../store/useAuthStore";
+import { useResendOTPStore } from "../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
 export default function Signup() {
   const { mutate, isPending } = useSignup();
   const navigate = useNavigate();
-  const setOTPToken = useTokenStore((state) => state.setOTPToken);
-  const setOTPResendAvailableAt = useResendOTPStore(
-    (state) => state.setOTPResendAvailableAt,
-  );
+  const setResendData = useResendOTPStore((state) => state.setResendData);
   const {
     register,
     formState: { errors },
@@ -31,25 +28,20 @@ export default function Signup() {
     mutate(user, {
       onSuccess: (data) => {
         console.log("success:", data.data, data.token);
-        setOTPToken(data.token);
-        sessionStorage.setItem(
-          "resendAvailableAt",
-          data.data.resendAvailableAt,
-        );
-        sessionStorage.setItem("resendAttempts", data.data.resendAttempt);
-        setOTPResendAvailableAt(data.data.resendAvailableAt);
+        setResendData(data.data.resendAvailableAt, data.data.resendAttempts);
         navigate("/otp", { replace: true });
+        console.log("navigate");
         reset();
       },
       onError: (error) => {
         console.log("error:", error.response.data);
         if (
-          error.response.data.message === "There is an account in this email"
+          error.response?.data?.message === "There is an account in this email"
         ) {
           reset();
           setError("common", {
             type: "manual",
-            message: error.response.data.message,
+            message: error.response?.data?.message,
           });
         }
       },

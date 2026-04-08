@@ -9,8 +9,8 @@ import {
   login,
   refresh,
   logout,
-  checkOTPStatus,
   signupStatus,
+  setUsername,
 } from "../controllers/auth.controller.js";
 
 //validators
@@ -21,15 +21,15 @@ import {
 } from "../validator/auth.validation.js";
 
 //custom middleware
-import { verifyOTPToken } from "../middlewares/verify.js";
+import { verifyOTPToken, verifyUsernameToken } from "../middlewares/verify.js";
 const router = express.Router();
 
 router.post("/checkUsername", usernameValidation, checkUsername);
 router.post("/signup", signupValidation, signup);
-router.post("/signup/status", signupStatus);
-// router.get("/otpStatus", verifyOTPToken, checkOTPStatus);
+router.get("/signup/status", signupStatus);
 router.post("/resend-otp", verifyOTPToken, resendOTP);
 router.post("/verify-otp", verifyOTPToken, verifyOTP);
+router.post("/set-username", verifyUsernameToken, setUsername);
 router.post("/login", loginValidation, login);
 router.post("/refresh", refresh);
 router.post("/logout", logout);
