@@ -21,10 +21,12 @@ export default function Signup() {
     watch,
     reset,
     setError,
-  } = useForm();
+    clearErrors,
+  } = useForm({ mode: "onchange" });
   const checkConfirmPassword = watch("password");
 
   async function onSubmit(user) {
+    clearErrors("common");
     mutate(user, {
       onSuccess: (data) => {
         console.log("success:", data.data, data.token);

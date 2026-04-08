@@ -125,9 +125,9 @@ export default function OTP() {
       {
         onSuccess: (data) => {
           clearResendData();
-          console.log(data.data.tempUsername);
+          console.log(data.data);
           setTempUsername(data.data.tempUsername);
-          navigate("/", { replace: true });
+          navigate("/username", { replace: true });
         },
         onError: (err) => {
           const errMessage = err.response.data.message || "Verification failed";

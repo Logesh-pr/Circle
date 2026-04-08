@@ -94,9 +94,9 @@ export const signup = catchAsync(async (req, res, next) => {
 export const signupStatus = catchAsync(async (req, res, next) => {
   const otpToken = req.cookies.otpToken;
 
-  if (!otpToken) {
-    next(new AppError("unauthorized", 410));
-  }
+  // if (!otpToken) {
+  //   next(new AppError("unauthorized", 410));
+  // }
 
   if (otpToken) {
     try {
@@ -128,9 +128,9 @@ export const signupStatus = catchAsync(async (req, res, next) => {
 
   const usernameToken = req.cookies.usernameToken;
 
-  if (!usernameToken) {
-    return next(new AppError("unauthorized", 410));
-  }
+  // if (!usernameToken) {
+  //   return next(new AppError("unauthorized", 410));
+  // }
 
   if (usernameToken) {
     try {
@@ -249,12 +249,15 @@ export const verifyOTP = catchAsync(async (req, res, next) => {
 
   setusernameCookie(res, usernameToken);
 
+  const data = {
+    step: "username",
+    tempUser: username,
+  };
+
   return res.status(200).json({
     status: 200,
     message: "OTP Verified successfully",
-    step: "username",
-    tempUsername: username,
-    usernameToken,
+    data,
   });
 });
 

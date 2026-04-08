@@ -1,20 +1,27 @@
 //react hook form
 import { useForm } from "react-hook-form";
 import FormField from "../components/FormField";
+
+//react query
 import { useSetUsername } from "../hooks/useAuthQuery";
+
+//Zustand
+import { useTempUserStore } from "../store/useAuthStore";
 
 export default function UsernameSelection() {
   const { mutate: setUsername, isPending: isSetUsernamePending } =
     useSetUsername();
+  const { tempUser } = useTempUserStore();
   const {
     register,
-    onSubmit,
+    handleSubmit,
     setError,
     formState: { errors },
-  } = useForm({ defaultValues: { username: "test" } });
+  } = useForm({ defaultValues: { username: tempUser } });
 
   function onSubmit(data) {
     console.log(data);
+    setUsername();
   }
   return (
     <>

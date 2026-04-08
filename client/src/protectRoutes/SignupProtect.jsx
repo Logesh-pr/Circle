@@ -20,7 +20,7 @@ export default function SignupProtect({ allowedStep, children }) {
       username: "/username",
     };
 
-    return <Navigate to={redirectMap[data.setp] || "/signup"} replace />;
+    return <Navigate to={redirectMap[data.step] || "/signup"} replace />;
   }
 
   return children;
