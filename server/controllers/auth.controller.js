@@ -35,7 +35,19 @@ import {
 import clearCookies from "../libs/clearCookies.js";
 
 export const checkUsername = catchAsync(async (req, res, next) => {
-  if (handleValidationError(req, next)) return;
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return next(
+      new AppError(
+        errors
+          .array()
+          .map((err) => err.msg)
+          .join(", "),
+        400,
+      ),
+    );
+  }
 
   const { username } = req.body;
 
@@ -149,7 +161,7 @@ export const signupStatus = catchAsync(async (req, res, next) => {
   }
 
   return res
-    .staus(401)
+    .status(401)
     .json({ status: 401, step: "none", message: "no active signup session" });
 });
 
@@ -244,14 +256,14 @@ export const verifyOTP = catchAsync(async (req, res, next) => {
 
   res.clearCookie("otpToken");
 
-  const username = `circle_User_${crypto.randomInt(1000, 9999)}${crypto.randomInt(10, 99)}`;
+  const username = `user_${crypto.randomInt(1000, 9999)}${crypto.randomInt(10, 99)}`;
   const usernameToken = generateUsernameToken(tempUser._id);
 
   setusernameCookie(res, usernameToken);
 
   const data = {
     step: "username",
-    tempUser: username,
+    tempUsername: username,
   };
 
   return res.status(200).json({
@@ -262,12 +274,13 @@ export const verifyOTP = catchAsync(async (req, res, next) => {
 });
 
 export const setUsername = catchAsync(async (req, res, next) => {
+  console.log("auth", req.user);
   const { userId } = req.user;
   const { username } = req.body;
 
   const tempUser = await TempUser.findById(userId);
 
-  if (tempUser.stauts !== "pending_username") {
+  if (tempUser.status !== "pending_username") {
     return next(new AppError("Invalid signup", 400));
   }
 
@@ -285,7 +298,7 @@ export const setUsername = catchAsync(async (req, res, next) => {
     authType: "credentials",
   });
 
-  await TempUser.deleteOne({ email });
+  await TempUser.deleteOne({ _id: userId });
 
   res.clearCookie("usernameToken");
 

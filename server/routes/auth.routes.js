@@ -24,7 +24,7 @@ import {
 import { verifyOTPToken, verifyUsernameToken } from "../middlewares/verify.js";
 const router = express.Router();
 
-router.post("/checkUsername", usernameValidation, checkUsername);
+router.post("/check-username", usernameValidation, checkUsername);
 router.post("/signup", signupValidation, signup);
 router.get("/signup/status", signupStatus);
 router.post("/resend-otp", verifyOTPToken, resendOTP);

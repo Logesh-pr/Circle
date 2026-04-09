@@ -29,22 +29,21 @@ const verifyOTP = async (data) => {
   return res.data;
 };
 
-const setUsername = async (data) => {
-  const res = await api.post("/auth/set-username", data);
+const checkUsername = async (data) => {
+  const res = await api.post("auth/check-username", data);
   return res.data;
 };
 
-const checkOTPStatus = async () => {
-  const res = await api.get("/auth/otpStatus");
-  console.log(res.data);
+const setUsername = async (data) => {
+  const res = await api.post("/auth/set-username", data);
   return res.data;
 };
 
 export {
   signup,
   resendOTP,
-  checkOTPStatus,
   signupStatus,
   verifyOTP,
+  checkUsername,
   setUsername,
 };

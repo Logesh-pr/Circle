@@ -49,9 +49,9 @@ function App() {
         {
           path: "/username",
           element: (
-            <SignupProtect allowedStep="username">
-              <UsernameSelection />
-            </SignupProtect>
+            // <SignupProtect allowedStep="username">
+            <UsernameSelection />
+            // </SignupProtect>
           ),
         },
       ],

@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { useSignup } from "../hooks/useAuthQuery";
 
 //components
-import FormField from "../components/FormField";
+import FormField from "../components/ui/FormField";
 
 //zustand
 import { useResendOTPStore } from "../store/useAuthStore";
@@ -74,6 +74,7 @@ export default function Signup() {
                 error={errors.email}
                 register={register}
                 disabled={isPending}
+                showValidation={true}
                 validation={{
                   required: "Email is required",
                   pattern: {
@@ -92,6 +93,7 @@ export default function Signup() {
                 error={errors.password}
                 register={register}
                 disabled={isPending}
+                showValidation={true}
                 validation={{
                   required: "Please enter the password",
                   minLength: {
@@ -109,6 +111,7 @@ export default function Signup() {
                 error={errors.confirmPassword}
                 register={register}
                 disabled={isPending}
+                showValidation={true}
                 validation={{
                   required: "confirm password is required",
                   validate: (password) =>

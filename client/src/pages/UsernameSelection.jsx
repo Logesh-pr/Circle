@@ -1,33 +1,125 @@
+import { useEffect, useRef, useState } from "react";
+
 //react hook form
 import { useForm } from "react-hook-form";
-import FormField from "../components/FormField";
+
+//components
+import FormField from "../components/ui/FormField";
 
 //react query
-import { useSetUsername } from "../hooks/useAuthQuery";
+import { useCheckUsername, useSetUsername } from "../hooks/useAuthQuery";
 
 //Zustand
 import { useTempUserStore } from "../store/useAuthStore";
 
+//icons
+import { CircleCheck, CircleX } from "lucide-react";
+
+//react router
+import { useNavigate } from "react-router-dom";
+
 export default function UsernameSelection() {
-  const { mutate: setUsername, isPending: isSetUsernamePending } =
+  const { mutate: checkUsernameMutate, isPending: isCheckUsernamePending } =
+    useCheckUsername();
+  const { mutate: setUsernameMutate, isPending: isSetUsernamePending } =
     useSetUsername();
-  const { tempUser } = useTempUserStore();
+  const tempUsername = useTempUserStore((state) => state.tempUsername);
+  const debounceRef = useRef(null);
+  const [usernameAvailable, setUsernameAvailable] = useState(false);
+  const navigate = useNavigate();
+
+  const icons = {
+    iconSuccess: <CircleCheck className="text-green-500" />,
+    iconError: <CircleX className="text-red-500" />,
+  };
   const {
     register,
     handleSubmit,
     setError,
+    clearErrors,
+    watch,
+
     formState: { errors },
-  } = useForm({ defaultValues: { username: tempUser } });
+  } = useForm({ defaultValues: { username: tempUsername }, mode: "onChange" });
+
+  const username = watch("username");
+
+  useEffect(() => {
+    if (!username || username.length < 5) {
+      return;
+    }
+
+    const usernameRegex = /^[a-zA-Z0-9_]+$/;
+    if (!usernameRegex.test(username)) {
+      setUsernameAvailable(false);
+      return;
+    }
+
+    clearErrors("username");
+
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+
+    debounceRef.current = setTimeout(() => {
+      checkUsernameMutate(
+        { username },
+        {
+          onSuccess: (data) => {
+            console.log(data.status);
+            if (data.status === 200) {
+              setUsernameAvailable(true);
+              clearErrors("username");
+            }
+          },
+          onError: (err) => {
+            console.log(err.response.data.message);
+            setUsernameAvailable(false);
+            if (err.response.data.message === "username is already taken") {
+              setError("username", {
+                type: "manual",
+                message: err.response.data.message,
+              });
+            } else {
+              setError("common", {
+                type: "manual",
+                message: "something went wrong, Try signup again",
+              });
+            }
+          },
+        },
+      );
+    }, 500);
+
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  }, [username]);
+
+  console.log(tempUsername);
 
   function onSubmit(data) {
     console.log(data);
-    setUsername();
+    setUsernameMutate(data, {
+      onSuccess: (data) => {
+        console.log(data);
+        navigate("/", { replace: true });
+      },
+      onError: (err) => {
+        console.log(err);
+        navigate("/signup", { replace: true });
+      },
+    });
   }
   return (
     <>
       <div className="w-full min-h-screen flex justify-center items-center">
         <div className="max-w-[450px]   mx-auto rounded-lg border border-card-border p-8 bg-zinc-950 ">
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <div>
+            <h5 className="text-xl font-semibold ">Choose your username</h5>
+            <p className="mt-2 text-sm text-zinc-300 font-semibold">
+              This is how others will find you. You can always change it later.
+            </p>
+          </div>
+          <form onSubmit={handleSubmit(onSubmit)} className="mt-6">
             <fieldset>
               <FormField
                 label="username"
@@ -37,6 +129,11 @@ export default function UsernameSelection() {
                 error={errors.username}
                 register={register}
                 disabled={isSetUsernamePending}
+                showValidation={true}
+                isChecking={isCheckUsernamePending}
+                showIcons={true}
+                icons={icons}
+                usernameAvailable={usernameAvailable}
                 validation={{
                   required: "Username is required",
                   minLength: {
@@ -55,6 +152,22 @@ export default function UsernameSelection() {
                 }}
               />
             </fieldset>
+
+            <p className="text-sm font-semibold text-zinc-500">
+              Lowercase letters, numbers, and underscores only. Min 3
+              characters.
+            </p>
+
+            <input
+              className={`mt-6 w-full  rounded-lg py-2 font-semibold  ${!usernameAvailable || isSetUsernamePending || isCheckUsernamePending ? "bg-accent/50 cursor-not-allowed" : "bg-accent hover:bg-accent/80 cursor-pointer"}`}
+              type="submit"
+              disabled={
+                !usernameAvailable ||
+                isSetUsernamePending ||
+                isCheckUsernamePending
+              }
+              value={"Finish setup"}
+            />
           </form>
         </div>
       </div>

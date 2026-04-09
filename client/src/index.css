@@ -49,6 +49,13 @@
   .error-message {
     @apply text-sm text-red-500;
   }
+
+  .success-message {
+    @apply text-sm text-green-500;
+  }
+  .checking-message {
+    @apply text-sm text-amber-500;
+  }
 }
 html {
   scroll-behavior: smooth;

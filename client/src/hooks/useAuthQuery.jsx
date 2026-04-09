@@ -5,6 +5,7 @@ import {
   signupStatus,
   verifyOTP,
   setUsername,
+  checkUsername,
 } from "../api/axios";
 
 export const useSignup = () => {
@@ -31,6 +32,12 @@ export const useResendOTP = () => {
 export const useVerifyOTP = () => {
   return useMutation({
     mutationFn: verifyOTP,
+  });
+};
+
+export const useCheckUsername = () => {
+  return useMutation({
+    mutationFn: checkUsername,
   });
 };
 

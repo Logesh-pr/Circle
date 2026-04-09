@@ -125,7 +125,7 @@ export default function OTP() {
       {
         onSuccess: (data) => {
           clearResendData();
-          console.log(data.data);
+          console.log("data", data.data.tempUsername);
           setTempUsername(data.data.tempUsername);
           navigate("/username", { replace: true });
         },
