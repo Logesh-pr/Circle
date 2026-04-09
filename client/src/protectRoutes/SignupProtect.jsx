@@ -12,15 +12,15 @@ export default function SignupProtect({ allowedStep, children }) {
   if (isLoading) return <Loader />;
 
   if (isError || !data || data.step === "none")
-    return <Navigate to="/signup" replace />;
+    return <Navigate to="/auth/signup" replace />;
 
   if (data.step !== allowedStep) {
     const redirectMap = {
-      otp: "/otp",
-      username: "/username",
+      otp: "/auth/otp",
+      username: "/auth/username",
     };
 
-    return <Navigate to={redirectMap[data.step] || "/signup"} replace />;
+    return <Navigate to={redirectMap[data.step] || "/auth/signup"} replace />;
   }
 
   return children;

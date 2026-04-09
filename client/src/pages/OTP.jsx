@@ -127,7 +127,7 @@ export default function OTP() {
           clearResendData();
           console.log("data", data.data.tempUsername);
           setTempUsername(data.data.tempUsername);
-          navigate("/username", { replace: true });
+          navigate("/auth/username", { replace: true });
         },
         onError: (err) => {
           const errMessage = err.response.data.message || "Verification failed";
@@ -154,84 +154,80 @@ export default function OTP() {
     });
   }
   return (
-    <div className="w-full min-h-screen flex justify-center items-center">
-      <div className="max-w-[450px]   mx-auto rounded-lg border border-card-border p-8 bg-zinc-950 ">
-        <h4 className="text-xl font-semibold ">Check your Email</h4>
-        <p className="mt-2 text-sm text-zinc-400">
-          We send 6 digit code to your{" "}
-          <span className="text-zinc-100">{maskedEmail}</span>. Enter it below
-        </p>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="w-full flex gap-x-3 mt-8" onPaste={handlePaste}>
-            {input.map((item, index) => (
-              <input
-                key={index}
-                type="text"
-                maxLength="1"
-                inputMode="numeric"
-                ref={(el) => (inputRef.current[index] = el)}
-                className="w-12 h-12 text-center p-2 rounded-lg border border-card-border focus:border-zinc-500 caret-transparent"
-                value={item}
-                onChange={(e) => handleChange(e.target.value, index)}
-                onKeyDown={(e) => handleKey(e, index)}
-                disabled={isResendPending || isMaxOtpReached}
-              />
-            ))}
-          </div>
-          {errors.otp && (
-            <p className="text-red-400 text-sm mt-3 text-center">
-              {errors.otp.message}
-            </p>
-          )}
-          <input
-            type="submit"
-            value={
-              (isResendPending && "Sending...") || isVerifyingPending
-                ? "Verifying..."
-                : "Verify"
-            }
-            disabled={isResendPending || isMaxOtpReached || isVerifyingPending}
-            className={` w-full py-2 bg-accent hover:bg-accent/90   transition-colors cursor-pointer rounded-lg text-white mt-6 ${
-              (isResendPending || isMaxOtpReached || isVerifyingPending) &&
-              "opacity-50 cursor-not-allowed"
-            }`}
-          />
-        </form>
-
-        <div className="mt-6 text-center">
-          {isMaxOtpReached ? (
-            <p className="text-red-400 font-semibold text-sm">
-              Maximum OTP attempts reached. Please signup again.
-            </p>
-          ) : isMaxResendReached ? (
-            <p className="text-zinc-400 text-sm">
-              Maximum resend limit reached
-            </p>
-          ) : (
-            <>
-              {isTimerActive ? (
-                <p className="text-zinc-400 text-sm">
-                  Resend available in{" "}
-                  <span className="text-zinc-100 font-semibold">
-                    {remainingSeconds}s
-                  </span>
-                </p>
-              ) : (
-                <button
-                  type="button"
-                  onClick={handleResend}
-                  disabled={isResendPending || isVerifyingPending}
-                  className="text-accent hover:text-accent/80 text-sm font-semibold transition-colors cursor-pointer"
-                >
-                  {isResendPending ? "Sending..." : "Resend OTP"}
-                </button>
-              )}
-              <p className="text-zinc-500 text-xs mt-1">
-                {resendAttempts}/{maxResendOTPAttempts} resends used
-              </p>
-            </>
-          )}
+    <div className="">
+      <h4 className="text-xl font-bold ">Check your Email</h4>
+      <p className="mt-2 text-sm font-semibold text-zinc-400">
+        We send 6 digit code to your{" "}
+        <span className="text-zinc-100">{maskedEmail}</span>. Enter it below
+      </p>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="w-full flex justify-between mt-8" onPaste={handlePaste}>
+          {input.map((item, index) => (
+            <input
+              key={index}
+              type="text"
+              maxLength="1"
+              inputMode="numeric"
+              ref={(el) => (inputRef.current[index] = el)}
+              className="w-12 h-12 text-center p-2 rounded-lg border border-card-border focus:border-zinc-500 caret-transparent"
+              value={item}
+              onChange={(e) => handleChange(e.target.value, index)}
+              onKeyDown={(e) => handleKey(e, index)}
+              disabled={isResendPending || isMaxOtpReached}
+            />
+          ))}
         </div>
+        {errors.otp && (
+          <p className="text-red-400 text-sm mt-3 text-center">
+            {errors.otp.message}
+          </p>
+        )}
+        <input
+          type="submit"
+          value={
+            (isResendPending && "Sending...") || isVerifyingPending
+              ? "Verifying..."
+              : "Verify"
+          }
+          disabled={isResendPending || isMaxOtpReached || isVerifyingPending}
+          className={` w-full py-2 bg-accent hover:bg-accent/90   transition-colors cursor-pointer rounded-lg text-white mt-6 ${
+            (isResendPending || isMaxOtpReached || isVerifyingPending) &&
+            "opacity-50 cursor-not-allowed"
+          }`}
+        />
+      </form>
+
+      <div className="mt-6 text-center">
+        {isMaxOtpReached ? (
+          <p className="text-red-400 font-semibold text-sm">
+            Maximum OTP attempts reached. Please signup again.
+          </p>
+        ) : isMaxResendReached ? (
+          <p className="text-zinc-400 text-sm">Maximum resend limit reached</p>
+        ) : (
+          <>
+            {isTimerActive ? (
+              <p className="text-zinc-400 text-sm">
+                Resend available in{" "}
+                <span className="text-zinc-100 font-semibold">
+                  {remainingSeconds}s
+                </span>
+              </p>
+            ) : (
+              <button
+                type="button"
+                onClick={handleResend}
+                disabled={isResendPending || isVerifyingPending}
+                className="text-accent hover:text-accent/80 text-sm font-semibold transition-colors cursor-pointer"
+              >
+                {isResendPending ? "Sending..." : "Resend OTP"}
+              </button>
+            )}
+            <p className="text-zinc-500 text-xs mt-1">
+              {resendAttempts}/{maxResendOTPAttempts} resends used
+            </p>
+          </>
+        )}
       </div>
     </div>
   );

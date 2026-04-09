@@ -5,6 +5,7 @@ export default function FormField({
   register,
   icons,
   isChecking,
+  errors,
   error,
   validation,
   disabled,
@@ -37,8 +38,8 @@ export default function FormField({
 
       {showIcons && (
         <div className=" absolute right-[10px] top-[40px]">
-          {(icons && usernameAvailable && icons.iconSuccess) ||
-            (error && icons.iconError)}
+          {usernameAvailable && !errors && !isChecking && icons?.iconSuccess}
+          {errors && !isChecking && icons?.iconError}
         </div>
       )}
     </div>

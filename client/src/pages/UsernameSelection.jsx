@@ -40,7 +40,7 @@ export default function UsernameSelection() {
     watch,
 
     formState: { errors },
-  } = useForm({ defaultValues: { username: tempUsername }, mode: "onChange" });
+  } = useForm({ defaultValues: { username: "test111" }, mode: "onChange" });
 
   const username = watch("username");
 
@@ -105,71 +105,69 @@ export default function UsernameSelection() {
       },
       onError: (err) => {
         console.log(err);
-        navigate("/signup", { replace: true });
+        navigate("/auth/signup", { replace: true });
       },
     });
   }
   return (
     <>
-      <div className="w-full min-h-screen flex justify-center items-center">
-        <div className="max-w-[450px]   mx-auto rounded-lg border border-card-border p-8 bg-zinc-950 ">
-          <div>
-            <h5 className="text-xl font-semibold ">Choose your username</h5>
-            <p className="mt-2 text-sm text-zinc-300 font-semibold">
-              This is how others will find you. You can always change it later.
-            </p>
-          </div>
-          <form onSubmit={handleSubmit(onSubmit)} className="mt-6">
-            <fieldset>
-              <FormField
-                label="username"
-                name="username"
-                type="text"
-                placeholder="Enter your username"
-                error={errors.username}
-                register={register}
-                disabled={isSetUsernamePending}
-                showValidation={true}
-                isChecking={isCheckUsernamePending}
-                showIcons={true}
-                icons={icons}
-                usernameAvailable={usernameAvailable}
-                validation={{
-                  required: "Username is required",
-                  minLength: {
-                    value: 5,
-                    message: "Must be at least 5 characters",
-                  },
-                  maxLength: {
-                    value: 15,
-                    message: "Must be at most 15 characters",
-                  },
-                  pattern: {
-                    value: /^[a-zA-Z0-9_]+$/,
-                    message: "Only letters, numbers, and underscores allowed",
-                  },
-                  setValueAs: (value) => value.toLowerCase().trim(),
-                }}
-              />
-            </fieldset>
+      <div className=" ">
+        <h5 className="text-xl font-bold ">Choose your username</h5>
+        <p className="mt-2 text-sm text-zinc-300 font-semibold">
+          This is how others will find you. You can always change it later.
+        </p>
 
-            <p className="text-sm font-semibold text-zinc-500">
-              Lowercase letters, numbers, and underscores only. Min 3
-              characters.
-            </p>
-
-            <input
-              className={`mt-6 w-full  rounded-lg py-2 font-semibold  ${!usernameAvailable || isSetUsernamePending || isCheckUsernamePending ? "bg-accent/50 cursor-not-allowed" : "bg-accent hover:bg-accent/80 cursor-pointer"}`}
-              type="submit"
-              disabled={
-                !usernameAvailable ||
-                isSetUsernamePending ||
-                isCheckUsernamePending
-              }
-              value={"Finish setup"}
+        <form onSubmit={handleSubmit(onSubmit)} className="mt-6">
+          <fieldset>
+            <FormField
+              label="username"
+              name="username"
+              type="text"
+              placeholder="Enter your username"
+              errors={errors}
+              error={errors.username}
+              register={register}
+              disabled={isSetUsernamePending}
+              showValidation={true}
+              isChecking={isCheckUsernamePending}
+              showIcons={true}
+              icons={icons}
+              usernameAvailable={usernameAvailable}
+              validation={{
+                required: "Username is required",
+                minLength: {
+                  value: 5,
+                  message: "Must be at least 5 characters",
+                },
+                maxLength: {
+                  value: 15,
+                  message: "Must be at most 15 characters",
+                },
+                pattern: {
+                  value: /^[a-zA-Z0-9_]+$/,
+                  message: "Only letters, numbers, and underscores allowed",
+                },
+                setValueAs: (value) => (value || "").toLowerCase().trim(),
+              }}
             />
-          </form>
-        </div>
+          </fieldset>
+
+          <p className="text-sm font-semibold text-zinc-500">
+            Lowercase letters, numbers, and underscores only. Min 3 characters.
+          </p>
+
+          <input
+            className={`mt-6 w-full  rounded-lg py-2 font-semibold  ${!usernameAvailable || isSetUsernamePending || isCheckUsernamePending || errors.username ? "bg-accent/50 cursor-not-allowed" : "bg-accent hover:bg-accent/80 cursor-pointer"}`}
+            type="submit"
+            disabled={
+              !usernameAvailable ||
+              isSetUsernamePending ||
+              isCheckUsernamePending ||
+              !!errors.username
+            }
+            value={"Finish setup"}
+          />
+        </form>
       </div>
     </>
   );

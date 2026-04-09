@@ -11,6 +11,8 @@ import Signup from "./pages/Signup.jsx";
 import OTP from "./pages/OTP.jsx";
 import SignupProtect from "./protectRoutes/SignupProtect.jsx";
 import UsernameSelection from "./pages/usernameSelection.jsx";
+import AuthLayout from "./pages/AuthLayout.jsx";
+import Setup from "./pages/Setup.jsx";
 
 //components
 
@@ -33,26 +35,35 @@ function App() {
             },
           ],
         },
-
         {
-          path: "/signup",
-          element: <Signup />,
-        },
-        {
-          path: "/otp",
-          element: (
-            <SignupProtect allowedStep="otp">
-              <OTP />
-            </SignupProtect>
-          ),
-        },
-        {
-          path: "/username",
-          element: (
-            // <SignupProtect allowedStep="username">
-            <UsernameSelection />
-            // </SignupProtect>
-          ),
+          path: "/auth",
+          element: <AuthLayout />,
+          children: [
+            {
+              path: "setup",
+              element: <Setup />,
+            },
+            {
+              path: "signup",
+              element: <Signup />,
+            },
+            {
+              path: "otp",
+              element: (
+                // <SignupProtect allowedStep="otp">
+                <OTP />
+                // </SignupProtect>
+              ),
+            },
+            {
+              path: "username",
+              element: (
+                // <SignupProtect allowedStep="username">
+                <UsernameSelection />
+                // </SignupProtect>
+              ),
+            },
+          ],
         },
       ],
     },
