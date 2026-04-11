@@ -44,3 +44,11 @@ export const useTempUserStore = create(
     },
   })),
 );
+
+export const useStepIndicatorStore = create((set) => ({
+  currentStep: "signup",
+
+  setStepIndicator: (step) => {
+    set({ currentStep: step });
+  },
+}));

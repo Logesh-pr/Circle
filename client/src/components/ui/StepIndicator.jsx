@@ -1,8 +1,12 @@
 //framer motion
 import { motion } from "motion/react";
 
-const SETPS = ["signup", "opt", "username"];
-export default function StepIndicator({ currentStep = "signup" }) {
+//zustand
+import { useStepIndicatorStore } from "../../store/useAuthStore";
+
+const SETPS = ["signup", "otp", "username"];
+export default function StepIndicator() {
+  const { currentStep } = useStepIndicatorStore();
   return (
     <div className="w-[100px] flex gap-x-2">
       {SETPS.map((step, index) => (

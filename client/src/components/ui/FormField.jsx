@@ -38,8 +38,8 @@ export default function FormField({
 
       {showIcons && (
         <div className=" absolute right-[10px] top-[40px]">
-          {usernameAvailable && !errors && !isChecking && icons?.iconSuccess}
-          {errors && !isChecking && icons?.iconError}
+          {usernameAvailable && !error && !isChecking && icons?.iconSuccess}
+          {error && !isChecking && icons?.iconError}
         </div>
       )}
     </div>

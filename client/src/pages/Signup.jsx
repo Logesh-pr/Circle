@@ -9,12 +9,19 @@ import FormField from "../components/ui/FormField";
 import StepIndicator from "../components/ui/StepIndicator";
 
 //zustand
-import { useResendOTPStore } from "../store/useAuthStore";
+import {
+  useResendOTPStore,
+  useStepIndicatorStore,
+} from "../store/useAuthStore";
+
+//react router
 import { useNavigate } from "react-router-dom";
+
 export default function Signup() {
   const { mutate, isPending } = useSignup();
   const navigate = useNavigate();
   const setResendData = useResendOTPStore((state) => state.setResendData);
+  const { setStepIndicator } = useStepIndicatorStore();
   const {
     register,
     formState: { errors },
@@ -32,7 +39,8 @@ export default function Signup() {
       onSuccess: (data) => {
         console.log("success:", data.data, data.token);
         setResendData(data.data.resendAvailableAt, data.data.resendAttempts);
-        navigate("/otp", { replace: true });
+        setStepIndicator("otp");
+        navigate("/auth/otp", { replace: true });
         console.log("navigate");
         reset();
       },
@@ -64,6 +72,7 @@ export default function Signup() {
           action=""
           className="w-full  mx-auto flex flex-col   mt-6 "
           onSubmit={handleSubmit(onSubmit)}
+          onChange={() => clearErrors("common")}
         >
           <fieldset disabled={isPending}>
             <FormField

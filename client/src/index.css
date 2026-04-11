@@ -4,19 +4,28 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+* {
+  @apply transition-colors duration-300;
+}
+
 @theme {
   --font-display: "Reddit Sans", sans-serif;
 
-  /* colors */
-
+  /* colors light mode */
   --color-accent: #00a6fb;
+  --color-light: #fafafa;
+  --color-light-text: oklch(21% 0.006 285.885);
+
+  /* colors dark mode */
+  --color-dark: #000000;
+  --color-dark-text: oklch(92% 0.004 286.32);
   --color-card-border: #27272a;
   --color-input: #52525c;
   --color-form-input: ##e4e4e7;
   --color-border: #1e2939;
   --color-dark-secondary: #f4f4f5;
+  --color-light: #ffffff; /* Fluid font sizes — clamp(MIN, PREFERRED, MAX) */
 
-  /* Fluid font sizes — clamp(MIN, PREFERRED, MAX) */
   --text-2xs: clamp(0.625rem, 0.6rem + 0.1vw, 0.7rem);
   --text-xs: clamp(0.7rem, 0.65rem + 0.2vw, 0.8rem);
   --text-sm: clamp(0.8rem, 0.75rem + 0.25vw, 0.9rem);
@@ -28,13 +37,13 @@
 
   --border-radius: 12px;
   --border-input-radius: 6px;
-}
 
-.dark {
-  --color-bg: #000000;
-  --color-post-bg: #000000;
-  --color-border: #1e2939;
-  --color-post-username: #f4f4f5;
+  /* .dark {
+    --color-lightmode: #fafafa;
+    --color-post-bg: #000000;
+    --color-border: #1e2939;
+    --color-post-username: #f4f4f5;
+  } */
 }
 
 @layer components {
