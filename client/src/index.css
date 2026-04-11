@@ -13,13 +13,17 @@
 
   /* colors light mode */
   --color-accent: #00a6fb;
+  --color-accent-light: #a3e0ff;
   --color-light: #fafafa;
   --color-light-text: oklch(21% 0.006 285.885);
+  --color-light-border: oklch(70.5% 0.015 286.067);
 
   /* colors dark mode */
   --color-dark: #000000;
   --color-dark-text: oklch(92% 0.004 286.32);
-  --color-card-border: #27272a;
+  --color-dark-accent-shade: #7ad2ff;
+  --color-dark-test: oklch(70.5% 0.015 286.067);
+  --color-dark-border: #27272a;
   --color-input: #52525c;
   --color-form-input: ##e4e4e7;
   --color-border: #1e2939;
