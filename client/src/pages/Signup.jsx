@@ -6,7 +6,7 @@ import { useSignup } from "../hooks/useAuthQuery";
 
 //components
 import FormField from "../components/ui/FormField";
-import StepIndicator from "../components/ui/StepIndicator";
+import Button from "../components/ui/Button";
 
 //zustand
 import {
@@ -64,8 +64,10 @@ export default function Signup() {
   return (
     <div className="w-full ">
       <div className="w-full ">
-        <h5 className="font-bold text-start text-xl">Create your account</h5>
-        <p className="text-start text-sm font-semibold text-zinc-300  mt-2 ">
+        <h5 className="font-bold text-start text-xl text-light-primary dark:text-dark-primary">
+          Create your account
+        </h5>
+        <p className="text-start font-semibold text-light-secondary dark:text-dark-secondary text-sm font-mdium  mt-2 ">
           Enter your email and choose your password to get started with circle
         </p>
         <form
@@ -133,12 +135,11 @@ export default function Signup() {
               </p>
             </div>
 
-            <div className="w-full text-center">
-              <input
-                type="submit"
+            <div className=" w-full text-center">
+              <Button
                 value={isPending ? "Signing in..." : "Signup"}
                 disabled={isPending}
-                className={`mt-6  px-8 py-2 bg-accent hover:bg-accent/90 transition-colors rounded-lg font-semibold cursor-pointer ${isPending && "opacity-50 cursor-not-allowed"} `}
+                btnLogic={isPending}
               />
             </div>
           </fieldset>

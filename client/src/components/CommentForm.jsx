@@ -11,11 +11,17 @@ export default function CommentForm() {
   const {
     handleSubmit,
     register,
+    watch,
+    clearErrors,
+    reset,
     formState: { errors },
-  } = useForm();
+  } = useForm({ mode: "onchange" });
+
+  const commentValue = watch("comment");
 
   function onSubmit(data) {
     console.log(data);
+    reset();
   }
   return (
     <div className="w-full flex gap-x-2 items-center">
@@ -24,13 +30,15 @@ export default function CommentForm() {
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="w-full flex items-center gap-x-2"
+        onChange={() => clearErrors("comment")}
       >
         <input
           name="comment"
           type="text"
           placeholder="Type your comment"
-          className={`w-full rounded-2xl border ${errors ? "border-red-500" : "border-light-border dark:border-dark-border"}  p-2`}
+          className={`w-full rounded-2xl text-light-primary dark:text-dark-primary border ${errors.comment ? "border-red-500" : "border-light-border dark:border-dark-border placeholder:text-light-primary focus:border-dark-secondary"}  p-2`}
           {...register("comment", {
+            required: "Please type the comment",
             maxLength: {
               value: 150,
               message: "Max 150 character are required",
@@ -38,7 +46,10 @@ export default function CommentForm() {
           })}
         />
 
-        <button className="bg-accent p-2 text-light rounded-full text-xs cursor-pointer">
+        <button
+          disabled={!commentValue || commentValue.length < 1}
+          className={`bg-accent p-2 text-light rounded-full text-xs  ${!commentValue || commentValue.length < 1 ? "opacity-50 cursor-not-allowed" : "opacity-100 cursor-pointer"}`}
+        >
           <Send />
         </button>
       </form>

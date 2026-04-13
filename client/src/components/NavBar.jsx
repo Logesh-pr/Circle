@@ -17,7 +17,7 @@ export default function NavBar() {
             return (
               <button
                 key={index}
-                className={`flex gap-x-3 cursor-pointer w-full p-3 rounded-xl ${isActive(items.path) ? "bg-accent-light text-accent dark:bg-dark-accent-shade/30 font-semibold " : "hover:text-accent font-medium "}`}
+                className={`flex gap-x-3 cursor-pointer w-full p-3 rounded-xl ${isActive(items.path) ? "bg-accent-light text-accent dark:bg-dark-accent-shade/30 font-semibold " : "hover:text-accent font-normal "}`}
               >
                 <span>{items.icon}</span> {items.name}
               </button>
@@ -32,7 +32,7 @@ export default function NavBar() {
           return (
             <button
               key={index}
-              className={`flex flex-col items-center text-sm font-medium cursor-pointer p-3  ${isActive(items.path) ? " text-accent border-t-4 border-accent font-semibold" : "hover:text-accent font-medium"}`}
+              className={`flex flex-col items-center text-sm font-medium cursor-pointer p-3  ${isActive(items.path) ? " text-accent border-t-4 border-accent font-semibold" : "hover:text-accent font-normal"}`}
             >
               <span className="text-[18px]">{items.icon}</span> {items.name}
             </button>

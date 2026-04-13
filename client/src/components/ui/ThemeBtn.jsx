@@ -11,7 +11,11 @@ export default function ThemeBtn() {
   return (
     <>
       <button onClick={toggleTheme} className="cursor-pointer ">
-        {theme === "light" ? <Moon /> : <Sun />}
+        {theme === "light" ? (
+          <Moon strokeWidth={1} className="text-accent" />
+        ) : (
+          <Sun strokeWidth={1} className="text-accent" />
+        )}
       </button>
     </>
   );

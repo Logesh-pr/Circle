@@ -16,14 +16,17 @@ export default function FormField({
 }) {
   return (
     <div className="flex flex-col gap-y-2 mb-2 relative">
-      <label htmlFor="" className="form label">
+      <label
+        htmlFor=""
+        className="form label text-light-primary dark:text-dark-primary font-semibold"
+      >
         {label}
       </label>
       <input
         {...register(name, validation)}
         type={type}
         placeholder={placeholder}
-        className={`form-input placeholder:text-sm placeholder:text-zinc-600 ${error && "border-red-500"} ${disabled && "opacity-50 cursor-not-allowed"}`}
+        className={`form-input border placeholder:text-sm placeholder:text-light-primary focus:border-dark-secondary ${error ? "border-red-500" : "border-light-border dark:border-dark-border"} ${disabled && "opacity-50 cursor-not-allowed"}`}
       />
 
       {showValidation && (

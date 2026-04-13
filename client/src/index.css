@@ -15,14 +15,15 @@
   --color-accent: #00a6fb;
   --color-accent-light: #a3e0ff;
   --color-light: #fafafa;
-  --color-light-primary: oklch(21% 0.006 285.885);
+  --color-light-primary: oklch(37% 0.013 285.805);
   --color-light-secondary: oklch(55.4% 0.046 257.417);
   --color-light-border: oklch(86.9% 0.022 252.894);
+  --color-light-focus: oklch(55.2% 0.016 285.938);
 
   /* colors dark mode */
   --color-dark: #000000;
   --color-dark-primary: oklch(92% 0.004 286.32);
-  --color-dark-secondary: oklch(70.5% 0.015 286.067);
+  --color-dark-secondary: oklch(55.2% 0.016 285.938);
   --color-dark-accent-shade: #7ad2ff;
   --color-dark-border: #27272a;
   --color-input: #52525c;
@@ -82,6 +83,7 @@ body {
   padding: 0;
   min-height: 100vh;
   overflow-y: scroll;
+  font-family: "Reddit Sans", sans-serif;
 }
 /* body {
   width: 100%;

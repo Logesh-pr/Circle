@@ -17,6 +17,7 @@ import { CircleCheck, CircleX } from "lucide-react";
 
 //react router
 import { useNavigate } from "react-router-dom";
+import Button from "../components/ui/Button";
 
 export default function UsernameSelection() {
   const { mutate: checkUsernameMutate, isPending: isCheckUsernamePending } =
@@ -112,8 +113,10 @@ export default function UsernameSelection() {
   return (
     <>
       <div className=" ">
-        <h5 className="text-xl font-bold ">Choose your username</h5>
-        <p className="mt-2 text-sm text-zinc-300 font-semibold">
+        <h5 className="text-xl font-bold text-light-primary dark:text-dark-primary ">
+          Choose your username
+        </h5>
+        <p className="mt-2 text-sm text-light-secondary dark:text-dark-secondary font-semibold">
           This is how others will find you. You can always change it later.
         </p>
 
@@ -152,11 +155,27 @@ export default function UsernameSelection() {
             />
           </fieldset>
 
-          <p className="text-sm font-semibold text-zinc-500">
+          <p className="text-sm font-semibold text-light-secondary dark:text-dark-secondary">
             Lowercase letters, numbers, and underscores only. Min 3 characters.
           </p>
 
-          <input
+          <Button
+            value={"Finish setup"}
+            disabled={
+              !usernameAvailable ||
+              isSetUsernamePending ||
+              isCheckUsernamePending ||
+              !!errors.username
+            }
+            btnLogic={
+              !usernameAvailable ||
+              isSetUsernamePending ||
+              isCheckUsernamePending ||
+              errors.username
+            }
+          />
+
+          {/* <input
             className={`mt-6 w-full  rounded-lg py-2 font-semibold  ${!usernameAvailable || isSetUsernamePending || isCheckUsernamePending || errors.username ? "bg-accent/50 cursor-not-allowed" : "bg-accent hover:bg-accent/80 cursor-pointer"}`}
             type="submit"
             disabled={
@@ -166,7 +185,7 @@ export default function UsernameSelection() {
               !!errors.username
             }
             value={"Finish setup"}
-          />
+          /> */}
         </form>
       </div>
     </>

@@ -20,6 +20,7 @@ import {
 
 //custom hooks
 import { useResendTimer } from "../hooks/useResedTimer";
+import Button from "../components/ui/Button";
 
 export default function OTP() {
   const OTP_LENGTH = 6;
@@ -161,10 +162,13 @@ export default function OTP() {
   }
   return (
     <div className="">
-      <h4 className="text-xl font-bold ">Check your Email</h4>
-      <p className="mt-2 text-sm font-semibold text-zinc-400">
+      <h4 className="text-xl font-bold text-light-primary dark:text-dark-primary">
+        Check your Email
+      </h4>
+      <p className="mt-2 text-sm font-semibold text-light-secondary dark:text-dark-secondary">
         We send 6 digit code to your{" "}
-        <span className="text-zinc-100">{maskedEmail}</span>. Enter it below
+        <span className="text-zinc-800 dark:text-zinc-100">{maskedEmail}</span>.
+        Enter it below
       </p>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="w-full flex justify-between mt-8" onPaste={handlePaste}>
@@ -175,7 +179,7 @@ export default function OTP() {
               maxLength="1"
               inputMode="numeric"
               ref={(el) => (inputRef.current[index] = el)}
-              className="w-12 h-12 text-center p-2 rounded-lg border border-card-border focus:border-zinc-500 caret-transparent"
+              className="w-12 h-12 text-center p-2 rounded-lg border border-light-border dark:border-dark-border focus:border-zinc-500 focus:shadow-xl caret-transparent"
               value={item}
               onChange={(e) => handleChange(e.target.value, index)}
               onKeyDown={(e) => handleKey(e, index)}
@@ -188,7 +192,16 @@ export default function OTP() {
             {errors.otp.message}
           </p>
         )}
-        <input
+        <Button
+          value={
+            (isResendPending && "Sending...") || isVerifyingPending
+              ? "Verifying..."
+              : "Verify"
+          }
+          disabled={isResendPending || isMaxOtpReached || isVerifyingPending}
+          btnLogic={isResendPending || isMaxOtpReached || isVerifyingPending}
+        />
+        {/* <input
           type="submit"
           value={
             (isResendPending && "Sending...") || isVerifyingPending
@@ -200,7 +213,7 @@ export default function OTP() {
             (isResendPending || isMaxOtpReached || isVerifyingPending) &&
             "opacity-50 cursor-not-allowed"
           }`}
-        />
+        /> */}
       </form>
 
       <div className="mt-6 text-center">

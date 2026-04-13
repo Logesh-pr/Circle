@@ -12,6 +12,7 @@ import OTP from "./pages/OTP.jsx";
 import SignupProtect from "./protectRoutes/SignupProtect.jsx";
 import UsernameSelection from "./pages/usernameSelection.jsx";
 import AuthLayout from "./pages/AuthLayout.jsx";
+import NotFound from "./pages/NotFound.jsx";
 
 //components
 
@@ -59,6 +60,10 @@ function App() {
               ),
             },
           ],
+        },
+        {
+          paht: "*",
+          element: <NotFound />,
         },
       ],
     },

@@ -14,7 +14,7 @@ export default function Comments() {
             <p className="text-xs text-light-secondary dark:text-dark-secondary">
               @kevin_ken
             </p>
-            <p className="text-light-primary dark:text-dark-primary font-medium text-sm mt-2">
+            <p className="text-light-primary dark:text-dark-primary font-normal text-sm mt-2">
               Lorem ipsum, dolor sit amet consectetur adipisicing elit.
               Asperiores animi obcaecati nostrum atque tenetur illum, similique
               voluptate fugiat provident deleniti.

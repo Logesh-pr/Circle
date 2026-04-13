@@ -8,8 +8,9 @@ import { Bookmark, Heart, MessageCircle, Share } from "lucide-react";
 
 export default function PostCard() {
   const [comment, setComment] = useState(false);
+  const [like, setLike] = useState(false);
   return (
-    <div className="w-full  rounded-xl border-2 border-light-border dark:border-dark-border">
+    <div className="w-full  rounded-xl border border-light-border dark:border-dark-border">
       <div className="p-3">
         {/* profile section */}
         <div className=" flex gap-x-2 items-start">
@@ -25,7 +26,7 @@ export default function PostCard() {
         </div>
 
         {/* content section */}
-        <div className="mt-2 text-light-primary dark:text-dark-primary text-base">
+        <div className="mt-2 text-light-primary dark:text-dark-primary font-normal text-sm">
           <p>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellendus
             blanditiis quod dolorem alias, ea beatae laborum velit amet dolore
@@ -35,24 +36,33 @@ export default function PostCard() {
         </div>
       </div>
 
-      <div className="mt-2 border-t-2 border-light-border dark:border-dark-border p-3 flex justify-between text-sm font-semibold text-light-secondary dark:text-dark-secondary ">
-        <div className="flex gap-x-5">
-          <div className="flex gap-x-2 items-center cursor-pointer">
-            <Heart /> <span>200</span>
+      <div className="mt-2 border-t border-light-border dark:border-dark-border p-3 flex justify-between text-sm font-semibold text-light-secondary dark:text-dark-secondary ">
+        <div className="flex gap-x-5 select-none text-xs">
+          <div
+            onClick={() => setLike((pre) => !pre)}
+            className="flex gap-x-2 items-center cursor-pointer transition-color  "
+          >
+            <Heart
+              size={20}
+              fill={like ? "red" : "none"}
+              strokeWidth={like ? 0 : 2}
+              className=""
+            />{" "}
+            <span>200</span>
           </div>
           <div
             onClick={() => setComment(true)}
             className="flex gap-x-2 items-center cursor-pointer"
           >
-            <MessageCircle /> <span>90</span>
+            <MessageCircle size={20} /> <span>90</span>
           </div>
           {comment && <CommentModel setComment={setComment} />}
           <div className="flex gap-x-2 items-center cursor-pointer">
-            <Share className="text-[12px]" /> <span>100</span>
+            <Share size={20} /> <span>100</span>
           </div>
         </div>
         <div className="self-end cursor-pointer">
-          <Bookmark />
+          <Bookmark size={20} />
         </div>
       </div>
     </div>
