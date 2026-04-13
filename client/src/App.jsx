@@ -13,6 +13,9 @@ import SignupProtect from "./protectRoutes/SignupProtect.jsx";
 import UsernameSelection from "./pages/usernameSelection.jsx";
 import AuthLayout from "./pages/AuthLayout.jsx";
 import NotFound from "./pages/NotFound.jsx";
+import SearchPage from "./pages/SearchPage.jsx";
+import Notification from "./pages/Notification.jsx";
+import Profile from "./pages/Profile.jsx";
 
 //components
 
@@ -32,6 +35,18 @@ function App() {
             {
               path: "/",
               element: <Home />,
+            },
+            {
+              path: "/search",
+              element: <SearchPage />,
+            },
+            {
+              path: "/notification",
+              element: <Notification />,
+            },
+            {
+              path: "/profile",
+              element: <Profile />,
             },
           ],
         },
@@ -62,7 +77,7 @@ function App() {
           ],
         },
         {
-          paht: "*",
+          path: "*",
           element: <NotFound />,
         },
       ],

@@ -1,13 +1,13 @@
 import { NavItems } from "../utils/NavItems";
 
 //react router
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function NavBar() {
   const location = useLocation();
 
   const isActive = (path) => location.pathname === path;
-  console.log(location.pathname);
+  const navigate = useNavigate();
   return (
     <>
       {/* Desktop navbar */}
@@ -17,6 +17,7 @@ export default function NavBar() {
             return (
               <button
                 key={index}
+                onClick={() => navigate(items.path)}
                 className={`flex gap-x-3 cursor-pointer w-full p-3 rounded-xl ${isActive(items.path) ? "bg-accent-light text-accent dark:bg-dark-accent-shade/30 font-semibold " : "hover:text-accent font-normal "}`}
               >
                 <span>{items.icon}</span> {items.name}
@@ -32,6 +33,7 @@ export default function NavBar() {
           return (
             <button
               key={index}
+              onClick={() => navigate(items.path)}
               className={`flex flex-col items-center text-sm font-medium cursor-pointer p-3  ${isActive(items.path) ? " text-accent border-t-4 border-accent font-semibold" : "hover:text-accent font-normal"}`}
             >
               <span className="text-[18px]">{items.icon}</span> {items.name}
