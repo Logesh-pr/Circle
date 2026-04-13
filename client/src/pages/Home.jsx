@@ -1,3 +1,11 @@
+//components
+import PostCard from "../components/PostCard";
+
 export default function Home() {
-  return <>home</>;
+  return (
+    <>
+      Home
+      <PostCard />
+    </>
+  );
 }

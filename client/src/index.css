@@ -15,19 +15,19 @@
   --color-accent: #00a6fb;
   --color-accent-light: #a3e0ff;
   --color-light: #fafafa;
-  --color-light-text: oklch(21% 0.006 285.885);
-  --color-light-border: oklch(70.5% 0.015 286.067);
+  --color-light-primary: oklch(21% 0.006 285.885);
+  --color-light-secondary: oklch(55.4% 0.046 257.417);
+  --color-light-border: oklch(86.9% 0.022 252.894);
 
   /* colors dark mode */
   --color-dark: #000000;
-  --color-dark-text: oklch(92% 0.004 286.32);
+  --color-dark-primary: oklch(92% 0.004 286.32);
+  --color-dark-secondary: oklch(70.5% 0.015 286.067);
   --color-dark-accent-shade: #7ad2ff;
-  --color-dark-test: oklch(70.5% 0.015 286.067);
   --color-dark-border: #27272a;
   --color-input: #52525c;
   --color-form-input: ##e4e4e7;
   --color-border: #1e2939;
-  --color-dark-secondary: #f4f4f5;
   --color-light: #ffffff; /* Fluid font sizes — clamp(MIN, PREFERRED, MAX) */
 
   --text-2xs: clamp(0.625rem, 0.6rem + 0.1vw, 0.7rem);

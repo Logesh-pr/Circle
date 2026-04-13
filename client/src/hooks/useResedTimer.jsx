@@ -1,14 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
 
-/**
- * Timer that survives page refreshes.
- * Uses absolute server timestamps stored in sessionStorage.
- *
- * Behavior:
- * - First load from signup:  timer = 0, resend button enabled
- * - After clicking resend:   timer starts (30s countdown)
- * - On page refresh:         recalculates remaining time from sessionStorage
- */
 export function useResendTimer() {
   const getRemaining = () => {
     const stored = sessionStorage.getItem("resendAvailableAt");
@@ -34,7 +25,6 @@ export function useResendTimer() {
     return () => clearInterval(interval);
   }, [remainingSeconds]);
 
-  // Call this after a successful resend API response
   const startTimer = useCallback((serverTimestamp) => {
     sessionStorage.setItem("resendAvailableAt", serverTimestamp);
     const remaining = Math.max(

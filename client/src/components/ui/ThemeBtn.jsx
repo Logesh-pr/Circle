@@ -10,7 +10,7 @@ export default function ThemeBtn() {
   console.log(theme);
   return (
     <>
-      <button onClick={toggleTheme} className="cursor-pointer">
+      <button onClick={toggleTheme} className="cursor-pointer ">
         {theme === "light" ? <Moon /> : <Sun />}
       </button>
     </>

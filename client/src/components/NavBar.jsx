@@ -12,7 +12,7 @@ export default function NavBar() {
     <>
       {/* Desktop navbar */}
       <div className="hidden md:block w-full h-full p-4 ">
-        <div className=" flex flex-col gap-y-6 items-start mt-12">
+        <div className=" flex flex-col gap-y-4 items-start mt-12">
           {NavItems.map((items, index) => {
             return (
               <button
