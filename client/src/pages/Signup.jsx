@@ -9,19 +9,22 @@ import FormField from "../components/ui/FormField";
 import Button from "../components/ui/Button";
 
 //zustand
-import {
-  useResendOTPStore,
-  useStepIndicatorStore,
-} from "../store/useAuthStore";
+import { useResendOTPStore } from "../store/useAuthStore";
 
 //react router
 import { useNavigate } from "react-router-dom";
+
+//icons
+import { EyeClosed, Eye } from "lucide-react";
 
 export default function Signup() {
   const { mutate, isPending } = useSignup();
   const navigate = useNavigate();
   const setResendData = useResendOTPStore((state) => state.setResendData);
-  const { setStepIndicator } = useStepIndicatorStore();
+  const passwordIcons = {
+    closedEye: <EyeClosed size={20} />,
+    eye: <Eye size={20} />,
+  };
   const {
     register,
     formState: { errors },
@@ -30,7 +33,7 @@ export default function Signup() {
     reset,
     setError,
     clearErrors,
-  } = useForm({ mode: "onchange" });
+  } = useForm({ mode: "onChange" });
   const checkConfirmPassword = watch("password");
 
   async function onSubmit(user) {
@@ -39,7 +42,6 @@ export default function Signup() {
       onSuccess: (data) => {
         console.log("success:", data.data, data.token);
         setResendData(data.data.resendAvailableAt, data.data.resendAttempts);
-        setStepIndicator("otp");
         navigate("/auth/otp", { replace: true });
         console.log("navigate");
         reset();
@@ -104,7 +106,10 @@ export default function Signup() {
               error={errors.password}
               register={register}
               disabled={isPending}
+              showIcons={true}
+              passwordIcons={passwordIcons}
               showValidation={true}
+              showPasswordIcons={true}
               validation={{
                 required: "Please enter the password",
                 minLength: {
@@ -123,6 +128,8 @@ export default function Signup() {
               register={register}
               disabled={isPending}
               showValidation={true}
+              showPasswordIcons={true}
+              passwordIcons={passwordIcons}
               validation={{
                 required: "confirm password is required",
                 validate: (password) =>

@@ -12,11 +12,7 @@ import {
 } from "../hooks/useAuthQuery";
 
 //zustand
-import {
-  useResendOTPStore,
-  useTempUserStore,
-  useStepIndicatorStore,
-} from "../store/useAuthStore";
+import { useResendOTPStore, useTempUserStore } from "../store/useAuthStore";
 
 //custom hooks
 import { useResendTimer } from "../hooks/useResedTimer";
@@ -28,7 +24,6 @@ export default function OTP() {
   const navigate = useNavigate();
   const [input, setInput] = useState(Array(OTP_LENGTH).fill(""));
   const inputRef = useRef([]);
-  const { setStepIndicator } = useStepIndicatorStore();
 
   const {
     handleSubmit,
@@ -133,7 +128,6 @@ export default function OTP() {
           clearResendData();
           console.log("data", data.data.tempUsername);
           setTempUsername(data.data.tempUsername);
-          setStepIndicator("username");
           navigate("/auth/username", { replace: true });
         },
         onError: (err) => {

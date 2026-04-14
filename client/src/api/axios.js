@@ -39,6 +39,11 @@ const setUsername = async (data) => {
   return res.data;
 };
 
+const login = async (data) => {
+  const res = await api.post("auth/login", data);
+  return res.data;
+};
+
 export {
   signup,
   resendOTP,
@@ -46,4 +51,5 @@ export {
   verifyOTP,
   checkUsername,
   setUsername,
+  login,
 };

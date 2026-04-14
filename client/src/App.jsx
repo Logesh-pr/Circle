@@ -16,6 +16,7 @@ import NotFound from "./pages/NotFound.jsx";
 import SearchPage from "./pages/SearchPage.jsx";
 import Notification from "./pages/Notification.jsx";
 import Profile from "./pages/Profile.jsx";
+import Login from "./pages/Login.jsx";
 
 //components
 
@@ -57,6 +58,10 @@ function App() {
             {
               path: "signup",
               element: <Signup />,
+            },
+            {
+              path: "login",
+              element: <Login />,
             },
             {
               path: "otp",

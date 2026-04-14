@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 export default function FormField({
   label,
   name,
@@ -5,7 +7,6 @@ export default function FormField({
   register,
   icons,
   isChecking,
-  errors,
   error,
   validation,
   disabled,
@@ -13,7 +14,10 @@ export default function FormField({
   usernameAvailable,
   showValidation,
   showIcons,
+  showPasswordIcons,
+  passwordIcons,
 }) {
+  const [password, showPassword] = useState(false);
   return (
     <div className="flex flex-col gap-y-2 mb-2 relative">
       <label
@@ -24,7 +28,7 @@ export default function FormField({
       </label>
       <input
         {...register(name, validation)}
-        type={type}
+        type={showPasswordIcons && password ? "text" : type}
         placeholder={placeholder}
         className={`form-input border placeholder:text-sm placeholder:text-light-primary focus:border-dark-secondary ${error ? "border-red-500" : "border-light-border dark:border-dark-border"} ${disabled && "opacity-50 cursor-not-allowed"}`}
       />
@@ -36,6 +40,15 @@ export default function FormField({
             <p className="success-message">username is available</p>
           )}
           {error && <p className="error-message">{error.message}</p>}
+        </div>
+      )}
+
+      {showPasswordIcons && (
+        <div
+          className="absolute right-[10px] top-[45px] "
+          onClick={() => showPassword((pre) => !pre)}
+        >
+          {password ? passwordIcons.eye : passwordIcons.closedEye}
         </div>
       )}
 

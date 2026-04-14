@@ -5,13 +5,12 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 export default function NavBar() {
   const location = useLocation();
-
   const isActive = (path) => location.pathname === path;
   const navigate = useNavigate();
   return (
     <>
       {/* Desktop navbar */}
-      <div className="hidden md:block w-full h-full p-4 ">
+      <div className="hidden md:flex flex-col justify-between w-full h-full p-4 ">
         <div className=" flex flex-col gap-y-4 items-start mt-12">
           {NavItems.map((items, index) => {
             return (
@@ -25,6 +24,11 @@ export default function NavBar() {
             );
           })}
         </div>
+
+        {/* <div className=" flex gap-x-4">
+          <button>Signup</button>
+          <button>Login</button>
+        </div> */}
       </div>
 
       {/* Mobile navbar */}

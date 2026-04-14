@@ -57,7 +57,7 @@
   }
 
   .form-input {
-    @apply border-2 border-input rounded-lg p-2 text-form-input focus:border-zinc-400;
+    @apply border-2 border-input rounded-lg p-2 text-form-input;
   }
 
   .error-message {
