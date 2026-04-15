@@ -1,4 +1,4 @@
-export function Loader() {
+export default function Loader() {
   return (
     <div className="h-fit flex justify-center items-center">
       <svg

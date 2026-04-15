@@ -4,7 +4,7 @@ import { Navigate } from "react-router-dom";
 import { useSignupStatus } from "../hooks/useAuthQuery";
 
 //components
-import { Loader } from "../components/ui/Loader";
+import Loader from "../components/ui/Loader";
 
 export default function SignupProtect({ allowedStep, children }) {
   const { data, isError, isLoading } = useSignupStatus();

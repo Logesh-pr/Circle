@@ -7,7 +7,7 @@ import "dotenv/config.js";
 import AppError from "../utils/AppError.js";
 import catchAsync from "../utils/catchAsync.js";
 import { generateOTP, hashOTP, verifyHashedOTP } from "../utils/otp.js";
-import { generateHash } from "../utils/hash.js";
+import { generateHash, verifyHash } from "../utils/hash.js";
 import {
   generateAccessToken,
   generateOTPToken,
@@ -352,7 +352,7 @@ export const login = catchAsync(async (req, res, next) => {
     return next(new AppError("Invalid credentials", 400));
   }
 
-  const checkPassword = user.comparePassword(password);
+  const checkPassword = await user.comparePassword(password);
 
   if (!checkPassword) {
     return next(new AppError("Invalid credentials", 400));
@@ -384,7 +384,7 @@ export const refresh = catchAsync(async (req, res, next) => {
     return next(new AppError("Invalid token", 401));
   }
 
-  const decoded = await jwt.verifyToken(
+  const decoded = await verifyToken(
     token,
     process.env.JWT_REFRESH_SECRET,
     next,
@@ -422,6 +422,25 @@ export const refresh = catchAsync(async (req, res, next) => {
   setCookies(res, accessToken, refreshToken);
 
   return res.status(200).json({ status: 200, message: "New token issued" });
+});
+
+export const fetchMe = catchAsync(async (req, res, next) => {
+  const token = req.user;
+  console.log(token);
+
+  if (!token) {
+    return next(new AppError("unauthorized", 410));
+  }
+
+  const user = await User.findOne({ token });
+
+  if (!user) {
+    return next(new AppError("user not found", 404));
+  }
+
+  return res
+    .status(200)
+    .json({ status: 200, message: "Successfully fetched data", data: user });
 });
 
 export const logout = catchAsync(async (req, res) => {

@@ -12,7 +12,7 @@ import Button from "../components/ui/Button";
 import { useResendOTPStore } from "../store/useAuthStore";
 
 //react router
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 //icons
 import { EyeClosed, Eye } from "lucide-react";
@@ -33,7 +33,7 @@ export default function Signup() {
     reset,
     setError,
     clearErrors,
-  } = useForm({ mode: "onChange" });
+  } = useForm();
   const checkConfirmPassword = watch("password");
 
   async function onSubmit(user) {
@@ -150,6 +150,18 @@ export default function Signup() {
               />
             </div>
           </fieldset>
+
+          <div className="mt-6 text-center text-sm text-light-secondary dark:text-dark-secondary font-semibold">
+            <p>
+              Already have an account?{" "}
+              <Link
+                className="text-accent hover:text-accent/80 transition-colors"
+                to={"/auth/login"}
+              >
+                Login
+              </Link>
+            </p>
+          </div>
         </form>
       </div>
     </div>

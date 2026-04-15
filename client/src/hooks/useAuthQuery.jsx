@@ -7,6 +7,7 @@ import {
   setUsername,
   checkUsername,
   login,
+  fetchMe,
 } from "../api/axios";
 
 export const useSignup = () => {
@@ -51,5 +52,14 @@ export const useSetUsername = () => {
 export const useLogin = () => {
   return useMutation({
     mutationFn: login,
+  });
+};
+
+export const useFetchUser = () => {
+  return useQuery({
+    queryKey: ["auth"],
+    queryFn: fetchMe,
+    retry: false,
+    staleTime: 5 * 60 * 1000,
   });
 };

@@ -9,6 +9,39 @@ const api = axios.create({
   withCredentials: true,
 });
 
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+
+    // If access token expired
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      try {
+        // call refresh endpoint
+        await axios.post(
+          `${
+            import.meta.env.VITE_MODE === "development"
+              ? import.meta.env.VITE_BACKEND_URL_DEVELOPMENT
+              : import.meta.env.VITE_BACKEND_URL_PRODUCTION
+          }/ auth/refresh`,
+          {},
+          { withCredentials: true },
+        );
+
+        // retry original request
+        return api(originalRequest);
+      } catch (err) {
+        // refresh failed → logout user
+        window.location.href = "/auth/signup";
+      }
+    }
+
+    return Promise.reject(error);
+  },
+);
+
 const signup = async (data) => {
   const res = await api.post("/auth/signup", data);
 
@@ -43,6 +76,10 @@ const login = async (data) => {
   const res = await api.post("auth/login", data);
   return res.data;
 };
+const fetchMe = async () => {
+  const res = await api.get("/auth/fetch-me");
+  return res.data;
+};
 
 export {
   signup,
@@ -52,4 +89,5 @@ export {
   checkUsername,
   setUsername,
   login,
+  fetchMe,
 };

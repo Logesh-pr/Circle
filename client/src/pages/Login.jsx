@@ -11,6 +11,9 @@ import { Eye, EyeClosed } from "lucide-react";
 //react query
 import { useLogin } from "../hooks/useAuthQuery";
 
+//react router
+import { Link } from "react-router-dom";
+
 export default function Login() {
   const { mutate, isPending } = useLogin();
   const passwordIcons = {
@@ -91,17 +94,29 @@ export default function Login() {
               },
             }}
           />
+          <div className="">
+            <p className="error-message text-center">
+              {errors.common && errors.common.message}
+            </p>
+          </div>
+          <Button
+            value={isPending ? "Logging in..." : "Login"}
+            disabled={isPending}
+            btnLogic={isPending}
+          />
         </fieldset>
-        <div className="">
-          <p className="error-message text-center">
-            {errors.common && errors.common.message}
+
+        <div className="mt-6 text-center text-sm text-light-secondary dark:text-dark-secondary font-semibold">
+          <p>
+            Don't have an account?
+            <Link
+              className="text-accent hover:text-accent/80 transition-colors ps-1"
+              to={"/auth/signup"}
+            >
+              Sign up
+            </Link>
           </p>
         </div>
-        <Button
-          value={isPending ? "Logging in..." : "Login"}
-          disabled={isPending}
-          btnLogic={isPending}
-        />
       </form>
     </div>
   );

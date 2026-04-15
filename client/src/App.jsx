@@ -22,6 +22,7 @@ import Login from "./pages/Login.jsx";
 
 //react query
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import ProtectLayout from "./protectRoutes/ProtectLayout.jsx";
 
 const queryClient = new QueryClient();
 
@@ -31,7 +32,11 @@ function App() {
       element: <RootLayout />,
       children: [
         {
-          element: <Layout />,
+          element: (
+            <ProtectLayout>
+              <Layout />
+            </ProtectLayout>
+          ),
           children: [
             {
               path: "/",

@@ -29,16 +29,16 @@ const userSchema = Schema(
   { timeStamps: true },
 );
 
-userSchema.pre("save", async function () {
-  if (!this.isModified("password")) return;
-  this.password = await bcryptjs.hash(this.password, 12);
-});
+// userSchema.pre("save", async function () {
+//   if (!this.isModified("password")) return;
+//   this.password = await bcryptjs.hash(this.password, 12);
+// });
 
 userSchema.methods.comparePassword = async function (userPassword) {
   try {
     return await bcryptjs.compare(userPassword, this.password);
   } catch (error) {
-    return flase;
+    return false;
   }
 };
 
