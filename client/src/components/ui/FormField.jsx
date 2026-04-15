@@ -30,7 +30,7 @@ export default function FormField({
         {...register(name, validation)}
         type={showPasswordIcons && password ? "text" : type}
         placeholder={placeholder}
-        className={`form-input border placeholder:text-sm placeholder:text-light-primary ${error ? "border-red-500" : "border-light-border dark:border-dark-border focus:border-dark-secondary "} ${disabled && "opacity-50 cursor-not-allowed"}`}
+        className={`form-input w-full border placeholder:text-sm placeholder:text-light-primary ${error ? "border-red-500" : "border-light-border dark:border-dark-border focus:border-dark-secondary "} ${disabled && "opacity-50 cursor-not-allowed"}`}
       />
 
       {showValidation && (

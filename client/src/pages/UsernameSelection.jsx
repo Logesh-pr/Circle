@@ -41,7 +41,7 @@ export default function UsernameSelection() {
     watch,
 
     formState: { errors },
-  } = useForm({ defaultValues: { username: "test111" }, mode: "onChange" });
+  } = useForm({ defaultValues: { username: tempUsername }, mode: "onChange" });
 
   const username = watch("username");
 

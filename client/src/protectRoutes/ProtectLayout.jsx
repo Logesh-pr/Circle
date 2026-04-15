@@ -17,7 +17,8 @@ export default function ProtectLayout({ children }) {
   const { data, isError, isSuccess, isPending } = useFetchUser();
 
   if (isError) {
-    navigate("auth/login", { replace: true });
+    console.log(isError);
+    // navigate("auth/login", { replace: true });
   }
 
   if (isPending) {
@@ -26,6 +27,6 @@ export default function ProtectLayout({ children }) {
 
   if (isSuccess) {
     console.log(data);
-    return { children };
+    return children;
   }
 }

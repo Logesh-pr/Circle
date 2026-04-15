@@ -379,6 +379,7 @@ export const login = catchAsync(async (req, res, next) => {
 
 export const refresh = catchAsync(async (req, res, next) => {
   const token = req.cookies.refreshToken;
+  console.log("refresh", token);
 
   if (!token) {
     return next(new AppError("Invalid token", 401));
@@ -432,15 +433,17 @@ export const fetchMe = catchAsync(async (req, res, next) => {
     return next(new AppError("unauthorized", 410));
   }
 
-  const user = await User.findOne({ token });
+  const user = await User.findById(token);
 
   if (!user) {
     return next(new AppError("user not found", 404));
   }
-
-  return res
-    .status(200)
-    .json({ status: 200, message: "Successfully fetched data", data: user });
+  console.log(user);
+  return res.status(200).json({
+    status: 200,
+    message: "Successfully fetched data",
+    data: user.toSafeObject(),
+  });
 });
 
 export const logout = catchAsync(async (req, res) => {

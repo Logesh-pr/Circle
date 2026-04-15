@@ -25,7 +25,7 @@ api.interceptors.response.use(
             import.meta.env.VITE_MODE === "development"
               ? import.meta.env.VITE_BACKEND_URL_DEVELOPMENT
               : import.meta.env.VITE_BACKEND_URL_PRODUCTION
-          }/ auth/refresh`,
+          }/auth/refresh`,
           {},
           { withCredentials: true },
         );
@@ -34,7 +34,7 @@ api.interceptors.response.use(
         return api(originalRequest);
       } catch (err) {
         // refresh failed → logout user
-        window.location.href = "/auth/signup";
+        window.location.href = "/auth/login";
       }
     }
 
@@ -76,6 +76,7 @@ const login = async (data) => {
   const res = await api.post("auth/login", data);
   return res.data;
 };
+
 const fetchMe = async () => {
   const res = await api.get("/auth/fetch-me");
   return res.data;

@@ -12,10 +12,11 @@ import { Eye, EyeClosed } from "lucide-react";
 import { useLogin } from "../hooks/useAuthQuery";
 
 //react router
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Login() {
   const { mutate, isPending } = useLogin();
+  const navigate = useNavigate();
   const passwordIcons = {
     closedEye: <EyeClosed size={20} />,
     eye: <Eye size={20} />,
@@ -35,6 +36,7 @@ export default function Login() {
     mutate(data, {
       onSuccess: (data) => {
         console.log(data);
+        navigate("/", { replace: true });
       },
       onError: (error) => {
         setError("common", {
