@@ -428,6 +428,7 @@ export const refresh = catchAsync(async (req, res, next) => {
 export const fetchMe = catchAsync(async (req, res, next) => {
   const token = req.user;
   console.log(token);
+  console.log("fetchme");
 
   if (!token) {
     return next(new AppError("unauthorized", 410));
@@ -446,13 +447,17 @@ export const fetchMe = catchAsync(async (req, res, next) => {
   });
 });
 
-export const logout = catchAsync(async (req, res) => {
+export const logout = catchAsync(async (req, res, next) => {
   const token = req.cookies.refreshToken;
+  console.log("logout", token);
 
   if (token) {
     const decoded = verifyToken(token, process.env.JWT_REFRESH_SECRET);
 
     await Session.deleteOne({ _id: decoded.sessionId });
+  } else {
+    console.log("logout");
+    next(new AppError("something went wrong, Try again later", 410));
   }
 
   clearCookies(res);

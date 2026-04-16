@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   signup,
   resendOTP,
@@ -8,6 +8,7 @@ import {
   checkUsername,
   login,
   fetchMe,
+  logout,
 } from "../api/axios";
 
 export const useSignup = () => {
@@ -60,6 +61,18 @@ export const useFetchUser = () => {
     queryKey: ["auth"],
     queryFn: fetchMe,
     retry: false,
-    staleTime: 5 * 60 * 1000,
+    staleTime: 1 * 60 * 1000,
+    refetchInterval: 1 * 60 * 1000, // refetch every 14 minutes
+  });
+};
+
+export const useLogout = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: logout,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["auth"] });
+    },
   });
 };

@@ -17,6 +17,7 @@ import SearchPage from "./pages/SearchPage.jsx";
 import Notification from "./pages/Notification.jsx";
 import Profile from "./pages/Profile.jsx";
 import Login from "./pages/Login.jsx";
+import PublicLayout from "./protectRoutes/PublicLayout.jsx";
 
 //components
 
@@ -58,7 +59,11 @@ function App() {
         },
         {
           path: "/auth",
-          element: <AuthLayout />,
+          element: (
+            <PublicLayout>
+              <AuthLayout />
+            </PublicLayout>
+          ),
           children: [
             {
               path: "signup",

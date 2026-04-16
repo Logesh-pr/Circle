@@ -34,7 +34,8 @@ api.interceptors.response.use(
         return api(originalRequest);
       } catch (err) {
         // refresh failed → logout user
-        window.location.href = "/auth/login";
+        // window.location.href = "/auth/login";
+        return Promise.reject(err);
       }
     }
 
@@ -82,6 +83,11 @@ const fetchMe = async () => {
   return res.data;
 };
 
+const logout = async () => {
+  const res = await api.post("/auth/logout");
+  return res.data;
+};
+
 export {
   signup,
   resendOTP,
@@ -91,4 +97,5 @@ export {
   setUsername,
   login,
   fetchMe,
+  logout,
 };

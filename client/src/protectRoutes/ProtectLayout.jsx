@@ -1,8 +1,10 @@
+import { useEffect } from "react";
+
 //custom hooks
 import { useFetchUser } from "../hooks/useAuthQuery";
 
 //react router
-import { useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 //components
 import Loader from "../components/ui/Loader";
@@ -11,14 +13,17 @@ import Loader from "../components/ui/Loader";
 import { useAuthStore } from "../store/useAuthStore";
 
 export default function ProtectLayout({ children }) {
-  const navigate = useNavigate();
   const { setUser } = useAuthStore();
 
   const { data, isError, isSuccess, isPending } = useFetchUser();
 
+  useEffect(() => {
+    setUser(data?.data);
+  }, [isSuccess, data, setUser]);
+
   if (isError) {
     console.log(isError);
-    // navigate("auth/login", { replace: true });
+    return <Navigate to="/auth/login" replace={true} />;
   }
 
   if (isPending) {
@@ -26,7 +31,7 @@ export default function ProtectLayout({ children }) {
   }
 
   if (isSuccess) {
-    console.log(data);
+    console.log(data.data);
     return children;
   }
 }

@@ -1,12 +1,24 @@
 import { NavItems } from "../utils/NavItems";
 
+//components
+import ProfilePic from "./ui/ProfilePic";
+
 //react router
 import { useLocation, useNavigate } from "react-router-dom";
+
+//zustand
+import { useAuthStore } from "../store/useAuthStore";
+
+//react query
+import { useLogout } from "../hooks/useAuthQuery";
 
 export default function NavBar() {
   const location = useLocation();
   const isActive = (path) => location.pathname === path;
   const navigate = useNavigate();
+  const { user } = useAuthStore();
+  const { mutate } = useLogout();
+
   return (
     <>
       {/* Desktop navbar */}
@@ -25,10 +37,22 @@ export default function NavBar() {
           })}
         </div>
 
-        {/* <div className=" flex gap-x-4">
-          <button>Signup</button>
-          <button>Login</button>
-        </div> */}
+        <div className=" flex gap-x-4 border-t border-light-border dark:border-dark-border">
+          <div className="flex items-start gap-x-3 mt-3">
+            <ProfilePic width={35} height={35} />
+            <div>
+              <p className="text-semibold text-light-primary dark:text-dark-primary">
+                {user?.username}
+              </p>
+              <button
+                onClick={() => mutate()}
+                className="text-red-500 hover:text-red-400 transition-colors font-semibold text-sm cursor-pointer"
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Mobile navbar */}
