@@ -1,10 +1,17 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 //axios
-import CreatePost from "../components/ui/CreatePost";
+import { createPost, fetchPost } from "../api/axios";
+
+export const useFetchAllPost = () => {
+  return useQuery({
+    queryKey: ["post"],
+    queryFn: fetchPost,
+  });
+};
 
 export const useCreatePost = () => {
-  useMutation({
-    mutationFn: CreatePost,
+  return useMutation({
+    mutationFn: createPost,
   });
 };

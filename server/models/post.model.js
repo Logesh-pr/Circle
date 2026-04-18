@@ -4,7 +4,7 @@ import slugify from "slugify";
 const postSchema = Schema(
   {
     author: { type: Schema.Types.ObjectId, ref: "User", required: true },
-    content: { type: String, min: 10, max: 2000 },
+    content: { type: String, max: 2000 },
     images: [{ url: String, publicId: String, width: Number, heidht: Number }],
     slug: { type: String, unique: true },
     likesCount: { type: Number, default: 0 },

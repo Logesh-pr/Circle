@@ -7,7 +7,7 @@ import CommentForm from "./CommentForm";
 //icons
 import { Bookmark, Heart, MessageCircle, Share } from "lucide-react";
 
-export default function PostCard() {
+export default function PostCard({ post }) {
   const [comment, setComment] = useState(false);
   const [like, setLike] = useState(false);
   return (
@@ -18,7 +18,7 @@ export default function PostCard() {
           <ProfilePic />
           <div className="flex flex-col">
             <p className="text-sm font-semibold  text-light-primary dark:text-dark-primary">
-              Kevin
+              {post.author.username}
             </p>
             <p className="text-xs text-light-secondary dark:text-dark-secondary">
               @kevin_ken <span>. 2h ago</span>
@@ -28,12 +28,7 @@ export default function PostCard() {
 
         {/* content section */}
         <div className="mt-2 text-light-primary dark:text-dark-primary font-normal text-sm">
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellendus
-            blanditiis quod dolorem alias, ea beatae laborum velit amet dolore
-            nulla veritatis nostrum, reiciendis, explicabo numquam maiores
-            officia animi corrupti. Illum.
-          </p>
+          <p>{post?.content}</p>
         </div>
       </div>
 

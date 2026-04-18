@@ -11,6 +11,7 @@ import {
   bookmark,
   comment,
   createPost,
+  getAllPost,
   like,
 } from "../controllers/post.controller.js";
 
@@ -20,6 +21,7 @@ import upload from "../middlewares/upload.js";
 
 const router = express.Router();
 
+router.get("/all-post", verify, getAllPost);
 router.post(
   "/create-post",
 

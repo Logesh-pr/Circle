@@ -11,6 +11,20 @@ import Like from "../models/like.model.js";
 import Comment from "../models/comment.model.js";
 import Bookmark from "../models/bookmark.model.js";
 
+export const getAllPost = catchAsync(async (req, res, next) => {
+  const posts = await Post.find().populate("author", "username");
+  console.log(posts);
+  if (!posts) {
+    return next(new AppError("No post yet", 410));
+  }
+
+  res.status(200).json({
+    status: 200,
+    message: "Sucessfully fetched all post",
+    data: posts,
+  });
+});
+
 export const createPost = catchAsync(async (req, res, next) => {
   const errors = validationResult(req);
 
@@ -40,7 +54,7 @@ export const createPost = catchAsync(async (req, res, next) => {
     const img = await uploadImage(file);
     uploadedImages.push(img);
   }
-
+  console.log(content);
   const post = await Post.create({
     author: req.user,
     content,

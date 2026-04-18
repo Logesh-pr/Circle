@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 //components
 import Modal from "./Modal";
 import ProfilePic from "./ProfilePic";
@@ -9,13 +11,38 @@ import { useForm } from "react-hook-form";
 //icons
 import { Images } from "lucide-react";
 
+//react query
+import { useCreatePost } from "../../hooks/usePostQuery";
+
 export default function CreatePost({ post, setPost }) {
+  const { mutate } = useCreatePost();
   const {
     register,
     clearError,
     handleSubmit,
+    reset,
+    watch,
     formState: { errors },
   } = useForm();
+  const watchPost = watch("content");
+
+  function onSubmit(data) {
+    console.log(data);
+    mutate(data, {
+      onSuccess: (data) => {
+        console.log(data);
+      },
+      onError: (error) => {
+        console.log(error);
+      },
+    });
+    reset();
+  }
+
+  //   useEffect(()=> {
+
+  //   },[watchPost])
+
   return (
     <>
       {post && (
@@ -25,20 +52,24 @@ export default function CreatePost({ post, setPost }) {
               <ProfilePic width={45} height={45} />
             </div>
 
-            <form action="" className="w-full">
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              action=""
+              className="w-full"
+            >
               <textarea
                 placeholder="Please type here"
                 className="w-full focus:border-none border-none outline-none"
-              ></textarea>
+                {...register("content")}
+              />
+              <Button value={"Post"} />
             </form>
           </div>
           <div className="border-t border-light-border dark:border-dark-border p-2 flex justify-between items-center">
             <div>
               <Images size={20} className="text-accent" />
             </div>
-            <div>
-              <Button value={"Post"} />
-            </div>
+            <div></div>
           </div>
         </Modal>
       )}

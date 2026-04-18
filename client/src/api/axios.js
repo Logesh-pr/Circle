@@ -43,64 +43,57 @@ api.interceptors.response.use(
   },
 );
 
-const signup = async (data) => {
+export const signup = async (data) => {
   const res = await api.post("/auth/signup", data);
 
   return res.data;
 };
 
-const signupStatus = async () => {
+export const signupStatus = async () => {
   const res = await api.get("auth/signup/status");
   return res.data;
 };
 
-const resendOTP = async () => {
+export const resendOTP = async () => {
   const res = await api.post("auth/resend-otp");
   return res.data;
 };
-const verifyOTP = async (data) => {
+export const verifyOTP = async (data) => {
   const res = await api.post("auth/verify-otp", data);
   return res.data;
 };
 
-const checkUsername = async (data) => {
+export const checkUsername = async (data) => {
   const res = await api.post("auth/check-username", data);
   return res.data;
 };
 
-const setUsername = async (data) => {
+export const setUsername = async (data) => {
   const res = await api.post("/auth/set-username", data);
   return res.data;
 };
 
-const login = async (data) => {
+export const login = async (data) => {
   const res = await api.post("auth/login", data);
   return res.data;
 };
 
-const fetchMe = async () => {
+export const fetchMe = async () => {
   const res = await api.get("/auth/fetch-me");
   return res.data;
 };
 
-const logout = async () => {
+export const logout = async () => {
   const res = await api.post("/auth/logout");
   return res.data;
 };
 
-const createPost = async (data) => {
-  const res = await api.post("/post/create-post", data);
-  return res.data;
+export const fetchPost = async () => {
+  const res = await api.get("/post/all-post");
+  return res.data.data;
 };
 
-export {
-  signup,
-  resendOTP,
-  signupStatus,
-  verifyOTP,
-  checkUsername,
-  setUsername,
-  login,
-  fetchMe,
-  logout,
+export const createPost = async (data) => {
+  const res = await api.post("/post/create-post", data);
+  return res.data;
 };
