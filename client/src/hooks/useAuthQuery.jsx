@@ -11,6 +11,9 @@ import {
   logout,
 } from "../api/axios";
 
+//zustand
+import { useAuthStore } from "../store/useAuthStore";
+
 export const useSignup = () => {
   return useMutation({
     mutationFn: signup,
@@ -72,6 +75,7 @@ export const useLogout = () => {
   return useMutation({
     mutationFn: logout,
     onSuccess: () => {
+      useAuthStore.getState().clearUser();
       queryClient.invalidateQueries({ queryKey: ["auth"] });
     },
   });

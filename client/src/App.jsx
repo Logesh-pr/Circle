@@ -26,81 +26,81 @@ import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import ProtectLayout from "./protectRoutes/ProtectLayout.jsx";
 
 const queryClient = new QueryClient();
+const router = createBrowserRouter([
+  {
+    element: <RootLayout />,
+    children: [
+      {
+        element: (
+          <ProtectLayout>
+            <Layout />
+          </ProtectLayout>
+        ),
+        children: [
+          {
+            path: "/",
+            element: <Home />,
+          },
+          {
+            path: "/search",
+            element: <SearchPage />,
+          },
+          {
+            path: "/notification",
+            element: <Notification />,
+          },
+          {
+            path: "/profile",
+            element: <Profile />,
+          },
+        ],
+      },
+      {
+        path: "/auth",
+        element: (
+          <PublicLayout>
+            <AuthLayout />
+          </PublicLayout>
+        ),
+        children: [
+          {
+            path: "signup",
+            element: <Signup />,
+          },
+          {
+            path: "login",
+            element: <Login />,
+          },
+          {
+            path: "otp",
+            element: (
+              <SignupProtect allowedStep="otp">
+                <OTP />
+              </SignupProtect>
+            ),
+          },
+          {
+            path: "username",
+            element: (
+              <SignupProtect allowedStep="username">
+                <UsernameSelection />
+              </SignupProtect>
+            ),
+          },
+        ],
+      },
+      {
+        path: "*",
+        element: <NotFound />,
+      },
+    ],
+  },
+]);
 
 function App() {
-  const router = createBrowserRouter([
-    {
-      element: <RootLayout />,
-      children: [
-        {
-          element: (
-            <ProtectLayout>
-              <Layout />
-            </ProtectLayout>
-          ),
-          children: [
-            {
-              path: "/",
-              element: <Home />,
-            },
-            {
-              path: "/search",
-              element: <SearchPage />,
-            },
-            {
-              path: "/notification",
-              element: <Notification />,
-            },
-            {
-              path: "/profile",
-              element: <Profile />,
-            },
-          ],
-        },
-        {
-          path: "/auth",
-          element: (
-            <PublicLayout>
-              <AuthLayout />
-            </PublicLayout>
-          ),
-          children: [
-            {
-              path: "signup",
-              element: <Signup />,
-            },
-            {
-              path: "login",
-              element: <Login />,
-            },
-            {
-              path: "otp",
-              element: (
-                <SignupProtect allowedStep="otp">
-                  <OTP />
-                </SignupProtect>
-              ),
-            },
-            {
-              path: "username",
-              element: (
-                <SignupProtect allowedStep="username">
-                  <UsernameSelection />
-                </SignupProtect>
-              ),
-            },
-          ],
-        },
-        {
-          path: "*",
-          element: <NotFound />,
-        },
-      ],
-    },
-  ]);
   return (
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />;
+      <RouterProvider router={router} />
     </QueryClientProvider>
   );
 }

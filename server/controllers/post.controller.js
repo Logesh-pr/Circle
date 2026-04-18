@@ -47,7 +47,7 @@ export const createPost = catchAsync(async (req, res, next) => {
     images: uploadedImages,
   });
 
-  if (post && uploadedImages) {
+  if (post || uploadedImages) {
     return res.status(200).json({ status: 200, message: "Post created" });
   }
 

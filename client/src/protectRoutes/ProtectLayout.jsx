@@ -18,6 +18,9 @@ export default function ProtectLayout({ children }) {
   const { data, isError, isSuccess, isPending } = useFetchUser();
 
   useEffect(() => {
+    if (isSuccess && data) {
+      setUser(data?.data);
+    }
     setUser(data?.data);
   }, [isSuccess, data, setUser]);
 

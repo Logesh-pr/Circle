@@ -88,6 +88,11 @@ const logout = async () => {
   return res.data;
 };
 
+const createPost = async (data) => {
+  const res = await api.post("/post/create-post", data);
+  return res.data;
+};
+
 export {
   signup,
   resendOTP,

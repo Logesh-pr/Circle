@@ -1,8 +1,9 @@
 //components
 import { useState } from "react";
 import ProfilePic from "../components/ui/ProfilePic";
-import CommentModel from "./CommentModel";
-
+import Modal from "./ui/Modal";
+import Comments from "./Comments";
+import CommentForm from "./CommentForm";
 //icons
 import { Bookmark, Heart, MessageCircle, Share } from "lucide-react";
 
@@ -56,7 +57,19 @@ export default function PostCard() {
           >
             <MessageCircle size={20} /> <span>90</span>
           </div>
-          {comment && <CommentModel setComment={setComment} />}
+          {comment && (
+            <Modal closeBtn={setComment} title={"Comments"}>
+              {" "}
+              <div>
+                <div className="p-3 overflow-y-scroll">
+                  <Comments />
+                </div>
+                <div className="border-t border-light-border dark:border-dark-border p-3">
+                  <CommentForm />
+                </div>
+              </div>
+            </Modal>
+          )}
           <div className="flex gap-x-2 items-center cursor-pointer">
             <Share size={20} /> <span>100</span>
           </div>

@@ -3,13 +3,10 @@ import { useAuthStore } from "../store/useAuthStore";
 
 //components
 import ProfilePic from "../components/ui/ProfilePic";
-
-//react query
-import { useLogout } from "../hooks/useAuthQuery";
+import Logout from "../components/ui/Logout";
 
 export default function Profile() {
   const { user } = useAuthStore();
-  const { mutate } = useLogout();
   return (
     <div className="px-4 py-6 border-b border-light-border dark:border-dark-border">
       <div className="flex flex-col md:flex-row gap-y-4 md:gap-x-4 items-center md:items-start">
@@ -21,12 +18,7 @@ export default function Profile() {
           <p className="text-sm font-semibold text-light-secondary dark:text-dark-secondary">
             {user?.email}
           </p>
-          <button
-            onClick={() => mutate()}
-            className="text-red-500 hover:text-red-400 transition-colors font-semibold text-sm cursor-pointer"
-          >
-            Logout
-          </button>
+          <Logout />
         </div>
       </div>
     </div>

@@ -1,7 +1,10 @@
 import { NavItems } from "../utils/NavItems";
+import { useState } from "react";
 
 //components
 import ProfilePic from "./ui/ProfilePic";
+import Logout from "./ui/Logout";
+import CreatePost from "./ui/CreatePost";
 
 //react router
 import { useLocation, useNavigate } from "react-router-dom";
@@ -9,15 +12,12 @@ import { useLocation, useNavigate } from "react-router-dom";
 //zustand
 import { useAuthStore } from "../store/useAuthStore";
 
-//react query
-import { useLogout } from "../hooks/useAuthQuery";
-
 export default function NavBar() {
   const location = useLocation();
   const isActive = (path) => location.pathname === path;
   const navigate = useNavigate();
   const { user } = useAuthStore();
-  const { mutate } = useLogout();
+  const [post, setPost] = useState(false);
 
   return (
     <>
@@ -36,6 +36,15 @@ export default function NavBar() {
             );
           })}
         </div>
+        <div>
+          <button
+            onClick={() => setPost(true)}
+            className="w-full rounded-full text-light text-lg  font-regular bg-accent hover:bg-accent/80 py-2 transition-colors cursor-pointer"
+          >
+            Post
+          </button>
+          <CreatePost post={post} setPost={setPost} />
+        </div>
 
         <div className=" flex gap-x-4 border-t border-light-border dark:border-dark-border">
           <div className="flex items-start gap-x-3 mt-3">
@@ -44,12 +53,8 @@ export default function NavBar() {
               <p className="text-semibold text-light-primary dark:text-dark-primary">
                 {user?.username}
               </p>
-              <button
-                onClick={() => mutate()}
-                className="text-red-500 hover:text-red-400 transition-colors font-semibold text-sm cursor-pointer"
-              >
-                Logout
-              </button>
+
+              <Logout />
             </div>
           </div>
         </div>
