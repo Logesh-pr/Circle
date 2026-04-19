@@ -36,21 +36,21 @@ export default function PostCard({ post }) {
         <div className="flex gap-x-5 select-none text-xs">
           <div
             onClick={() => setLike((pre) => !pre)}
-            className="flex gap-x-2 items-center cursor-pointer transition-color  "
+            className="flex gap-x-2 items-center cursor-pointer transition-color hover:text-red-500  "
           >
             <Heart
               size={20}
               fill={like ? "red" : "none"}
               strokeWidth={like ? 0 : 2}
-              className=""
+              className="group-hover:"
             />{" "}
-            <span>200</span>
+            <span>{post.likesCount}</span>
           </div>
           <div
             onClick={() => setComment(true)}
-            className="flex gap-x-2 items-center cursor-pointer"
+            className="flex gap-x-2 items-center cursor-pointer hover:text-accent transition-colors"
           >
-            <MessageCircle size={20} /> <span>90</span>
+            <MessageCircle size={20} /> <span>{post.commentsCount}</span>
           </div>
           {comment && (
             <Modal closeBtn={setComment} title={"Comments"}>
@@ -65,11 +65,11 @@ export default function PostCard({ post }) {
               </div>
             </Modal>
           )}
-          <div className="flex gap-x-2 items-center cursor-pointer">
+          <div className="flex gap-x-2 items-center cursor-pointer hover:text-green-500">
             <Share size={20} /> <span>100</span>
           </div>
         </div>
-        <div className="self-end cursor-pointer">
+        <div className="self-end cursor-pointer hover:text-amber-500">
           <Bookmark size={20} />
         </div>
       </div>

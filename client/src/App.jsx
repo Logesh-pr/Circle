@@ -18,6 +18,7 @@ import Notification from "./pages/Notification.jsx";
 import Profile from "./pages/Profile.jsx";
 import Login from "./pages/Login.jsx";
 import PublicLayout from "./protectRoutes/PublicLayout.jsx";
+import Bookmark from "./pages/Bookmark.jsx";
 
 //components
 
@@ -48,6 +49,10 @@ const router = createBrowserRouter([
           {
             path: "/notification",
             element: <Notification />,
+          },
+          {
+            path: "/bookmark",
+            element: <Bookmark />,
           },
           {
             path: "/profile",

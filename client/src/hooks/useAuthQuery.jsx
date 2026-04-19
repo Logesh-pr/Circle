@@ -65,7 +65,7 @@ export const useFetchUser = () => {
     queryFn: fetchMe,
     retry: false,
     staleTime: 1 * 60 * 1000,
-    refetchInterval: 1 * 60 * 1000, // refetch every 14 minutes
+    // refetchInterval: 1 * 60 * 1000, // refetch every 14 minutes
   });
 };
 
@@ -76,7 +76,7 @@ export const useLogout = () => {
     mutationFn: logout,
     onSuccess: () => {
       useAuthStore.getState().clearUser();
-      queryClient.invalidateQueries({ queryKey: ["auth"] });
+      queryClient.removeQueries({ queryKey: ["auth"] });
     },
   });
 };

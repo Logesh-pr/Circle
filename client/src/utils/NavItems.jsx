@@ -1,5 +1,5 @@
 //icons
-import { House, Search, Bell, User } from "lucide-react";
+import { House, Search, Bell, User, Bookmark } from "lucide-react";
 
 export const NavItems = [
   {
@@ -16,6 +16,11 @@ export const NavItems = [
     path: "/notification",
     name: "Notification",
     icon: <Bell />,
+  },
+  {
+    path: "/bookmark",
+    name: "Bookmarks",
+    icon: <Bookmark />,
   },
   {
     path: "/profile",
