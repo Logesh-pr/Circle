@@ -98,7 +98,8 @@ export const createPost = async (data) => {
   return res.data;
 };
 
-export const likePost = async () => {
-  const res = await api.post("/post/like-post");
+export const likePost = async (postId) => {
+  const res = await api.post(`/post/like-post/${postId}`);
+  console.log(res.data);
   return res.data;
 };

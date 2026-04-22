@@ -29,7 +29,7 @@ router.post(
   upload.array("images", 4),
   createPost,
 );
-router.post("/like-post", like);
+router.post("/like-post/:postId", like);
 router.post("/comment-post", commentValidation, comment);
 router.post("/bookmark-post", bookmark);
 

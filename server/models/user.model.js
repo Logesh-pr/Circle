@@ -44,6 +44,7 @@ userSchema.methods.comparePassword = async function (userPassword) {
 
 userSchema.methods.toSafeObject = function () {
   return {
+    id: this._id,
     username: this.username,
     email: this.email,
   };

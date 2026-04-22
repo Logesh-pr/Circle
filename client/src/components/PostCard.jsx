@@ -6,10 +6,12 @@ import Comments from "./Comments";
 import CommentForm from "./CommentForm";
 //icons
 import { Bookmark, Heart, MessageCircle, Share } from "lucide-react";
+import { useLikePost } from "../hooks/usePostQuery";
 
 export default function PostCard({ post }) {
   const [comment, setComment] = useState(false);
   const [like, setLike] = useState(false);
+  const { mutate: likeMutate, isPending } = useLikePost();
   return (
     <div className="w-full  rounded-xl border border-light-border dark:border-dark-border">
       <div className="p-3">
@@ -35,7 +37,7 @@ export default function PostCard({ post }) {
       <div className="mt-2 border-t border-light-border dark:border-dark-border p-3 flex justify-between text-sm font-semibold text-light-secondary dark:text-dark-secondary ">
         <div className="flex gap-x-5 select-none text-xs">
           <div
-            onClick={() => setLike((pre) => !pre)}
+            onClick={() => !isPending && likeMutate(post._id)}
             className="flex gap-x-2 items-center cursor-pointer transition-color hover:text-red-500  "
           >
             <Heart

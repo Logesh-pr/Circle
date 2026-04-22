@@ -15,7 +15,7 @@ export default function Layout() {
         <Outlet />
       </div>
       <div className="  h-[70px]  border border-amber-500"></div> */}
-      <aside className=" bg-light dark:bg-dark md:w-[30%] xl:w-[25%] w-full overflow-y-scroll fixed md:sticky md:top-0 h-[60px] md:min-h-screen bottom-0 z-50 right-0 left-0 border-t md:border-t-0 border-light-border dark:border-dark-border  md:border-r md:border-light-border md:bg-transparent ">
+      <aside className=" bg-light dark:bg-dark md:w-[30%] xl:w-[25%] w-full md:overflow-y-scroll fixed md:sticky md:top-0 h-[60px] md:min-h-screen bottom-0 z-50 right-0 left-0 border-t md:border-t-0 border-light-border dark:border-dark-border  md:border-r md:border-light-border md:bg-transparent ">
         <NavBar />
       </aside>
       <main className="w-full md:w-[70%] xl:w-[50%] ">
