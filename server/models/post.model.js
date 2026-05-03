@@ -9,7 +9,6 @@ const postSchema = Schema(
     slug: { type: String, unique: true },
     likesCount: { type: Number, default: 0 },
     commentsCount: { type: Number, default: 0 },
-    bookmarksCount: { type: Number, default: 0 },
   },
   { timestamps: true },
 );

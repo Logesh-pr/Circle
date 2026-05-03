@@ -27,47 +27,41 @@ export const useCreatePost = () => {
 
 export function useLikePost() {
   const queryClient = useQueryClient();
-  const userId = useAuthStore((state) => state.user?.id);
-  console.log("likeQuery", userId);
+  // const userId = useAuthStore((state) => state.user?.id);
+  // console.log("likeQuery", userId);
 
   return useMutation({
     mutationFn: likePost,
 
-    // Fires BEFORE the API call
     onMutate: async (postId) => {
-      // Cancel any in-flight refetches to avoid race conditions
       await queryClient.cancelQueries({ queryKey: ["post"] });
 
-      // Snapshot the current data for rollback
-      const previousPosts = queryClient.getQueryData(["post"]);
+      const previousPosts = await queryClient.getQueryData(["post"]);
 
-      // Optimistically update the cache
       queryClient.setQueryData(["post"], (old) =>
         old?.map((post) =>
           post._id === postId
             ? {
                 ...post,
-                likes: post.isLiked
-                  ? post.likes.filter((id) => id !== userId)
-                  : [...post.likes, userId],
+                likesCount: post.isLiked
+                  ? post.likesCount - 1
+                  : post.likesCount + 1,
+
                 isLiked: !post.isLiked,
               }
             : post,
         ),
       );
 
-      // Return snapshot so we can rollback in onError
       return { previousPosts };
     },
 
     onError: (err, variables, context) => {
-      // Restore the snapshot
       queryClient.setQueryData(["post"], context.previousPosts);
       console.log("Failed to like post");
     },
 
     onSettled: () => {
-      // Always refetch after mutation to sync with server truth
       queryClient.invalidateQueries({ queryKey: ["post"] });
     },
   });

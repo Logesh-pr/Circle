@@ -10,7 +10,6 @@ import { useLikePost } from "../hooks/usePostQuery";
 
 export default function PostCard({ post }) {
   const [comment, setComment] = useState(false);
-  const [like, setLike] = useState(false);
   const { mutate: likeMutate, isPending } = useLikePost();
   return (
     <div className="w-full  rounded-xl border border-light-border dark:border-dark-border">
@@ -22,9 +21,9 @@ export default function PostCard({ post }) {
             <p className="text-sm font-semibold  text-light-primary dark:text-dark-primary">
               {post.author.username}
             </p>
-            <p className="text-xs text-light-secondary dark:text-dark-secondary">
+            {/* <p className="text-xs text-light-secondary dark:text-dark-secondary">
               @kevin_ken <span>. 2h ago</span>
-            </p>
+            </p> */}
           </div>
         </div>
 
@@ -42,11 +41,13 @@ export default function PostCard({ post }) {
           >
             <Heart
               size={20}
-              fill={like ? "red" : "none"}
-              strokeWidth={like ? 0 : 2}
+              fill={post.isLiked ? "red" : "none"}
+              strokeWidth={post.isLiked ? 0 : 2}
               className="group-hover:"
             />{" "}
-            <span>{post.likesCount}</span>
+            <span className={`${post.isLiked && "text-red-500"}`}>
+              {post.likesCount}
+            </span>
           </div>
           <div
             onClick={() => setComment(true)}

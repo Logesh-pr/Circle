@@ -18,10 +18,28 @@ export const getAllPost = catchAsync(async (req, res, next) => {
     return next(new AppError("No post yet", 410));
   }
 
+  const userId = req.user;
+  console.log("user", userId);
+
+  const postIds = posts.map((post) => post._id);
+
+  const userLikes = await Like.find({ user: userId, post: { $in: postIds } });
+  console.log("like", userLikes);
+
+  const likedPostIds = new Set(userLikes?.map((like) => like.post.toString()));
+
+  const postWithLikes = posts.map((post) => {
+    const postObject = post.toObject();
+    return {
+      ...postObject,
+      isLiked: likedPostIds?.has(post._id.toString()),
+    };
+  });
+
   res.status(200).json({
     status: 200,
     message: "Sucessfully fetched all post",
-    data: posts,
+    data: postWithLikes,
   });
 });
 
@@ -71,6 +89,7 @@ export const createPost = catchAsync(async (req, res, next) => {
 export const like = catchAsync(async (req, res, next) => {
   const { postId } = req.params;
   const userId = req.user;
+  console.log("like");
 
   const existing = await Like.findOne({ user: userId, post: postId });
 
