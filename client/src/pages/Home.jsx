@@ -1,6 +1,7 @@
 //components
 import PostCard from "../components/PostCard";
 import Loader from "../components/ui/Loader";
+import Feed from "../components/ui/Feed";
 
 //zustand
 import { useAuthStore } from "../store/useAuthStore";
@@ -17,11 +18,11 @@ export default function Home() {
   }
   return (
     <>
-      <div className="py-5 flex flex-col-reverse gap-y-3">
+      <Feed>
         {post?.map((post, index) => (
           <PostCard post={post} key={index} />
         ))}
-      </div>
+      </Feed>
     </>
   );
 }

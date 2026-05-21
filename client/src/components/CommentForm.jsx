@@ -6,8 +6,10 @@ import ProfilePic from "./ui/ProfilePic";
 
 //react hook
 import { useForm } from "react-hook-form";
+import { useCommentPost } from "../hooks/usePostQuery";
 
-export default function CommentForm() {
+export default function CommentForm({ postId }) {
+  const { mutate } = useCommentPost();
   const {
     handleSubmit,
     register,
@@ -22,6 +24,7 @@ export default function CommentForm() {
   function onSubmit(data) {
     console.log(data);
     reset();
+    mutate({ postId, comment: data.comment });
   }
   return (
     <div className="w-full flex gap-x-2 items-center">

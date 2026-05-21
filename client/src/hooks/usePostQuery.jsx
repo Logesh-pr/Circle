@@ -1,10 +1,22 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 //axios
-import { createPost, fetchPost, likePost } from "../api/axios";
+import {
+  createPost,
+  fetchPost,
+  likePost,
+  bookmarkPost,
+  getAllBookmarks,
+  commentPost,
+  getAllComments,
+  fetchPostByProfile,
+} from "../api/axios";
 
 //zustand
 import { useAuthStore } from "../store/useAuthStore";
+
+//libs
+import updatePostInAllCaches from "../utils/updatePostInAllCaches";
 
 export const useFetchAllPost = () => {
   return useQuery({
@@ -14,6 +26,13 @@ export const useFetchAllPost = () => {
   });
 };
 
+export const useFetchAllPostByProfile = () => {
+  return useQuery({
+    queryKey: ["userPost"],
+    queryFn: fetchPostByProfile,
+    staleTime: 5 * 60 * 1000,
+  });
+};
 export const useCreatePost = () => {
   const queryClient = useQueryClient();
 
@@ -27,42 +46,152 @@ export const useCreatePost = () => {
 
 export function useLikePost() {
   const queryClient = useQueryClient();
-  // const userId = useAuthStore((state) => state.user?.id);
-  // console.log("likeQuery", userId);
 
   return useMutation({
     mutationFn: likePost,
 
     onMutate: async (postId) => {
       await queryClient.cancelQueries({ queryKey: ["post"] });
+      await queryClient.cancelQueries({ queryKey: ["bookmarks"] });
+      await queryClient.cancelQueries({ queryKey: ["userPost"] });
 
-      const previousPosts = await queryClient.getQueryData(["post"]);
+      const previousPosts = queryClient.getQueryData(["post"]);
+      const previousBookmarks = queryClient.getQueryData(["bookmarks"]);
+      const previousUserPosts = queryClient.getQueryData(["userPost"]);
 
-      queryClient.setQueryData(["post"], (old) =>
-        old?.map((post) =>
-          post._id === postId
-            ? {
-                ...post,
-                likesCount: post.isLiked
-                  ? post.likesCount - 1
-                  : post.likesCount + 1,
+      updatePostInAllCaches(queryClient, postId, (post) => ({
+        ...post,
+        likesCount: post.isLiked ? post.likesCount - 1 : post.likesCount + 1,
+        isLiked: !post.isLiked,
+      }));
 
-                isLiked: !post.isLiked,
-              }
-            : post,
-        ),
-      );
-
-      return { previousPosts };
+      return { previousPosts, previousBookmarks, previousUserPosts };
     },
 
     onError: (err, variables, context) => {
-      queryClient.setQueryData(["post"], context.previousPosts);
+      if (context?.previousPosts) {
+        queryClient.setQueryData(["post"], context.previousPosts);
+      }
+      if (context?.previousBookmarks) {
+        queryClient.setQueryData(["bookmarks"], context.previousBookmarks);
+      }
+      if (context?.previousUserPosts) {
+        queryClient.setQueryData(["userPost"], context.previousUserPosts);
+      }
       console.log("Failed to like post");
     },
 
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["post"] });
+      queryClient.invalidateQueries({ queryKey: ["bookmarks"] });
+      queryClient.invalidateQueries({ queryKey: ["userPost"] });
     },
+  });
+}
+
+export function useBookmarkPost() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: bookmarkPost,
+
+    onMutate: async (postId) => {
+      await queryClient.cancelQueries({ queryKey: ["post"] });
+      await queryClient.cancelQueries({ queryKey: ["bookmarks"] });
+      await queryClient.cancelQueries({ queryKey: ["userPost"] });
+
+      const previousPosts = queryClient.getQueryData(["post"]);
+      const previousBookmarks = queryClient.getQueryData(["bookmarks"]);
+      const previousUserPosts = queryClient.getQueryData(["userPost"]);
+
+      updatePostInAllCaches(queryClient, postId, (post) => ({
+        ...post,
+        bookmarkCount: post.isBookmarked
+          ? post.bookmarkCount - 1
+          : post.bookmarkCount + 1,
+        isBookmarked: !post.isBookmarked,
+      }));
+
+      return { previousPosts, previousBookmarks, previousUserPosts };
+    },
+
+    onError: (err, variables, context) => {
+      if (context?.previousPosts)
+        queryClient.setQueryData(["post"], context.previousPosts);
+      if (context?.previousBookmarks)
+        queryClient.setQueryData(["bookmarks"], context.previousBookmarks);
+      if (context?.previousUserPosts) {
+        queryClient.setQueryData(["userPost"], context.previousUserPosts);
+      }
+    },
+
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["post"] });
+      queryClient.invalidateQueries({ queryKey: ["bookmarks"] });
+      queryClient.invalidateQueries({ queryKey: ["userPost"] });
+    },
+  });
+}
+
+export function useGetAllBookmarks() {
+  return useQuery({
+    queryKey: ["bookmarks"],
+    queryFn: getAllBookmarks,
+  });
+}
+
+export function useCommentPost() {
+  const queryClient = useQueryClient();
+  const user = useAuthStore((state) => state.user);
+
+  return useMutation({
+    mutationFn: ({ postId, comment }) => commentPost(postId, { comment }),
+
+    onMutate: async ({ postId, comment }) => {
+      await queryClient.cancelQueries({ queryKey: ["comments", postId] });
+      const previousComments = queryClient.getQueryData(["comments", postId]);
+
+      queryClient.setQueryData(["comments", postId], (old) => ({
+        ...old,
+        data: [
+          ...(old?.data || []),
+          {
+            _id: Date.now(),
+            user: { username: user.username },
+            post: postId,
+            content: comment,
+            createdAt: new Date().toISOString(),
+          },
+        ],
+      }));
+
+      return { previousComments, postId };
+    },
+
+    onError: (err, variables, context) => {
+      if (context?.previousComments) {
+        queryClient.setQueryData(
+          ["comments", context.postId],
+          context.previousComments,
+        );
+      }
+    },
+
+    onSettled: (data, err, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: ["comments", variables.postId],
+      });
+      queryClient.invalidateQueries({ queryKey: ["post"] });
+    },
+  });
+}
+
+export function useGetAllComments(postId) {
+  const queryClient = useQueryClient();
+
+  return useQuery({
+    queryKey: ["comments", postId],
+    queryFn: () => getAllComments(postId),
+    enabled: !!postId,
   });
 }

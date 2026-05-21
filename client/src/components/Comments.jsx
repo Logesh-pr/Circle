@@ -1,30 +1,20 @@
 //components
-import ProfilePic from "./ui/ProfilePic";
+import CommentCard from "./ui/CommentCard";
 
-export default function Comments() {
+//custom hook
+import { useGetAllComments } from "../hooks/usePostQuery";
+import Loader from "./ui/Loader";
+
+export default function Comments({ postId }) {
+  const { data: comments, isPending } = useGetAllComments(postId);
+
+  if (isPending) return <Loader />;
+
   return (
-    <>
-      <div className="w-full flex items-start gap-x-2">
-        <ProfilePic width={35} height={35} />
-        <div>
-          <div className="rounded-xl p-2 bg-slate-100 dark:bg-zinc-900 ">
-            <p className="text-light-primary dark:text-dark-primary text-sm font-semibold">
-              Kevin
-            </p>
-            <p className="text-xs text-light-secondary dark:text-dark-secondary">
-              @kevin_ken
-            </p>
-            <p className="text-light-primary dark:text-dark-primary font-normal text-sm mt-2">
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-              Asperiores animi obcaecati nostrum atque tenetur illum, similique
-              voluptate fugiat provident deleniti.
-            </p>
-          </div>
-          <div className="mt-1 text-xs">
-            <p>2h ago</p>{" "}
-          </div>
-        </div>
-      </div>
-    </>
+    <div className="flex flex-col gap-y-4">
+      {comments?.data?.map((comment, id) => (
+        <CommentCard key={id} comment={comment} />
+      ))}
+    </div>
   );
 }

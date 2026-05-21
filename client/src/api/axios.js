@@ -9,17 +9,41 @@ const api = axios.create({
   withCredentials: true,
 });
 
+// 1. Create variables to hold the lock and the waiting queue
+let isRefreshing = false;
+let failedQueue = [];
+// 2. Helper function to process all waiting requests
+const processQueue = (error, token = null) => {
+  failedQueue.forEach((prom) => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token);
+    }
+  });
+  failedQueue = [];
+};
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-
-    // If access token expired
     if (error.response?.status === 401 && !originalRequest._retry) {
+      // 3. If a refresh is already happening, PAUSE this request and add it to the queue
+      if (isRefreshing) {
+        return new Promise(function (resolve, reject) {
+          failedQueue.push({ resolve, reject });
+        })
+          .then(() => {
+            return api(originalRequest);
+          })
+          .catch((err) => {
+            return Promise.reject(err);
+          });
+      }
+      // 4. Lock the interceptor so no other requests can trigger a refresh
       originalRequest._retry = true;
-
+      isRefreshing = true;
       try {
-        // call refresh endpoint
         await axios.post(
           `${
             import.meta.env.VITE_MODE === "development"
@@ -29,16 +53,18 @@ api.interceptors.response.use(
           {},
           { withCredentials: true },
         );
-
-        // retry original request
+        // 5. Refresh succeeded! Release the queued requests so they can retry
+        processQueue(null);
         return api(originalRequest);
       } catch (err) {
-        // refresh failed → logout user
-        // window.location.href = "/auth/login";
+        // 6. Refresh failed entirely (e.g. refresh token expired). Reject all queued requests.
+        processQueue(err, null);
         return Promise.reject(err);
+      } finally {
+        // 7. Unlock the interceptor
+        isRefreshing = false;
       }
     }
-
     return Promise.reject(error);
   },
 );
@@ -92,7 +118,10 @@ export const fetchPost = async () => {
   const res = await api.get("/post/all-post");
   return res.data.data;
 };
-
+export const fetchPostByProfile = async () => {
+  const res = await api.get("/post/all-post-by-profile");
+  return res.data.data;
+};
 export const createPost = async (data) => {
   const res = await api.post("/post/create-post", data);
   return res.data;
@@ -101,5 +130,29 @@ export const createPost = async (data) => {
 export const likePost = async (postId) => {
   const res = await api.post(`/post/like-post/${postId}`);
   console.log(res.data);
+  return res.data;
+};
+
+export const bookmarkPost = async (postId) => {
+  const res = await api.post(`/post/bookmark-post/${postId}`);
+  console.log(res.data);
+  return res.data;
+};
+
+export const getAllBookmarks = async () => {
+  const res = await api.get("/post/all-bookmarks");
+  console.log(res);
+  return res.data.data.map((bookmark) => bookmark.post);
+};
+
+export const commentPost = async (postId, data) => {
+  console.log(postId, data);
+  const res = await api.post(`/post/comment-post/${postId}`, data);
+  return res.data;
+};
+
+export const getAllComments = async (postId) => {
+  const res = await api.get(`/post/all-comments/${postId}`);
+  console.log(postId);
   return res.data;
 };

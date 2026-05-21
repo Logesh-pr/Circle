@@ -11,7 +11,10 @@ import {
   bookmark,
   comment,
   createPost,
+  getAllBookmarks,
+  getAllComments,
   getAllPost,
+  getAllPostByProfile,
   like,
 } from "../controllers/post.controller.js";
 
@@ -22,6 +25,7 @@ import upload from "../middlewares/upload.js";
 const router = express.Router();
 
 router.get("/all-post", verify, getAllPost);
+router.get("/all-post-by-profile", verify, getAllPostByProfile);
 router.post(
   "/create-post",
 
@@ -30,7 +34,9 @@ router.post(
   createPost,
 );
 router.post("/like-post/:postId", verify, like);
-router.post("/comment-post", commentValidation, comment);
-router.post("/bookmark-post", bookmark);
+router.post("/comment-post/:postId", verify, comment);
+router.get("/all-comments/:postId", verify, getAllComments);
+router.post("/bookmark-post/:postId", verify, bookmark);
+router.get("/all-bookmarks", verify, getAllBookmarks);
 
 export default router;

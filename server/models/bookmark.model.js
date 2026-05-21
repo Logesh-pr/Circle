@@ -2,8 +2,8 @@ import { Schema, model } from "mongoose";
 
 const bookmarkSchema = Schema(
   {
-    user: Schema.Types.ObjectId,
-    post: Schema.Types.ObjectId,
+    user: { type: Schema.Types.ObjectId, ref: "User" },
+    post: { type: Schema.Types.ObjectId, ref: "Post" },
   },
   { timestamps: true },
 );

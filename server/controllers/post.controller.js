@@ -23,16 +23,64 @@ export const getAllPost = catchAsync(async (req, res, next) => {
 
   const postIds = posts.map((post) => post._id);
 
-  const userLikes = await Like.find({ user: userId, post: { $in: postIds } });
-  console.log("like", userLikes);
+  const [userLikes, userBookmarks] = await Promise.all([
+    Like.find({ user: userId, post: { $in: postIds } }),
+    Bookmark.find({ user: userId, post: { $in: postIds } }),
+  ]);
 
   const likedPostIds = new Set(userLikes?.map((like) => like.post.toString()));
+  const bookmarkedPostIds = new Set(
+    userBookmarks?.map((bookmark) => bookmark.post.toString()),
+  );
 
   const postWithLikes = posts.map((post) => {
     const postObject = post.toObject();
     return {
       ...postObject,
       isLiked: likedPostIds?.has(post._id.toString()),
+      isBookmarked: bookmarkedPostIds?.has(post._id.toString()),
+    };
+  });
+
+  res.status(200).json({
+    status: 200,
+    message: "Sucessfully fetched all post",
+    data: postWithLikes,
+  });
+});
+
+export const getAllPostByProfile = catchAsync(async (req, res, next) => {
+  const userId = req.user;
+  console.log("userid", userId);
+
+  const posts = await Post.find({ author: userId }).populate(
+    "author",
+    "username",
+  );
+
+  console.log("getAllPostByProfile", posts);
+  if (!posts) {
+    return next(new AppError("No post yet", 410));
+  }
+
+  const postIds = posts.map((post) => post._id);
+
+  const [userLikes, userBookmarks] = await Promise.all([
+    Like.find({ user: userId, post: { $in: postIds } }),
+    Bookmark.find({ user: userId, post: { $in: postIds } }),
+  ]);
+
+  const likedPostIds = new Set(userLikes?.map((like) => like.post.toString()));
+  const bookmarkedPostIds = new Set(
+    userBookmarks?.map((bookmark) => bookmark.post.toString()),
+  );
+
+  const postWithLikes = posts.map((post) => {
+    const postObject = post.toObject();
+    return {
+      ...postObject,
+      isLiked: likedPostIds?.has(post._id.toString()),
+      isBookmarked: bookmarkedPostIds?.has(post._id.toString()),
     };
   });
 
@@ -119,26 +167,26 @@ export const like = catchAsync(async (req, res, next) => {
 });
 
 export const comment = catchAsync(async (req, res, next) => {
-  const errors = validationResult(req);
+  // const errors = validationResult(req);
 
-  if (!errors.isEmpty()) {
-    return next(
-      new AppError(
-        errors
-          .array()
-          .map((err) => err.msg)
-          .join(", "),
-        400,
-      ),
-    );
-  }
+  // if (!errors.isEmpty()) {
+  //   return next(
+  //     new AppError(
+  //       errors
+  //         .array()
+  //         .map((err) => err.msg)
+  //         .join(", "),
+  //       400,
+  //     ),
+  //   );
+  // }
   const { postId } = req.params;
-  const { content } = req.body;
-
+  const { comment } = req.body;
+  console.log(postId, comment);
   const commentPost = await Comment.create({
     user: req.user,
     post: postId,
-    content,
+    content: comment,
   });
 
   const commentPostCount = await Post.findByIdAndUpdate(postId, {
@@ -154,11 +202,83 @@ export const comment = catchAsync(async (req, res, next) => {
   return next(new AppError("something went wrong, Try again later", 400));
 });
 
-export const bookmark = catchAsync(async (req, res, next) => {
+export const getAllComments = catchAsync(async (req, res, next) => {
   const { postId } = req.params;
 
+  console.log(postId);
+
+  const comments = await Comment.find({ post: postId }).populate(
+    "user",
+    "username",
+  );
+
+  if (!comments) {
+    next(new AppError("No Comments in this post", 401));
+  }
+
+  return res.status(200).json({
+    status: 200,
+    message: "SuccessFully fetched comments",
+    data: comments,
+  });
+});
+
+export const getAllBookmarks = catchAsync(async (req, res, next) => {
+  const userId = req.user;
+  const bookmarks = await Bookmark.find({
+    user: userId,
+  }).populate({
+    path: "post",
+    populate: { path: "author", select: "username" },
+  });
+
+  if (!bookmarks) {
+    return next(new AppError("No bookmarks found", 404));
+  }
+
+  const postIds = bookmarks
+    .map((bookmark) => bookmark.post?._id)
+    .filter(Boolean);
+
+  const userLikes = await Like.find({ user: userId, post: { $in: postIds } });
+
+  const likedPostIds = new Set(userLikes?.map((like) => like.post.toString()));
+
+  const bookmarksWithInteraction = bookmarks.map((bookmark) => {
+    const bookmarkObj = bookmark.toObject();
+    console.log("bookmarkObj", bookmarkObj);
+    if (bookmarkObj.post) {
+      bookmarkObj.post = {
+        ...bookmarkObj.post,
+        isLiked: likedPostIds.has(bookmarkObj.post._id.toString()),
+        isBookmarked: true,
+      };
+    }
+    return bookmarkObj;
+  });
+
+  return res.status(200).json({
+    status: 200,
+    message: "Successfully fetched bookmarks",
+    data: bookmarksWithInteraction,
+  });
+});
+
+export const bookmark = catchAsync(async (req, res, next) => {
+  const { postId } = req.params;
+  const userId = req.user;
+
+  const existing = await Bookmark.findOne({ user: userId, post: postId });
+
+  if (existing) {
+    await existing.deleteOne();
+
+    return res
+      .status(200)
+      .json({ status: 200, message: "unbookmark successfully" });
+  }
   const bookmarkPost = await Bookmark.create({
-    user: req.user,
+    user: userId,
     post: postId,
   });
 

@@ -5,7 +5,7 @@ const postSchema = Schema(
   {
     author: { type: Schema.Types.ObjectId, ref: "User", required: true },
     content: { type: String, max: 2000 },
-    images: [{ url: String, publicId: String, width: Number, heidht: Number }],
+    images: [{ url: String, publicId: String, width: Number, height: Number }],
     slug: { type: String, unique: true },
     likesCount: { type: Number, default: 0 },
     commentsCount: { type: Number, default: 0 },

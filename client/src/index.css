@@ -85,6 +85,20 @@ body {
   overflow-y: scroll;
   font-family: "Reddit Sans", sans-serif;
 }
+.swiper-button-next,
+.swiper-button-prev {
+  color: white;
+  background: rgba(65, 65, 65, 0.4);
+  padding: 18px;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  font-size: 22px;
+}
 /* body {
   width: 100%;
   min-height: 100vh;
