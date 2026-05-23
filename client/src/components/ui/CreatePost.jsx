@@ -14,12 +14,6 @@ import { Images, X } from "lucide-react";
 //react query
 import { useCreatePost } from "../../hooks/usePostQuery";
 
-//swiper
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper/modules";
-import "swiper/css";
-import "swiper/css/navigation";
-
 export default function CreatePost({ post, setPost }) {
   const { mutate } = useCreatePost();
   const {
@@ -32,6 +26,8 @@ export default function CreatePost({ post, setPost }) {
     formState: { errors },
   } = useForm();
   const watchedImages = watch("images");
+  const watchedContent = watch("content");
+
   const preview = watchedImages
     ? Array.from(watchedImages).map((file) => URL.createObjectURL(file))
     : [];
@@ -86,7 +82,7 @@ export default function CreatePost({ post, setPost }) {
             >
               <textarea
                 placeholder="What's happening?"
-                className="w-full h-[300px] focus:border-none border-none outline-none bg-slate-100 dark:bg-zinc-950 p-2 rounded-xl"
+                className="w-full h-[200px] focus:border-none border-none outline-none bg-slate-100 dark:bg-zinc-950 p-2 rounded-xl"
                 {...register("content")}
               />
               <label
@@ -121,47 +117,45 @@ export default function CreatePost({ post, setPost }) {
                   },
                 })}
               />
-              <p>{errors?.images?.message}</p>
+              {errors?.images && (
+                <p className="error-message">{errors?.images?.message}</p>
+              )}
+
+              {/* Image previews */}
               {preview.length > 0 && (
-                <div className="mt-2 relative">
-                  <Swiper
-                    modules={[Navigation]}
-                    navigation
-                    spaceBetween={8}
-                    slidesPerView={1}
-                    className="rounded-xl overflow-hidden"
-                  >
-                    {preview.map((src, i) => (
-                      <SwiperSlide key={i}>
-                        <div className="relative">
-                          <img
-                            src={src}
-                            alt={`preview-${i}`}
-                            className="w-full h-52 object-cover"
-                          />
-                          <button
-                            type="button"
-                            onClick={() => removeImage(i)}
-                            className="absolute top-2 right-2 bg-black/60 rounded-full p-0.5"
-                          >
-                            <X size={14} className="text-white" />
-                          </button>
-                        </div>
-                      </SwiperSlide>
-                    ))}
-                  </Swiper>
-                  <span className="text-xs text-gray-400 mt-1 block">
-                    {preview.length}/4 images
-                  </span>
+                <div className="grid grid-cols-4 gap-2 mt-2">
+                  {preview.map((src, i) => (
+                    <div key={i} className="relative w-[100px]">
+                      <img
+                        src={src}
+                        alt={`preview-${i}`}
+                        className="w-full h-28 object-cover rounded-md"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeImage(i)}
+                        className="absolute top-1 right-1 bg-black/60 rounded-full p-0.5 cursor-pointer"
+                      >
+                        <X size={14} className="text-white" />
+                      </button>
+                    </div>
+                  ))}
                 </div>
               )}
-              <Button value={"Post"} />
+
+              <Button
+                value={"Post"}
+                disabled={
+                  !watchedContent?.trim() &&
+                  (!watchedImages || watchedImages.length === 0)
+                }
+                btnLogic={
+                  !watchedContent?.trim() &&
+                  (!watchedImages || watchedImages.length === 0)
+                }
+              />
             </form>
           </div>
-          {/* <div className="border-t border-light-border dark:border-dark-border p-2 flex justify-between items-center">
-            <div></div>
-            <div></div>
-          </div> */}
         </Modal>
       )}
     </>

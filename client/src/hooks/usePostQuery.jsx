@@ -20,7 +20,7 @@ import updatePostInAllCaches from "../utils/updatePostInAllCaches";
 
 export const useFetchAllPost = () => {
   return useQuery({
-    queryKey: ["post"],
+    queryKey: ["posts"],
     queryFn: fetchPost,
     staleTime: 1 * 60 * 1000,
   });
@@ -28,7 +28,7 @@ export const useFetchAllPost = () => {
 
 export const useFetchAllPostByProfile = () => {
   return useQuery({
-    queryKey: ["userPost"],
+    queryKey: ["userPosts"],
     queryFn: fetchPostByProfile,
     staleTime: 5 * 60 * 1000,
   });
@@ -39,7 +39,7 @@ export const useCreatePost = () => {
   return useMutation({
     mutationFn: createPost,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["post"] });
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
     },
   });
 };
@@ -51,13 +51,13 @@ export function useLikePost() {
     mutationFn: likePost,
 
     onMutate: async (postId) => {
-      await queryClient.cancelQueries({ queryKey: ["post"] });
+      await queryClient.cancelQueries({ queryKey: ["posts"] });
       await queryClient.cancelQueries({ queryKey: ["bookmarks"] });
-      await queryClient.cancelQueries({ queryKey: ["userPost"] });
+      await queryClient.cancelQueries({ queryKey: ["userPosts"] });
 
-      const previousPosts = queryClient.getQueryData(["post"]);
+      const previousPosts = queryClient.getQueryData(["posts"]);
       const previousBookmarks = queryClient.getQueryData(["bookmarks"]);
-      const previousUserPosts = queryClient.getQueryData(["userPost"]);
+      const previousUserPosts = queryClient.getQueryData(["userPosts"]);
 
       updatePostInAllCaches(queryClient, postId, (post) => ({
         ...post,
@@ -70,21 +70,21 @@ export function useLikePost() {
 
     onError: (err, variables, context) => {
       if (context?.previousPosts) {
-        queryClient.setQueryData(["post"], context.previousPosts);
+        queryClient.setQueryData(["posts"], context.previousPosts);
       }
       if (context?.previousBookmarks) {
         queryClient.setQueryData(["bookmarks"], context.previousBookmarks);
       }
       if (context?.previousUserPosts) {
-        queryClient.setQueryData(["userPost"], context.previousUserPosts);
+        queryClient.setQueryData(["userPosts"], context.previousUserPosts);
       }
       console.log("Failed to like post");
     },
 
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["post"] });
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
       queryClient.invalidateQueries({ queryKey: ["bookmarks"] });
-      queryClient.invalidateQueries({ queryKey: ["userPost"] });
+      queryClient.invalidateQueries({ queryKey: ["userPosts"] });
     },
   });
 }
@@ -96,13 +96,13 @@ export function useBookmarkPost() {
     mutationFn: bookmarkPost,
 
     onMutate: async (postId) => {
-      await queryClient.cancelQueries({ queryKey: ["post"] });
+      await queryClient.cancelQueries({ queryKey: ["posts"] });
       await queryClient.cancelQueries({ queryKey: ["bookmarks"] });
-      await queryClient.cancelQueries({ queryKey: ["userPost"] });
+      await queryClient.cancelQueries({ queryKey: ["userPosts"] });
 
-      const previousPosts = queryClient.getQueryData(["post"]);
+      const previousPosts = queryClient.getQueryData(["posts"]);
       const previousBookmarks = queryClient.getQueryData(["bookmarks"]);
-      const previousUserPosts = queryClient.getQueryData(["userPost"]);
+      const previousUserPosts = queryClient.getQueryData(["userPosts"]);
 
       updatePostInAllCaches(queryClient, postId, (post) => ({
         ...post,
@@ -117,18 +117,18 @@ export function useBookmarkPost() {
 
     onError: (err, variables, context) => {
       if (context?.previousPosts)
-        queryClient.setQueryData(["post"], context.previousPosts);
+        queryClient.setQueryData(["posts"], context.previousPosts);
       if (context?.previousBookmarks)
         queryClient.setQueryData(["bookmarks"], context.previousBookmarks);
       if (context?.previousUserPosts) {
-        queryClient.setQueryData(["userPost"], context.previousUserPosts);
+        queryClient.setQueryData(["userPosts"], context.previousUserPosts);
       }
     },
 
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["post"] });
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
       queryClient.invalidateQueries({ queryKey: ["bookmarks"] });
-      queryClient.invalidateQueries({ queryKey: ["userPost"] });
+      queryClient.invalidateQueries({ queryKey: ["userPosts"] });
     },
   });
 }
@@ -181,7 +181,7 @@ export function useCommentPost() {
       queryClient.invalidateQueries({
         queryKey: ["comments", variables.postId],
       });
-      queryClient.invalidateQueries({ queryKey: ["post"] });
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
     },
   });
 }

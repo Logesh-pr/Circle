@@ -17,6 +17,8 @@ const userSchema = Schema(
       required: true,
       trim: true,
     },
+    followersCounts: { type: Number, default: 0 },
+    followingCounts: { type: Number, default: 0 },
     password: { type: String, required: true, min: 6 },
     tokenVersion: { type: Number, default: 0 },
     bio: { type: String, Max: 30 },
