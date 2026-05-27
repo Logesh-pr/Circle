@@ -1,13 +1,13 @@
-import ProfilePic from "./ui/ProfilePic";
-
-export default function UserProfile() {
+//components
+import ProfilePic from "./ProfilePic";
+export default function SearchCard({ user }) {
   return (
     <div className="w-full flex justify-between items-center  ">
       <div className="flex gap-x-4">
-        <ProfilePic />
+        <ProfilePic avator={user?.avator} />
         <div>
           <p className="text-sm text-light-primary dark:text-dark-primary font-semibold">
-            Kevin
+            {user?.username}
           </p>
           <p className="text-xs text-light-secondary dark:text-dark-secondary">
             @kevin_ken

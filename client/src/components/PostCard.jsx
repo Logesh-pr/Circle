@@ -20,16 +20,17 @@ export default function PostCard({ post }) {
     useBookmarkPost();
 
   const formatTime = formatCreatedAt(post?.createdAt);
+  console.log(post.author);
 
   return (
     <div className="w-full max-w-[500px]   rounded-xl border border-light-border dark:border-dark-border">
       <div className="p-3 flex flex-col gap-y-3 ">
         {/* profile section */}
         <div className=" flex gap-x-2 items-start">
-          <ProfilePic />
+          <ProfilePic avator={post?.author?.avator} />
           <div className="flex flex-col">
             <p className="text-sm font-semibold  text-light-primary dark:text-dark-primary">
-              {post.author.username}
+              {post?.author?.username}
             </p>
             <p className="text-xs font-semibold text-light-secondary dark:text-dark-secondary">
               @kevin_ken <span className="ps-2">{formatTime}</span>

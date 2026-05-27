@@ -293,6 +293,8 @@ export const setUsername = catchAsync(async (req, res, next) => {
   const user = await User.create({
     username,
     email: tempUser.email,
+    avator:
+      "https://www.kindpng.com/picc/m/722-7221920_placeholder-profile-image-placeholder-png-transparent-png.png",
     password: tempUser.password,
     isVerified: true,
     authType: "credentials",

@@ -156,3 +156,8 @@ export const getAllComments = async (postId) => {
   console.log(postId);
   return res.data;
 };
+
+export const searchUsers = async (query) => {
+  const res = await api.get(`/user/search?q=${encodeURIComponent(query)}`);
+  return res.data.data;
+};

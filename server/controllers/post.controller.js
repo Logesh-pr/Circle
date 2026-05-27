@@ -12,7 +12,7 @@ import Comment from "../models/comment.model.js";
 import Bookmark from "../models/bookmark.model.js";
 
 export const getAllPost = catchAsync(async (req, res, next) => {
-  const posts = await Post.find().populate("author", "username");
+  const posts = await Post.find().populate("author", "username avator");
   console.log(posts);
   if (!posts) {
     return next(new AppError("No post yet", 410));
@@ -55,7 +55,7 @@ export const getAllPostByProfile = catchAsync(async (req, res, next) => {
 
   const posts = await Post.find({ author: userId }).populate(
     "author",
-    "username",
+    "username avator",
   );
 
   console.log("getAllPostByProfile", posts);
@@ -209,7 +209,7 @@ export const getAllComments = catchAsync(async (req, res, next) => {
 
   const comments = await Comment.find({ post: postId }).populate(
     "user",
-    "username",
+    "username avator",
   );
 
   if (!comments) {
@@ -229,7 +229,7 @@ export const getAllBookmarks = catchAsync(async (req, res, next) => {
     user: userId,
   }).populate({
     path: "post",
-    populate: { path: "author", select: "username" },
+    populate: { path: "author", select: "username avator" },
   });
 
   if (!bookmarks) {

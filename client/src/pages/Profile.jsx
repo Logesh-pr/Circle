@@ -1,6 +1,3 @@
-//zustand
-import { useAuthStore } from "../store/useAuthStore";
-
 //components
 import ProfilePic from "../components/ui/ProfilePic";
 import Logout from "../components/ui/Logout";
@@ -10,15 +7,21 @@ import Loader from "../components/ui/Loader";
 
 //custom hook
 import { useFetchAllPostByProfile } from "../hooks/usePostQuery";
+
+//components
 import ProfileCard from "../components/ProfileCard";
 
+//zustand
+import { useAuthStore } from "../store/useAuthStore";
+
 export default function Profile() {
-  const { user } = useAuthStore();
   const { data: post, isPending } = useFetchAllPostByProfile();
+  const { user } = useAuthStore();
+
   return (
     <>
       <div className="px-4 py-6 border-b border-light-border dark:border-dark-border">
-        <ProfileCard />
+        <ProfileCard user={user} />
       </div>
       <div>
         {isPending ? (

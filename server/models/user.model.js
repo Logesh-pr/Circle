@@ -22,7 +22,7 @@ const userSchema = Schema(
     password: { type: String, required: true, min: 6 },
     tokenVersion: { type: Number, default: 0 },
     bio: { type: String, Max: 30 },
-    avator: { type: String },
+    avator: { type: String, required: true },
     isVerified: { type: Boolean, default: false },
     authType: { type: String, enum: ["credentials", "google"] },
     createAt: { type: Date, default: Date.now },
@@ -49,7 +49,11 @@ userSchema.methods.toSafeObject = function () {
     id: this._id,
     username: this.username,
     email: this.email,
+    avator: this.avator,
   };
 };
+
+userSchema.index({ username: "text" });
+userSchema.index({ username: 1 });
 
 export default model("User", userSchema);

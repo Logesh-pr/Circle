@@ -5,6 +5,26 @@ import catchAsync from "../utils/catchAsync.js";
 import User from "../models/user.model.js";
 import Follow from "../models/follow.model.js";
 
+export const searchUsers = catchAsync(async (req, res, next) => {
+  const { q } = req.query;
+
+  if (!q || q.trim().length < 0) {
+    return res.status(200).json({ status: "success", data: [] });
+  }
+
+  const escaped = q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+  const users = await User.find({
+    username: { $regex: `^${escaped}`, $options: "i" },
+    _id: { $ne: req.user },
+  })
+    .select("username avator")
+    .limit(20)
+    .lean();
+
+  res.status(200).json({ message: "Successfully fetched users", data: users });
+});
+
 export const followUser = catchAsync(async (req, res, next) => {
   const { username } = req.params;
   const userId = req.user;
