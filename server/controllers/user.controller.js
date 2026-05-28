@@ -5,6 +5,28 @@ import catchAsync from "../utils/catchAsync.js";
 import User from "../models/user.model.js";
 import Follow from "../models/follow.model.js";
 
+export const getUserProfile = catchAsync(async (req, res, next) => {
+  const userId = req.user;
+  const { username } = req.params;
+
+  const user = await User.findOne({ username });
+
+  if (!user) {
+    next(new AppError("There is no user in this username", 404));
+  }
+
+  const isOwnProfile = user._id.toString() === userId.toString();
+
+  const isFollowing = isOwnProfile
+    ? false
+    : !!(await Follow.findOne({ follower: userId, following: user._id }));
+
+  return res.status(200).json({
+    message: "success",
+    data: { ...user.toSafeObject(), isOwnProfile, isFollowing },
+  });
+});
+
 export const searchUsers = catchAsync(async (req, res, next) => {
   const { q } = req.query;
 
@@ -28,24 +50,26 @@ export const searchUsers = catchAsync(async (req, res, next) => {
 export const followUser = catchAsync(async (req, res, next) => {
   const { username } = req.params;
   const userId = req.user;
+  console.log(username);
 
   const user = await User.findOne({ username });
 
-  if (username === user.username) {
+  if (userId === user._id) {
     return next(new AppError("You cannot follow yourself", 400));
   }
 
-  if (!username || user) {
+  if (!username || !user) {
     return next(new AppError("No username found", 404));
   }
 
   const existing = await Follow.findOne({
-    followUser: userId,
+    follower: userId,
     following: user._id,
   });
 
+  console.log(existing);
   if (existing) {
-    await deleteOne();
+    await existing.deleteOne();
     await User.findByIdAndUpdate(user._id, { $inc: { follower: -1 } });
     await User.findByIdAndUpdate(userId, { $inc: { following: -1 } });
     return res
@@ -61,13 +85,13 @@ export const followUser = catchAsync(async (req, res, next) => {
     .json({ status: "success", message: "Successfully followed" });
 });
 
-export const getUserProfile = catchAsync(async (req, res, next) => {
-  const userId = req.user;
-  const { username } = req.params;
+// export const getUserProfile = catchAsync(async (req, res, next) => {
+//   const userId = req.user;
+//   const { username } = req.params;
 
-  const user = await User.findOne({ username });
+//   const user = await User.findOne({ username });
 
-  if (userId === user._id) {
-    return next(new AppError("You can not "));
-  }
-});
+//   if (userId === user._id) {
+//     return next(new AppError("You can not "));
+//   }
+// });

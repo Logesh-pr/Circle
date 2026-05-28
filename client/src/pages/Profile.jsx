@@ -14,17 +14,22 @@ import ProfileCard from "../components/ProfileCard";
 //zustand
 import { useAuthStore } from "../store/useAuthStore";
 
-export default function Profile() {
-  const { data: post, isPending } = useFetchAllPostByProfile();
-  const { user } = useAuthStore();
+//react router
+import { useParams } from "react-router-dom";
+import { useUserProfileQuery } from "../hooks/useUserQuery";
 
+export default function Profile() {
+  const { username } = useParams();
+  const { data: post, isLoading } = useFetchAllPostByProfile(username);
+  const { data: user } = useUserProfileQuery(username);
+  console.log(user);
   return (
     <>
       <div className="px-4 py-6 border-b border-light-border dark:border-dark-border">
         <ProfileCard user={user} />
       </div>
       <div>
-        {isPending ? (
+        {isLoading ? (
           <Loader />
         ) : (
           <Feed>

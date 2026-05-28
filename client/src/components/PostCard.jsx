@@ -20,7 +20,6 @@ export default function PostCard({ post }) {
     useBookmarkPost();
 
   const formatTime = formatCreatedAt(post?.createdAt);
-  console.log(post.author);
 
   return (
     <div className="w-full max-w-[500px]   rounded-xl border border-light-border dark:border-dark-border">

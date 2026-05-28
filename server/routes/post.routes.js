@@ -25,7 +25,7 @@ import upload from "../middlewares/upload.js";
 const router = express.Router();
 
 router.get("/all-post", verify, getAllPost);
-router.get("/all-post-by-profile", verify, getAllPostByProfile);
+router.get("/all-post-by-profile/:username", verify, getAllPostByProfile);
 router.post(
   "/create-post",
 

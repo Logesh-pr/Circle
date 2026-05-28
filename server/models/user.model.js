@@ -50,6 +50,9 @@ userSchema.methods.toSafeObject = function () {
     username: this.username,
     email: this.email,
     avator: this.avator,
+    bio: this.bio,
+    followersCounts: this.followersCounts,
+    followingCounts: this.followingCounts,
   };
 };
 

@@ -6,6 +6,7 @@ import uploadImage from "../utils/uploadImage.js";
 import catchAsync from "../utils/catchAsync.js";
 
 //models
+import User from "../models/user.model.js";
 import Post from "../models/post.model.js";
 import Like from "../models/like.model.js";
 import Comment from "../models/comment.model.js";
@@ -50,10 +51,17 @@ export const getAllPost = catchAsync(async (req, res, next) => {
 });
 
 export const getAllPostByProfile = catchAsync(async (req, res, next) => {
+  const { username } = req.params;
   const userId = req.user;
   console.log("userid", userId);
 
-  const posts = await Post.find({ author: userId }).populate(
+  const user = await User.findOne({ username });
+
+  if (!user) {
+    return next(new AppError("No user found", 404));
+  }
+
+  const posts = await Post.find({ author: user._id }).populate(
     "author",
     "username avator",
   );

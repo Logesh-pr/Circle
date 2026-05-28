@@ -7,13 +7,11 @@ import "swiper/css/zoom";
 
 export default function ImageCarousel({ images }) {
   if (!images?.length) return null;
-  console.log(images);
   const firstImage = images[0];
   const computedRatio =
     firstImage.width && firstImage.height
       ? `${firstImage.width}/${firstImage.height}`
       : "4/5";
-  console.log(computedRatio);
   return (
     <div className="w-full  rounded-xl">
       <Swiper

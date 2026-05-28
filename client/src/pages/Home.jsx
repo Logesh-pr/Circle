@@ -10,10 +10,9 @@ import { useAuthStore } from "../store/useAuthStore";
 import { useFetchAllPost } from "../hooks/usePostQuery";
 
 export default function Home() {
-  const { data: post, isPending } = useFetchAllPost();
-  console.log(post);
+  const { data: post, isLoading } = useFetchAllPost();
 
-  if (isPending) {
+  if (isLoading) {
     return <Loader />;
   }
   return (

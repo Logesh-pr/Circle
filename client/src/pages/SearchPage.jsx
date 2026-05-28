@@ -31,7 +31,7 @@ export default function SearchPage() {
   return (
     <div className="mt-6">
       <form onSubmit={(e) => e.preventDefault()}>
-        <div className="relative">
+        <div className="relative overflow-hidden">
           <input
             ref={searchRef}
             value={query}
@@ -50,7 +50,7 @@ export default function SearchPage() {
           <div className="p-4 font-semibold text-lg border-b border-light-border dark:border-dark-border">
             <p>People</p>
           </div>
-          <div className="p-2">
+          <div className="">
             {users?.map((user, id) => (
               <SearchCard user={user} />
             ))}

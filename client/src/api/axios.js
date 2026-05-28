@@ -118,8 +118,9 @@ export const fetchPost = async () => {
   const res = await api.get("/post/all-post");
   return res.data.data;
 };
-export const fetchPostByProfile = async () => {
-  const res = await api.get("/post/all-post-by-profile");
+export const fetchPostByProfile = async (username) => {
+  const res = await api.get(`/post/all-post-by-profile/${username}`);
+  console.log(res.data);
   return res.data.data;
 };
 export const createPost = async (data) => {
@@ -159,5 +160,16 @@ export const getAllComments = async (postId) => {
 
 export const searchUsers = async (query) => {
   const res = await api.get(`/user/search?q=${encodeURIComponent(query)}`);
+  return res.data.data;
+};
+
+export const fetchUserProfile = async (username) => {
+  const res = await api.get(`/user/get-user-profile/${username}`);
+  return res.data.data;
+};
+
+export const followUser = async (username) => {
+  const res = await api.post(`/user/follow/${username}`);
+  console.log(res.data);
   return res.data.data;
 };

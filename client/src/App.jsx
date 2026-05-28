@@ -26,7 +26,13 @@ import Bookmark from "./pages/Bookmark.jsx";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import ProtectLayout from "./protectRoutes/ProtectLayout.jsx";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000, // 5 minutes
+    },
+  },
+});
 const router = createBrowserRouter([
   {
     element: <RootLayout />,
@@ -55,7 +61,7 @@ const router = createBrowserRouter([
             element: <Bookmark />,
           },
           {
-            path: "/profile",
+            path: "/profile/:username",
             element: <Profile />,
           },
         ],

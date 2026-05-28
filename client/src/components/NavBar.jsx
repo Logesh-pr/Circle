@@ -1,4 +1,4 @@
-import { NavItems } from "../utils/NavItems";
+import { useNavItems } from "../utils/NavItems";
 import { useState } from "react";
 
 //components
@@ -17,6 +17,7 @@ export default function NavBar() {
   const isActive = (path) => location.pathname === path;
   const navigate = useNavigate();
   const { user } = useAuthStore();
+  const NavItems = useNavItems();
   const [post, setPost] = useState(false);
 
   return (

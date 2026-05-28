@@ -1,8 +1,14 @@
 //components
 import ProfilePic from "./ProfilePic";
+
+//react router
+import { Link } from "react-router-dom";
 export default function SearchCard({ user }) {
   return (
-    <div className="w-full flex justify-between items-center  ">
+    <Link
+      to={`/profile/${user?.username}`}
+      className="w-full flex justify-between items-center cursor-pointer hover:bg-zinc-950 p-2"
+    >
       <div className="flex gap-x-4">
         <ProfilePic avator={user?.avator} />
         <div>
@@ -19,6 +25,6 @@ export default function SearchCard({ user }) {
           Follow
         </button>
       </div>
-    </div>
+    </Link>
   );
 }

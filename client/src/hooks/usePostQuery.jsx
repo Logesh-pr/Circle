@@ -26,11 +26,11 @@ export const useFetchAllPost = () => {
   });
 };
 
-export const useFetchAllPostByProfile = () => {
+export const useFetchAllPostByProfile = (username) => {
   return useQuery({
-    queryKey: ["userPosts"],
-    queryFn: fetchPostByProfile,
-    staleTime: 5 * 60 * 1000,
+    queryKey: ["userPosts", username],
+    queryFn: () => fetchPostByProfile(username),
+    staleTime: 2 * 60 * 1000,
   });
 };
 export const useCreatePost = () => {

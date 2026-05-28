@@ -21,7 +21,6 @@ export default function ProtectLayout({ children }) {
     if (isSuccess && data) {
       setUser(data?.data);
     }
-    setUser(data?.data);
   }, [isSuccess, data, setUser]);
 
   if (isError) {
