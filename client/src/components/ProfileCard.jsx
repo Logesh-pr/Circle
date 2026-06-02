@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 //components
 import ProfilePic from "./ui/ProfilePic";
 
@@ -6,9 +8,13 @@ import { useAuthStore } from "../store/useAuthStore";
 
 //custom hooks
 import { useFollowUserQuery } from "../hooks/useUserQuery";
+import ShowFollowers from "./ShowFollowers";
+import ShowFollowings from "./ShowFollowings";
 
 export default function ProfileCard({ user }) {
   const { mutate: followUser } = useFollowUserQuery();
+  const [followers, setFollowers] = useState(false);
+  const [followings, setFollowings] = useState(false);
 
   return (
     <div>
@@ -29,10 +35,28 @@ export default function ProfileCard({ user }) {
 
           {/* <Logout /> */}
           <div className="flex gap-x-4 text-light-primary dark:text-dark-primary text-sm">
-            <p className="flex items-center">
+            <p
+              onClick={() => setFollowings(true)}
+              className=" cursor-pointer flex items-center"
+            >
               Following {user?.followingCounts}
             </p>
-            <p>Followers {user?.followersCounts}</p>
+            {followings && (
+              <ShowFollowings
+                username={user?.username}
+                setFollowings={setFollowings}
+              />
+            )}
+
+            <p onClick={() => setFollowers(true)} className="cursor-pointer">
+              Followers {user?.followersCounts}
+            </p>
+            {followers && (
+              <ShowFollowers
+                username={user?.username}
+                setFollowers={setFollowers}
+              />
+            )}
           </div>
 
           <div className="mt-2">

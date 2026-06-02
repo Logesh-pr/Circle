@@ -173,3 +173,9 @@ export const followUser = async (username) => {
   console.log(res.data);
   return res.data.data;
 };
+
+export const getUserFollowers = async (username, type) => {
+  const res = await api.get("/user/follows", { params: { username, type } });
+  console.log(res.data);
+  return res.data.data;
+};

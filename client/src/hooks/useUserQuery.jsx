@@ -1,7 +1,12 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 //axios
-import { fetchUserProfile, followUser, searchUsers } from "../api/axios";
+import {
+  fetchUserProfile,
+  followUser,
+  getUserFollowers,
+  searchUsers,
+} from "../api/axios";
 
 export function useSearchQuery(query) {
   return useQuery({
@@ -25,5 +30,21 @@ export function useUserProfileQuery(username) {
 export function useFollowUserQuery() {
   return useMutation({
     mutationFn: (username) => followUser(username),
+  });
+}
+
+export function useGetFollowersQuery(username, type) {
+  return useQuery({
+    queryKey: ["followers", username],
+    queryFn: () => getUserFollowers(username, type),
+    refetchOnMount: "always",
+  });
+}
+
+export function useGetFollowingsQuery(username, type) {
+  return useQuery({
+    queryKey: ["followings", username],
+    queryFn: () => getUserFollowers(username, type),
+    refetchOnMount: "always",
   });
 }

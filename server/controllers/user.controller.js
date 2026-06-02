@@ -85,13 +85,62 @@ export const followUser = catchAsync(async (req, res, next) => {
     .json({ status: "success", message: "Successfully followed" });
 });
 
-// export const getUserProfile = catchAsync(async (req, res, next) => {
-//   const userId = req.user;
+export const getFollowsByUser = catchAsync(async (req, res, next) => {
+  const { username, type } = req.query;
+  console.log(username, type);
+
+  const user = await User.findOne({ username });
+
+  if (!user) {
+    next(new AppError("user not found", 404));
+  }
+
+  let data;
+
+  if (type === "followings") {
+    data = await Follow.find({ follower: user._id }).populate(
+      "following",
+      "username",
+    );
+  } else if (type === "followers") {
+    data = await Follow.find({ following: user._id }).populate(
+      "follower",
+      "username",
+    );
+  } else {
+    return next(new AppError("something went wrong", 500));
+  }
+
+  console.log(data);
+  return res.status(200).json({
+    status: "success",
+    message: "Successfully fetched follows",
+    data,
+  });
+
+  console.log("followers", followers);
+});
+
+// export const getFollowersByUser = catchAsync(async (req, res, next) => {
 //   const { username } = req.params;
+//   console.log(username);
 
 //   const user = await User.findOne({ username });
 
-//   if (userId === user._id) {
-//     return next(new AppError("You can not "));
+//   if (!user) {
+//     next(new AppError("user not found", 404));
 //   }
+
+//   const followers = await Follow.find({ follower: user._id }).populate(
+//     "following",
+//     "username",
+//   );
+
+//   return res.status(200).json({
+//     status: "success",
+//     messag: "Successfully fetched followers",
+//     data: followers,
+//   });
+
+//   console.log("followers", followers);
 // });

@@ -80,6 +80,27 @@ export default function Signup() {
         >
           <fieldset disabled={isPending}>
             <FormField
+              label="Name"
+              name="name"
+              type="text"
+              placeholder="Enter your name"
+              error={errors.name}
+              register={register}
+              disabled={isPending}
+              showValidation={true}
+              validation={{
+                required: "Please enter your name",
+                minLength: {
+                  value: 4,
+                  message: "Name must contain atleast 4 characters",
+                },
+                maxLength: {
+                  value: 10,
+                  message: "Name must contain maximum 10 characters",
+                },
+              }}
+            />
+            <FormField
               label="Email"
               name="email"
               type="email"
@@ -114,7 +135,7 @@ export default function Signup() {
                 required: "Please enter the password",
                 minLength: {
                   value: 6,
-                  message: "Password must contain 6 characters",
+                  message: "Password must contain atleast 6 characters",
                 },
               }}
             />

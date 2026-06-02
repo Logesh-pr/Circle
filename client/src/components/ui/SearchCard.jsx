@@ -4,6 +4,7 @@ import ProfilePic from "./ProfilePic";
 //react router
 import { Link } from "react-router-dom";
 export default function SearchCard({ user }) {
+  console.log(user);
   return (
     <Link
       to={`/profile/${user?.username}`}

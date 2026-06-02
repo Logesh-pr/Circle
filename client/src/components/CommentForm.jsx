@@ -8,7 +8,11 @@ import ProfilePic from "./ui/ProfilePic";
 import { useForm } from "react-hook-form";
 import { useCommentPost } from "../hooks/usePostQuery";
 
+//zustand
+import { useAuthStore } from "../store/useAuthStore";
+
 export default function CommentForm({ postId }) {
+  const { user } = useAuthStore();
   const { mutate } = useCommentPost();
   const {
     handleSubmit,
@@ -18,6 +22,7 @@ export default function CommentForm({ postId }) {
     reset,
     formState: { errors },
   } = useForm({ mode: "onchange" });
+  console.log(user);
 
   const commentValue = watch("comment");
 
@@ -28,7 +33,7 @@ export default function CommentForm({ postId }) {
   }
   return (
     <div className="w-full flex gap-x-2 items-center">
-      <ProfilePic width={35} height={35} />
+      <ProfilePic avator={user?.avator} width={35} height={35} />
 
       <form
         onSubmit={handleSubmit(onSubmit)}
