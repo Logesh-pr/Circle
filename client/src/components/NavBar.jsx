@@ -49,10 +49,13 @@ export default function NavBar() {
 
         <div className=" flex gap-x-4 border-t border-light-border dark:border-dark-border">
           <div className="flex items-start gap-x-3 mt-3">
-            <ProfilePic width={35} height={35} />
+            <ProfilePic avator={user?.avator} width={35} height={35} />
             <div>
-              <p className="text-semibold text-light-primary dark:text-dark-primary">
-                {user?.username}
+              <p className="text-sm font-semibold  text-light-primary dark:text-dark-primary">
+                {user?.name}
+              </p>
+              <p className="text-xs mt-1 font-semibold text-light-secondary dark:text-dark-secondary">
+                @{user?.username}
               </p>
 
               <Logout />

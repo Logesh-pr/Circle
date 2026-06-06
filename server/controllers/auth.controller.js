@@ -77,7 +77,7 @@ export const signup = catchAsync(async (req, res, next) => {
     );
   }
 
-  const { email, password } = req.body;
+  const { name, email, password } = req.body;
 
   const checkUser =
     (await TempUser.findOne({ email })) || (await User.findOne({ email }));
@@ -88,6 +88,7 @@ export const signup = catchAsync(async (req, res, next) => {
   const otp = generateOTP();
   const hashedOTP = await hashOTP(otp);
   const user = await TempUser.create({
+    name,
     email,
     password,
     otp: hashedOTP,
@@ -291,6 +292,7 @@ export const setUsername = catchAsync(async (req, res, next) => {
   }
 
   const user = await User.create({
+    name: tempUser.name,
     username,
     email: tempUser.email,
     avator:

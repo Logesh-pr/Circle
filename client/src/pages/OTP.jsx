@@ -10,6 +10,7 @@ import {
   useSignupStatus,
   useVerifyOTP,
 } from "../hooks/useAuthQuery";
+import { useQueryClient } from "@tanstack/react-query";
 
 //zustand
 import { useResendOTPStore, useTempUserStore } from "../store/useAuthStore";
@@ -19,6 +20,7 @@ import { useResendTimer } from "../hooks/useResedTimer";
 import Button from "../components/ui/Button";
 
 export default function OTP() {
+  const queryClient = useQueryClient();
   const OTP_LENGTH = 6;
 
   const navigate = useNavigate();
@@ -125,9 +127,10 @@ export default function OTP() {
       { otp: data.otp },
       {
         onSuccess: (data) => {
+          console.log("data", data);
           clearResendData();
-          console.log("data", data.data.tempUsername);
           setTempUsername(data.data.tempUsername);
+          queryClient.invalidateQueries({ queryKey: ["signupStatus"] });
           navigate("/auth/username", { replace: true });
         },
         onError: (err) => {

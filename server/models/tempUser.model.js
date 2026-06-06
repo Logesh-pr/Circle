@@ -2,7 +2,7 @@ import { Schema, model } from "mongoose";
 import bcryptjs from "bcryptjs";
 
 const tempUserSchema = Schema({
-  name: { type: String, require: true, min: 4, max: 10 },
+  name: { type: String, require: true, min: 4, max: 10, trim: true },
   email: { type: String, unique: true, required: true, trim: true },
   password: { type: String, required: true, min: 6 },
   otp: { type: String },

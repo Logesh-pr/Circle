@@ -13,6 +13,9 @@ import { useBookmarkPost, useLikePost } from "../hooks/usePostQuery";
 //libs
 import formatCreatedAt from "../utils/FormatCreatedAt";
 
+//react router
+import { Link } from "react-router-dom";
+
 export default function PostCard({ post }) {
   const [comment, setComment] = useState(false);
   const { mutate: likeMutate, isPending } = useLikePost();
@@ -25,24 +28,28 @@ export default function PostCard({ post }) {
     <div className="w-full max-w-[500px]   rounded-xl border border-light-border dark:border-dark-border">
       <div className="p-3 flex flex-col gap-y-3 ">
         {/* profile section */}
-        <div className=" flex gap-x-2 items-start">
+        <Link
+          to={`/profile/${post?.author?.username}`}
+          className=" flex gap-x-2 items-start"
+        >
           <ProfilePic avator={post?.author?.avator} />
           <div className="flex flex-col">
             <p className="text-sm font-semibold  text-light-primary dark:text-dark-primary">
-              {post?.author?.username}
+              {post?.author?.name}
             </p>
-            <p className="text-xs font-semibold text-light-secondary dark:text-dark-secondary">
-              @kevin_ken <span className="ps-2">{formatTime}</span>
+            <p className="text-xs mt-1 font-semibold text-light-secondary dark:text-dark-secondary">
+              @{post?.author?.username}{" "}
+              <span className="ps-2">{formatTime}</span>
             </p>
           </div>
-        </div>
+        </Link>
 
         {/* content section */}
         <div className="mt-2 text-light-primary dark:text-dark-primary font-normal text-sm">
           <p>{post?.content}</p>
         </div>
         <div>
-          <ImageCarousel images={post.images} />
+          <ImageCarousel images={post?.images} />
         </div>
       </div>
 
@@ -54,22 +61,22 @@ export default function PostCard({ post }) {
           >
             <Heart
               size={20}
-              strokeWidth={post.isLiked ? 0 : 2}
+              strokeWidth={post?.isLiked ? 0 : 2}
               className={`transition-all duration-300 ease-out group-hover:scale-125 group-active:scale-90 ${
-                post.isLiked
+                post?.isLiked
                   ? "scale-110 fill-red-500 text-red-500"
                   : "scale-100 "
               }`}
             />{" "}
-            <span className={`${post.isLiked && "text-red-500"}`}>
-              {post.likesCount}
+            <span className={`${post?.isLiked && "text-red-500"}`}>
+              {post?.likesCount}
             </span>
           </div>
           <div
             onClick={() => setComment(true)}
             className="flex gap-x-2 items-center cursor-pointer hover:text-accent transition-colors"
           >
-            <MessageCircle size={20} /> <span>{post.commentsCount}</span>
+            <MessageCircle size={20} /> <span>{post?.commentsCount}</span>
           </div>
           {comment && (
             <Modal closeBtn={setComment} title={"Comments"}>
@@ -94,9 +101,9 @@ export default function PostCard({ post }) {
         >
           <Bookmark
             size={20}
-            strokeWidth={post.isBookmarked ? 0 : 2}
+            strokeWidth={post?.isBookmarked ? 0 : 2}
             className={
-              post.isBookmarked ? "fill-amber-500 text-amber-500" : "none"
+              post?.isBookmarked ? "fill-amber-500 text-amber-500" : "none"
             }
           />
         </div>

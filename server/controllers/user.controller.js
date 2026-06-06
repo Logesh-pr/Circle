@@ -53,6 +53,7 @@ export const followUser = catchAsync(async (req, res, next) => {
   console.log(username);
 
   const user = await User.findOne({ username });
+  console.log("user", user);
 
   if (userId === user._id) {
     return next(new AppError("You cannot follow yourself", 400));
@@ -70,16 +71,16 @@ export const followUser = catchAsync(async (req, res, next) => {
   console.log(existing);
   if (existing) {
     await existing.deleteOne();
-    await User.findByIdAndUpdate(user._id, { $inc: { follower: -1 } });
-    await User.findByIdAndUpdate(userId, { $inc: { following: -1 } });
+    await User.findByIdAndUpdate(user._id, { $inc: { followersCounts: -1 } });
+    await User.findByIdAndUpdate(userId, { $inc: { followingCounts: -1 } });
     return res
       .status(200)
       .json({ status: "success", message: "Successfully unfollowed" });
   }
 
   await Follow.create({ follower: userId, following: user._id });
-  await User.findByIdAndUpdate(user._id, { $inc: { follower: 1 } });
-  await User.findByIdAndUpdate(userId, { $inc: { following: 1 } });
+  await User.findByIdAndUpdate(user._id, { $inc: { followersCounts: 1 } });
+  await User.findByIdAndUpdate(userId, { $inc: { followingCounts: 1 } });
   return res
     .status(200)
     .json({ status: "success", message: "Successfully followed" });
@@ -100,12 +101,12 @@ export const getFollowsByUser = catchAsync(async (req, res, next) => {
   if (type === "followings") {
     data = await Follow.find({ follower: user._id }).populate(
       "following",
-      "username",
+      "name username avator",
     );
   } else if (type === "followers") {
     data = await Follow.find({ following: user._id }).populate(
       "follower",
-      "username",
+      "name username avator",
     );
   } else {
     return next(new AppError("something went wrong", 500));

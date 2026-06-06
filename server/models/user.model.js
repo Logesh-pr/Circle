@@ -3,6 +3,8 @@ import bcryptjs from "bcryptjs";
 
 const userSchema = Schema(
   {
+    name: { type: String, require: true, min: 4, max: 10, trim: true },
+
     username: {
       type: String,
       unique: true,
@@ -46,7 +48,7 @@ userSchema.methods.comparePassword = async function (userPassword) {
 
 userSchema.methods.toSafeObject = function () {
   return {
-    id: this._id,
+    name: this.name,
     username: this.username,
     email: this.email,
     avator: this.avator,

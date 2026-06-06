@@ -157,7 +157,7 @@ export function useCommentPost() {
           ...(old?.data || []),
           {
             _id: Date.now(),
-            user: { username: user.username },
+            user: { name: user.name, username: user.username },
             post: postId,
             content: comment,
             createdAt: new Date().toISOString(),

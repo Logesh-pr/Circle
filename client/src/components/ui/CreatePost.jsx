@@ -14,8 +14,13 @@ import { Images, X } from "lucide-react";
 //react query
 import { useCreatePost } from "../../hooks/usePostQuery";
 
+//zustand
+import { useAuthStore } from "../../store/useAuthStore";
+
 export default function CreatePost({ post, setPost }) {
   const { mutate } = useCreatePost();
+  const { user } = useAuthStore();
+  console.log(user);
   const {
     register,
     clearError,
@@ -71,8 +76,16 @@ export default function CreatePost({ post, setPost }) {
       {post && (
         <Modal closeBtn={setPost} title={"Create a post"}>
           <div className="p-6 flex flex-col gap-y-2">
-            <div className="">
-              <ProfilePic width={45} height={45} />
+            <div className=" flex gap-x-3">
+              <ProfilePic avator={user?.avator} width={45} height={45} />
+              <div>
+                <p className="text-sm font-semibold  text-light-primary dark:text-dark-primary">
+                  {user?.name}
+                </p>
+                <p className="text-xs mt-1 font-semibold text-light-secondary dark:text-dark-secondary">
+                  @{user?.username}
+                </p>
+              </div>
             </div>
 
             <form
@@ -82,7 +95,7 @@ export default function CreatePost({ post, setPost }) {
             >
               <textarea
                 placeholder="What's happening?"
-                className="w-full h-[200px] focus:border-none border-none outline-none bg-slate-100 dark:bg-zinc-950 p-2 rounded-xl"
+                className="w-full h-[200px] placeholder:text-zinc-600 focus:border-none border-none outline-none bg-slate-100 dark:bg-zinc-950 p-2 rounded-xl"
                 {...register("content")}
               />
               <label

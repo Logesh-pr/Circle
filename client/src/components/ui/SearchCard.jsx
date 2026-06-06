@@ -14,17 +14,17 @@ export default function SearchCard({ user }) {
         <ProfilePic avator={user?.avator} />
         <div>
           <p className="text-sm text-light-primary dark:text-dark-primary font-semibold">
-            {user?.username}
+            {user?.name}
           </p>
           <p className="text-xs text-light-secondary dark:text-dark-secondary">
-            @kevin_ken
+            @{user?.username}
           </p>
         </div>
       </div>
       <div>
-        <button className="bg-accent px-4 py-1 rounded-lg text-light font-semibold text-sm hover:bg-accent/90 transition-colors cursor-pointer">
+        {/* <button className="bg-accent px-4 py-1 rounded-lg text-light font-semibold text-sm hover:bg-accent/90 transition-colors cursor-pointer">
           Follow
-        </button>
+        </button> */}
       </div>
     </Link>
   );

@@ -21,12 +21,16 @@ export default function ProfileCard({ user }) {
       <div className="flex flex-col md:flex-row gap-y-4 md:gap-x-4 items-center md:items-start">
         <ProfilePic avator={user?.avator} width={100} height={100} />
         <div className="text-center md:text-start flex flex-col gap-y-2">
-          <p className="text-lg font-semibold text-light-primary dark:text-dark-primary">
-            {user?.username}
-          </p>
-          <p className="text-sm font-semibold text-light-secondary dark:text-dark-secondary">
+          <div className="">
+            <p className="text-lg font-semibold text-light-primary dark:text-dark-primary">
+              {user?.name}
+            </p>
+            <p className="text-sm text-zinc-500 mt-1">@{user?.username}</p>
+          </div>
+
+          {/* <p className="text-sm font-semibold text-light-secondary dark:text-dark-secondary">
             {user?.email}
-          </p>
+          </p> */}
           {user?.bio && (
             <p className="text-sm text-light-primary dark:text-dark-primary">
               {user.bio}
