@@ -10,7 +10,7 @@ import Home from "./pages/Home.jsx";
 import Signup from "./pages/Signup.jsx";
 import OTP from "./pages/OTP.jsx";
 import SignupProtect from "./protectRoutes/SignupProtect.jsx";
-import UsernameSelection from "./pages/usernameSelection.jsx";
+import UsernameSelection from "./pages/UsernameSelection.jsx";
 import AuthLayout from "./pages/AuthLayout.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import SearchPage from "./pages/SearchPage.jsx";
