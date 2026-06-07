@@ -85,6 +85,48 @@ body {
   overflow-y: scroll;
   font-family: "Reddit Sans", sans-serif;
 }
+
+/* ─── Modern Scrollbar ─── */
+
+/* Firefox / modern browsers */
+* {
+  scrollbar-width: none;
+  scrollbar-color: rgba(150, 150, 160, 0.3) transparent;
+}
+*::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
+}
+/* Webkit (Chrome, Safari, Edge) */
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: rgba(150, 150, 160, 0.3);
+  border-radius: 999px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(150, 150, 160, 0.5);
+}
+
+/* Dark mode scrollbar */
+.dark *::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.dark *::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.dark * {
+  scrollbar-color: rgba(255, 255, 255, 0.12) transparent;
+}
 .swiper-button-next,
 .swiper-button-prev {
   color: white;

@@ -1,14 +1,17 @@
 import "dotenv/config.js";
 
+const isProduction = process.env.NODE_ENV === "production";
+
 const clearCookies = (res) => {
-  res.clearCookie("accessToken", {
+  const options = {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-  });
-  res.clearCookie("refreshToken", {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-  });
+    secure: isProduction,
+    sameSite: isProduction ? "None" : "Lax",
+    path: "/",
+  };
+
+  res.clearCookie("accessToken", options);
+  res.clearCookie("refreshToken", options);
 };
 
 export default clearCookies;
