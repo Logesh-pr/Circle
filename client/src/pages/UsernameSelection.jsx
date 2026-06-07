@@ -65,14 +65,12 @@ export default function UsernameSelection() {
         { username },
         {
           onSuccess: (data) => {
-            console.log(data.status);
             if (data.status === 200) {
               setUsernameAvailable(true);
               clearErrors("username");
             }
           },
           onError: (err) => {
-            console.log(err.response.data.message);
             setUsernameAvailable(false);
             if (err.response.data.message === "username is already taken") {
               setError("username", {
@@ -95,17 +93,12 @@ export default function UsernameSelection() {
     };
   }, [username]);
 
-  console.log(tempUsername);
-
   function onSubmit(data) {
-    console.log(data);
     setUsernameMutate(data, {
       onSuccess: (data) => {
-        console.log(data);
         navigate("/", { replace: true });
       },
       onError: (err) => {
-        console.log(err);
         navigate("/auth/signup", { replace: true });
       },
     });

@@ -34,7 +34,6 @@ app.use(
     methods: ["GET", "POST", "PUT", "DELETE"],
   }),
 );
-console.log(process.env.FRONTEND_URL);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());

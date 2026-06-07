@@ -5,7 +5,6 @@ import ProfilePic from "./ProfilePic";
 import formatCreatedAt from "../../utils/FormatCreatedAt";
 
 export default function CommentCard({ comment }) {
-  console.log(comment);
   const formatTime = formatCreatedAt(comment?.createdAt);
   return (
     <div className="w-full flex items-start gap-x-2">

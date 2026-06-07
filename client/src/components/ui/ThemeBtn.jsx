@@ -7,7 +7,6 @@ import { Moon, Sun } from "lucide-react";
 import useTheme from "../../hooks/useTheme";
 export default function ThemeBtn() {
   const { theme, toggleTheme } = useTheme();
-  console.log(theme);
   return (
     <>
       <button onClick={toggleTheme} className="cursor-pointer ">

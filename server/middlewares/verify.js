@@ -30,20 +30,16 @@ export const verify = catchAsync(async (req, res, next) => {
 
 export const verifyOTPToken = catchAsync(async (req, res, next) => {
   const token = req.cookies.otpToken;
-  console.log(req.cookies.otpToken);
   if (!token) {
     return next(new AppError("opt section expiry, Try signup again", 401));
   }
 
   const decoded = await verifyToken(token, process.env.JWT_OTP_TOKEN_SECRET);
-  console.log(decoded.email);
   const user = await TempUser.findOne({ email: decoded.email });
 
   if (!user) {
     return next(new AppError("user expiry, Try signup again", 401));
   }
-
-  console.log(decoded);
 
   const userData = {
     email: decoded.email,
@@ -57,7 +53,6 @@ export const verifyOTPToken = catchAsync(async (req, res, next) => {
 
 export const verifyUsernameToken = catchAsync(async (req, res, next) => {
   const usernameToken = req.cookies.usernameToken;
-  console.log("verify", req.cookies);
 
   if (!usernameToken) {
     return next(new AppError("unauthorized", 410));
@@ -75,7 +70,6 @@ export const verifyUsernameToken = catchAsync(async (req, res, next) => {
     return next(new AppError("user expires, Try signup again", 401));
   }
 
-  console.log("token", decoded, user);
   const userData = {
     userId: decoded.userId,
     purpose: decoded.purpose,

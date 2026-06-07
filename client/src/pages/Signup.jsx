@@ -40,14 +40,11 @@ export default function Signup() {
     clearErrors("common");
     mutate(user, {
       onSuccess: (data) => {
-        console.log("success:", data.data, data.token);
         setResendData(data.data.resendAvailableAt, data.data.resendAttempts);
         navigate("/auth/otp", { replace: true });
-        console.log("navigate");
         reset();
       },
       onError: (error) => {
-        console.log("error:", error.response.data);
         if (
           error.response?.data?.message === "There is an account in this email"
         ) {
@@ -59,8 +56,6 @@ export default function Signup() {
         }
       },
     });
-
-    console.log(user);
   }
 
   return (

@@ -18,11 +18,11 @@ export function useNavItems() {
       name: "Search",
       icon: <Search />,
     },
-    {
-      path: "/notification",
-      name: "Notification",
-      icon: <Bell />,
-    },
+    // {
+    //   path: "/notification",
+    //   name: "Notification",
+    //   icon: <Bell />,
+    // },
     {
       path: "/bookmark",
       name: "Bookmarks",

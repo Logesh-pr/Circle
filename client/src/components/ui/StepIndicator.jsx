@@ -8,7 +8,6 @@ const STEPS = ["/auth/signup", "/auth/otp", "/auth/username"];
 export default function StepIndicator() {
   const location = useLocation();
   const currentLocation = location.pathname;
-  console.log(currentLocation);
 
   return (
     <div

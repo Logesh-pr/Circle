@@ -22,12 +22,10 @@ export default function CommentForm({ postId }) {
     reset,
     formState: { errors },
   } = useForm({ mode: "onchange" });
-  console.log(user);
 
   const commentValue = watch("comment");
 
   function onSubmit(data) {
-    console.log(data);
     reset();
     mutate({ postId, comment: data.comment });
   }

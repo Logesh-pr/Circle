@@ -23,7 +23,6 @@ export default function SearchPage() {
   const [query, setQuery] = useState("");
   const debouncedQuery = useDebouncedValue(query, 300);
   const { data: users, isPending } = useSearchQuery(debouncedQuery);
-  console.log(users);
   useEffect(() => {
     searchRef.current.focus();
   }, []);

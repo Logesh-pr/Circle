@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 //axios
 import {
@@ -28,8 +28,45 @@ export function useUserProfileQuery(username) {
 }
 
 export function useFollowUserQuery() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (username) => followUser(username),
+
+    onMutate: async (username) => {
+      await queryClient.cancelQueries({ queryKey: ["userProfile", username] });
+
+      const previousUserProfile = queryClient.setQueryData({
+        queryKey: ["userProfile", username],
+      });
+
+      await queryClient.setQueryData({ queryKey: ["userProfile"] }, (old) => {
+        if (!old) return old;
+
+        const isNowFollowing = !old.isFollowing;
+        return {
+          ...old,
+          isFollowing: isNowFollowing,
+          followersCount: isNowFollowing
+            ? (old.followersCount || 0) + 1
+            : (old.followersCount || 0) - 1,
+        };
+      });
+
+      return { previousUserProfile, username };
+    },
+
+    onError: (err, username, context) => {
+      queryClient.setQueryData(
+        ["userProfile", context.username],
+        context.previousUserProfile,
+      );
+    },
+
+    onSettled: (data, err, username) => {
+      queryClient.invalidateQueries({ queryKey: ["userProfile", username] });
+      queryClient.invalidateQueries({ queryKey: ["followers", username] });
+      queryClient.invalidateQueries({ queryKey: ["followings", username] });
+    },
   });
 }
 

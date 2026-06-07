@@ -31,11 +31,9 @@ export default function Login() {
   } = useForm();
 
   function onSubmit(data) {
-    console.log(data);
     reset();
     mutate(data, {
       onSuccess: (data) => {
-        console.log(data);
         navigate("/", { replace: true });
       },
       onError: (error) => {

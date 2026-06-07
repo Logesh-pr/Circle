@@ -91,9 +91,9 @@ export default function PostCard({ post }) {
               </div>
             </Modal>
           )}
-          <div className="flex gap-x-2 items-center cursor-pointer hover:text-green-500">
+          {/* <div className="flex gap-x-2 items-center cursor-pointer hover:text-green-500">
             <Share size={20} /> <span>100</span>
-          </div>
+          </div> */}
         </div>
         <div
           onClick={() => !isBookmarkPending && bookmarkMutate(post._id)}

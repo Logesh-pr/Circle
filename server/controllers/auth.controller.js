@@ -118,9 +118,7 @@ export const signupStatus = catchAsync(async (req, res, next) => {
         process.env.JWT_OTP_TOKEN_SECRET,
         next,
       );
-      console.log(decoded);
       const tempUser = await TempUser.findOne({ email: decoded.email });
-      console.log(tempUser);
 
       if (tempUser && tempUser.status === "pending_otp") {
         return res.status(200).json({
@@ -180,7 +178,6 @@ export const signupStatus = catchAsync(async (req, res, next) => {
 export const resendOTP = catchAsync(async (req, res, next) => {
   const { email } = req.user;
   const tempUser = await TempUser.findOne({ email });
-  console.log(tempUser);
   if (!tempUser) {
     return next(new AppError("user expired. signup again", 410));
   }
@@ -275,7 +272,6 @@ export const verifyOTP = catchAsync(async (req, res, next) => {
 });
 
 export const setUsername = catchAsync(async (req, res, next) => {
-  console.log("auth", req.user);
   const { userId } = req.user;
   const { username } = req.body;
 
@@ -383,7 +379,6 @@ export const login = catchAsync(async (req, res, next) => {
 
 export const refresh = catchAsync(async (req, res, next) => {
   const token = req.cookies.refreshToken;
-  console.log("refresh", token);
 
   if (!token) {
     return next(new AppError("Invalid token", 401));
@@ -431,8 +426,6 @@ export const refresh = catchAsync(async (req, res, next) => {
 
 export const fetchMe = catchAsync(async (req, res, next) => {
   const token = req.user;
-  console.log(token);
-  console.log("fetchme");
 
   if (!token) {
     return next(new AppError("unauthorized", 410));
@@ -443,7 +436,6 @@ export const fetchMe = catchAsync(async (req, res, next) => {
   if (!user) {
     return next(new AppError("user not found", 404));
   }
-  console.log(user);
   return res.status(200).json({
     status: 200,
     message: "Successfully fetched data",
@@ -453,14 +445,12 @@ export const fetchMe = catchAsync(async (req, res, next) => {
 
 export const logout = catchAsync(async (req, res, next) => {
   const token = req.cookies.refreshToken;
-  console.log("logout", token);
 
   if (token) {
     const decoded = verifyToken(token, process.env.JWT_REFRESH_SECRET);
 
     await Session.deleteOne({ _id: decoded.sessionId });
   } else {
-    console.log("logout");
     next(new AppError("something went wrong, Try again later", 410));
   }
 

@@ -21,7 +21,10 @@ export default function ShowFollowings({ username, setFollowings }) {
     <div>
       <Modal closeBtn={setFollowings}>
         {followings?.map((following, id) => (
-          <SearchCard user={following.following} />
+          <SearchCard
+            user={following.following}
+            setFollowings={setFollowings}
+          />
         ))}
       </Modal>
     </div>

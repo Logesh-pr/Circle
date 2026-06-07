@@ -8,7 +8,6 @@ import Feed from "../components/ui/Feed";
 
 export default function Bookmark() {
   const { data: bookmark, isLoading } = useGetAllBookmarks();
-  console.log(bookmark);
   if (isLoading) return <Loader />;
   return (
     <Feed>

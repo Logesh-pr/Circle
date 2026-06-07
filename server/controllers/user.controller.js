@@ -40,7 +40,7 @@ export const searchUsers = catchAsync(async (req, res, next) => {
     username: { $regex: `^${escaped}`, $options: "i" },
     _id: { $ne: req.user },
   })
-    .select("username avator")
+    .select("name username avator")
     .limit(20)
     .lean();
 
@@ -50,10 +50,8 @@ export const searchUsers = catchAsync(async (req, res, next) => {
 export const followUser = catchAsync(async (req, res, next) => {
   const { username } = req.params;
   const userId = req.user;
-  console.log(username);
 
   const user = await User.findOne({ username });
-  console.log("user", user);
 
   if (userId === user._id) {
     return next(new AppError("You cannot follow yourself", 400));
@@ -68,7 +66,6 @@ export const followUser = catchAsync(async (req, res, next) => {
     following: user._id,
   });
 
-  console.log(existing);
   if (existing) {
     await existing.deleteOne();
     await User.findByIdAndUpdate(user._id, { $inc: { followersCounts: -1 } });
@@ -88,7 +85,6 @@ export const followUser = catchAsync(async (req, res, next) => {
 
 export const getFollowsByUser = catchAsync(async (req, res, next) => {
   const { username, type } = req.query;
-  console.log(username, type);
 
   const user = await User.findOne({ username });
 
@@ -112,36 +108,9 @@ export const getFollowsByUser = catchAsync(async (req, res, next) => {
     return next(new AppError("something went wrong", 500));
   }
 
-  console.log(data);
   return res.status(200).json({
     status: "success",
     message: "Successfully fetched follows",
     data,
   });
-
-  console.log("followers", followers);
 });
-
-// export const getFollowersByUser = catchAsync(async (req, res, next) => {
-//   const { username } = req.params;
-//   console.log(username);
-
-//   const user = await User.findOne({ username });
-
-//   if (!user) {
-//     next(new AppError("user not found", 404));
-//   }
-
-//   const followers = await Follow.find({ follower: user._id }).populate(
-//     "following",
-//     "username",
-//   );
-
-//   return res.status(200).json({
-//     status: "success",
-//     messag: "Successfully fetched followers",
-//     data: followers,
-//   });
-
-//   console.log("followers", followers);
-// });

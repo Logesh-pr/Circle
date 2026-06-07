@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 //components
 import ProfilePic from "./ui/ProfilePic";
@@ -6,12 +6,15 @@ import ProfilePic from "./ui/ProfilePic";
 //zustand
 import { useAuthStore } from "../store/useAuthStore";
 
-//custom hooks
+//custom hookss
 import { useFollowUserQuery } from "../hooks/useUserQuery";
 import ShowFollowers from "./ShowFollowers";
 import ShowFollowings from "./ShowFollowings";
 
 export default function ProfileCard({ user }) {
+  useEffect(() => {
+    setFollowings(false);
+  }, []);
   const { mutate: followUser } = useFollowUserQuery();
   const [followers, setFollowers] = useState(false);
   const [followings, setFollowings] = useState(false);

@@ -3,11 +3,11 @@ import ProfilePic from "./ProfilePic";
 
 //react router
 import { Link } from "react-router-dom";
-export default function SearchCard({ user }) {
-  console.log(user);
+export default function SearchCard({ user, setFollowings }) {
   return (
     <Link
       to={`/profile/${user?.username}`}
+      onClick={() => setFollowings(false)}
       className="w-full flex justify-between items-center cursor-pointer hover:bg-zinc-950 p-2"
     >
       <div className="flex gap-x-4">

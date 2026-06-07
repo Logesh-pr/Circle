@@ -120,7 +120,6 @@ export const fetchPost = async () => {
 };
 export const fetchPostByProfile = async (username) => {
   const res = await api.get(`/post/all-post-by-profile/${username}`);
-  console.log(res.data);
   return res.data.data;
 };
 export const createPost = async (data) => {
@@ -130,31 +129,26 @@ export const createPost = async (data) => {
 
 export const likePost = async (postId) => {
   const res = await api.post(`/post/like-post/${postId}`);
-  console.log(res.data);
   return res.data;
 };
 
 export const bookmarkPost = async (postId) => {
   const res = await api.post(`/post/bookmark-post/${postId}`);
-  console.log(res.data);
   return res.data;
 };
 
 export const getAllBookmarks = async () => {
   const res = await api.get("/post/all-bookmarks");
-  console.log(res);
   return res.data.data.map((bookmark) => bookmark.post);
 };
 
 export const commentPost = async (postId, data) => {
-  console.log(postId, data);
   const res = await api.post(`/post/comment-post/${postId}`, data);
   return res.data;
 };
 
 export const getAllComments = async (postId) => {
   const res = await api.get(`/post/all-comments/${postId}`);
-  console.log(postId);
   return res.data;
 };
 
@@ -170,12 +164,10 @@ export const fetchUserProfile = async (username) => {
 
 export const followUser = async (username) => {
   const res = await api.post(`/user/follow/${username}`);
-  console.log(res.data);
   return res.data.data;
 };
 
 export const getUserFollowers = async (username, type) => {
   const res = await api.get("/user/follows", { params: { username, type } });
-  console.log(res.data);
   return res.data.data;
 };

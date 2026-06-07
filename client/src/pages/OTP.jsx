@@ -56,7 +56,6 @@ export default function OTP() {
 
   useEffect(() => {
     inputRef.current[0]?.focus();
-    console.log(inputRef.current);
   }, []);
 
   function syncFormValue(newOTP) {
@@ -80,8 +79,6 @@ export default function OTP() {
   }
 
   function handleKey(e, index) {
-    console.log(e.key === "Backspace" && !input[index] && index > 0);
-
     if (e.key === "Backspace" && !input[index] && index > 0) {
       inputRef.current[index - 1]?.focus();
     }
@@ -127,7 +124,6 @@ export default function OTP() {
       { otp: data.otp },
       {
         onSuccess: (data) => {
-          console.log("data", data);
           clearResendData();
           setTempUsername(data.data.tempUsername);
           queryClient.invalidateQueries({ queryKey: ["signupStatus"] });

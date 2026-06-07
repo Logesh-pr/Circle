@@ -52,10 +52,10 @@ const router = createBrowserRouter([
             path: "/search",
             element: <SearchPage />,
           },
-          {
-            path: "/notification",
-            element: <Notification />,
-          },
+          // {
+          //   path: "/notification",
+          //   element: <Notification />,
+          // },
           {
             path: "/bookmark",
             element: <Bookmark />,

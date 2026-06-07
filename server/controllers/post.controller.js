@@ -14,13 +14,11 @@ import Bookmark from "../models/bookmark.model.js";
 
 export const getAllPost = catchAsync(async (req, res, next) => {
   const posts = await Post.find().populate("author", "name username avator");
-  console.log(posts);
   if (!posts) {
     return next(new AppError("No post yet", 410));
   }
 
   const userId = req.user;
-  console.log("user", userId);
 
   const postIds = posts.map((post) => post._id);
 
@@ -53,7 +51,6 @@ export const getAllPost = catchAsync(async (req, res, next) => {
 export const getAllPostByProfile = catchAsync(async (req, res, next) => {
   const { username } = req.params;
   const userId = req.user;
-  console.log("userid", userId);
 
   const user = await User.findOne({ username });
 
@@ -66,7 +63,6 @@ export const getAllPostByProfile = catchAsync(async (req, res, next) => {
     "name username avator",
   );
 
-  console.log("getAllPostByProfile", posts);
   if (!posts) {
     return next(new AppError("No post yet", 410));
   }
@@ -116,7 +112,6 @@ export const createPost = catchAsync(async (req, res, next) => {
 
   const { content } = req.body;
   const files = req.files || [];
-  console.log("file:", files);
 
   if (files.length > 4) {
     return next(new AppError("max 4 are allowed", 400));
@@ -128,7 +123,6 @@ export const createPost = catchAsync(async (req, res, next) => {
     const img = await uploadImage(file);
     uploadedImages.push(img);
   }
-  console.log(content);
   const post = await Post.create({
     author: req.user,
     content,
@@ -145,7 +139,6 @@ export const createPost = catchAsync(async (req, res, next) => {
 export const like = catchAsync(async (req, res, next) => {
   const { postId } = req.params;
   const userId = req.user;
-  console.log("like");
 
   const existing = await Like.findOne({ user: userId, post: postId });
 
@@ -190,7 +183,6 @@ export const comment = catchAsync(async (req, res, next) => {
   // }
   const { postId } = req.params;
   const { comment } = req.body;
-  console.log(postId, comment);
   const commentPost = await Comment.create({
     user: req.user,
     post: postId,
@@ -212,8 +204,6 @@ export const comment = catchAsync(async (req, res, next) => {
 
 export const getAllComments = catchAsync(async (req, res, next) => {
   const { postId } = req.params;
-
-  console.log(postId);
 
   const comments = await Comment.find({ post: postId }).populate(
     "user",
@@ -254,7 +244,6 @@ export const getAllBookmarks = catchAsync(async (req, res, next) => {
 
   const bookmarksWithInteraction = bookmarks.map((bookmark) => {
     const bookmarkObj = bookmark.toObject();
-    console.log("bookmarkObj", bookmarkObj);
     if (bookmarkObj.post) {
       bookmarkObj.post = {
         ...bookmarkObj.post,

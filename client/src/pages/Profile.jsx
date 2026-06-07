@@ -22,7 +22,6 @@ export default function Profile() {
   const { username } = useParams();
   const { data: post, isLoading } = useFetchAllPostByProfile(username);
   const { data: user } = useUserProfileQuery(username);
-  console.log(user);
   return (
     <>
       <div className="px-4 py-6 border-b border-light-border dark:border-dark-border">

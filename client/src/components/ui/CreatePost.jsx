@@ -17,10 +17,12 @@ import { useCreatePost } from "../../hooks/usePostQuery";
 //zustand
 import { useAuthStore } from "../../store/useAuthStore";
 
+//toast
+import toast from "react-hot-toast";
+
 export default function CreatePost({ post, setPost }) {
   const { mutate } = useCreatePost();
   const { user } = useAuthStore();
-  console.log(user);
   const {
     register,
     clearError,
@@ -38,7 +40,6 @@ export default function CreatePost({ post, setPost }) {
     : [];
 
   function removeImage(imageIndex) {
-    console.log(imageIndex);
     const current = Array.from(watchedImages);
     const updated = current.filter((_, i) => i !== imageIndex);
 
@@ -49,7 +50,6 @@ export default function CreatePost({ post, setPost }) {
   }
 
   function onSubmit(data) {
-    console.log(data);
     const formData = new FormData();
     formData.append("content", data.content);
 
@@ -58,14 +58,13 @@ export default function CreatePost({ post, setPost }) {
         formData.append("images", file);
       });
     }
-    console.log(formData);
     mutate(formData, {
       onSuccess: (data) => {
-        console.log(data);
         setPost(false);
+        toast.success("Post created successfully");
       },
       onError: (error) => {
-        console.log(error);
+        toast.errro();
       },
     });
     reset();

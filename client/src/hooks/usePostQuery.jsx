@@ -57,7 +57,9 @@ export function useLikePost() {
 
       const previousPosts = queryClient.getQueryData(["posts"]);
       const previousBookmarks = queryClient.getQueryData(["bookmarks"]);
-      const previousUserPosts = queryClient.getQueryData(["userPosts"]);
+      const previousUserPosts = queryClient.getQueriesData({
+        queryKey: ["userPosts"],
+      });
 
       updatePostInAllCaches(queryClient, postId, (post) => ({
         ...post,
@@ -76,9 +78,10 @@ export function useLikePost() {
         queryClient.setQueryData(["bookmarks"], context.previousBookmarks);
       }
       if (context?.previousUserPosts) {
-        queryClient.setQueryData(["userPosts"], context.previousUserPosts);
+        context.previousUserPosts.forEach(([key, data]) =>
+          queryClient.setQueryData(key, data),
+        );
       }
-      console.log("Failed to like post");
     },
 
     onSettled: () => {
@@ -102,7 +105,9 @@ export function useBookmarkPost() {
 
       const previousPosts = queryClient.getQueryData(["posts"]);
       const previousBookmarks = queryClient.getQueryData(["bookmarks"]);
-      const previousUserPosts = queryClient.getQueryData(["userPosts"]);
+      const previousUserPosts = queryClient.getQueriesData({
+        queryKey: ["userPosts"],
+      });
 
       updatePostInAllCaches(queryClient, postId, (post) => ({
         ...post,
@@ -121,7 +126,9 @@ export function useBookmarkPost() {
       if (context?.previousBookmarks)
         queryClient.setQueryData(["bookmarks"], context.previousBookmarks);
       if (context?.previousUserPosts) {
-        queryClient.setQueryData(["userPosts"], context.previousUserPosts);
+        context.previousUserPosts.forEach(([key, data]) =>
+          queryClient.setQueryData(key, data),
+        );
       }
     },
 

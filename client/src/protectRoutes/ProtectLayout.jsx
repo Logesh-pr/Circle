@@ -24,7 +24,6 @@ export default function ProtectLayout({ children }) {
   }, [isSuccess, data, setUser]);
 
   if (isError) {
-    console.log(isError);
     return <Navigate to="/auth/login" replace={true} />;
   }
 
@@ -33,7 +32,6 @@ export default function ProtectLayout({ children }) {
   }
 
   if (isSuccess) {
-    console.log(data.data);
     return children;
   }
 }
