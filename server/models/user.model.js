@@ -59,6 +59,5 @@ userSchema.methods.toSafeObject = function () {
 };
 
 userSchema.index({ username: "text" });
-userSchema.index({ username: 1 });
 
 export default model("User", userSchema);
