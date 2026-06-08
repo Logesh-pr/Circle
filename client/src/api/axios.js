@@ -70,7 +70,7 @@ api.interceptors.response.use(
 );
 
 export const signup = async (data) => {
-  const res = await api.post("/auth/signup", data);
+  const res = await api.post("auth/signup", data);
 
   return res.data;
 };
@@ -95,7 +95,7 @@ export const checkUsername = async (data) => {
 };
 
 export const setUsername = async (data) => {
-  const res = await api.post("/auth/set-username", data);
+  const res = await api.post("auth/set-username", data);
   return res.data;
 };
 
@@ -105,69 +105,69 @@ export const login = async (data) => {
 };
 
 export const fetchMe = async () => {
-  const res = await api.get("/auth/fetch-me");
+  const res = await api.get("auth/fetch-me");
   return res.data;
 };
 
 export const logout = async () => {
-  const res = await api.post("/auth/logout");
+  const res = await api.post("auth/logout");
   return res.data;
 };
 
 export const fetchPost = async () => {
-  const res = await api.get("/post/all-post");
+  const res = await api.get("post/all-post");
   return res.data.data;
 };
 export const fetchPostByProfile = async (username) => {
-  const res = await api.get(`/post/all-post-by-profile/${username}`);
+  const res = await api.get(`post/all-post-by-profile/${username}`);
   return res.data.data;
 };
 export const createPost = async (data) => {
-  const res = await api.post("/post/create-post", data);
+  const res = await api.post("post/create-post", data);
   return res.data;
 };
 
 export const likePost = async (postId) => {
-  const res = await api.post(`/post/like-post/${postId}`);
+  const res = await api.post(`post/like-post/${postId}`);
   return res.data;
 };
 
 export const bookmarkPost = async (postId) => {
-  const res = await api.post(`/post/bookmark-post/${postId}`);
+  const res = await api.post(`post/bookmark-post/${postId}`);
   return res.data;
 };
 
 export const getAllBookmarks = async () => {
-  const res = await api.get("/post/all-bookmarks");
+  const res = await api.get("post/all-bookmarks");
   return res.data.data.map((bookmark) => bookmark.post);
 };
 
 export const commentPost = async (postId, data) => {
-  const res = await api.post(`/post/comment-post/${postId}`, data);
+  const res = await api.post(`post/comment-post/${postId}`, data);
   return res.data;
 };
 
 export const getAllComments = async (postId) => {
-  const res = await api.get(`/post/all-comments/${postId}`);
+  const res = await api.get(`post/all-comments/${postId}`);
   return res.data;
 };
 
 export const searchUsers = async (query) => {
-  const res = await api.get(`/user/search?q=${encodeURIComponent(query)}`);
+  const res = await api.get(`user/search?q=${encodeURIComponent(query)}`);
   return res.data.data;
 };
 
 export const fetchUserProfile = async (username) => {
-  const res = await api.get(`/user/get-user-profile/${username}`);
+  const res = await api.get(`user/get-user-profile/${username}`);
   return res.data.data;
 };
 
 export const followUser = async (username) => {
-  const res = await api.post(`/user/follow/${username}`);
+  const res = await api.post(`user/follow/${username}`);
   return res.data.data;
 };
 
 export const getUserFollowers = async (username, type) => {
-  const res = await api.get("/user/follows", { params: { username, type } });
+  const res = await api.get("user/follows", { params: { username, type } });
   return res.data.data;
 };
