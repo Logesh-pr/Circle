@@ -4,7 +4,7 @@ const api = axios.create({
   baseURL:
     import.meta.env.VITE_MODE === "development"
       ? import.meta.env.VITE_BACKEND_URL_DEVELOPMENT
-      : import.meta.env.VITE_BACKEND_URL_PRODUCTION,
+      : "/api",
 
   withCredentials: true,
 });
@@ -48,7 +48,7 @@ api.interceptors.response.use(
           `${
             import.meta.env.VITE_MODE === "development"
               ? import.meta.env.VITE_BACKEND_URL_DEVELOPMENT
-              : import.meta.env.VITE_BACKEND_URL_PRODUCTION
+              : "/api"
           }/auth/refresh`,
           {},
           { withCredentials: true },
