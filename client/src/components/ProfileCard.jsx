@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 
 //components
 import ProfilePic from "./ui/ProfilePic";
+import Logout from "./ui/Logout";
 
 //zustand
 import { useAuthStore } from "../store/useAuthStore";
@@ -20,7 +21,7 @@ export default function ProfileCard({ user }) {
   const [followings, setFollowings] = useState(false);
 
   return (
-    <div>
+    <div className="flex flex-col items-center">
       <div className="flex flex-col md:flex-row gap-y-4 md:gap-x-4 items-center md:items-start">
         <ProfilePic avator={user?.avator} width={100} height={100} />
         <div className="text-center md:text-start flex flex-col gap-y-2">
@@ -86,6 +87,9 @@ export default function ProfileCard({ user }) {
             )}
           </div>
         </div>
+      </div>
+      <div>
+        <Logout />
       </div>
     </div>
   );
