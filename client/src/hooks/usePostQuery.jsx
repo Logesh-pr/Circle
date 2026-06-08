@@ -18,6 +18,9 @@ import { useAuthStore } from "../store/useAuthStore";
 //libs
 import updatePostInAllCaches from "../utils/updatePostInAllCaches";
 
+//toast
+import toast from "react-hot-toast";
+
 export const useFetchAllPost = () => {
   return useQuery({
     queryKey: ["posts"],
@@ -61,13 +64,29 @@ export function useLikePost() {
         queryKey: ["userPosts"],
       });
 
-      updatePostInAllCaches(queryClient, postId, (post) => ({
-        ...post,
-        likesCount: post.isLiked ? post.likesCount - 1 : post.likesCount + 1,
-        isLiked: !post.isLiked,
-      }));
+      let wasLiked = false;
 
-      return { previousPosts, previousBookmarks, previousUserPosts };
+      updatePostInAllCaches(queryClient, postId, (post) => {
+        wasLiked = post.isLiked;
+        return {
+          ...post,
+          likesCount: post.isLiked ? post.likesCount - 1 : post.likesCount + 1,
+          isLiked: !post.isLiked,
+        };
+      });
+
+      return {
+        previousPosts,
+        previousBookmarks,
+        previousUserPosts,
+        wasLiked,
+      };
+    },
+
+    onSuccess: (data, variables, context) => {
+      if (!context.wasLiked) {
+        toast.success("Post Liked");
+      }
     },
 
     onError: (err, variables, context) => {
@@ -109,17 +128,30 @@ export function useBookmarkPost() {
         queryKey: ["userPosts"],
       });
 
-      updatePostInAllCaches(queryClient, postId, (post) => ({
-        ...post,
-        bookmarkCount: post.isBookmarked
-          ? post.bookmarkCount - 1
-          : post.bookmarkCount + 1,
-        isBookmarked: !post.isBookmarked,
-      }));
+      let wasBookmarked = false;
 
-      return { previousPosts, previousBookmarks, previousUserPosts };
+      updatePostInAllCaches(queryClient, postId, (post) => {
+        wasBookmarked = post.isBookmarked;
+        return {
+          ...post,
+          bookmarkCount: post.isBookmarked
+            ? post.bookmarkCount - 1
+            : post.bookmarkCount + 1,
+          isBookmarked: !post.isBookmarked,
+        };
+      });
+
+      return {
+        previousPosts,
+        previousBookmarks,
+        previousUserPosts,
+        wasBookmarked,
+      };
     },
 
+    onSuccess: (data, variables, context) => {
+      toast.success(context.wasBookmarked ? "Bookmar removed" : "Bookmarked");
+    },
     onError: (err, variables, context) => {
       if (context?.previousPosts)
         queryClient.setQueryData(["posts"], context.previousPosts);

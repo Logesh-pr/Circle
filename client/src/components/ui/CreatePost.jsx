@@ -9,7 +9,7 @@ import Button from "./Button";
 import { useForm } from "react-hook-form";
 
 //icons
-import { Images, X } from "lucide-react";
+import { Images, X, CircleX } from "lucide-react";
 
 //react query
 import { useCreatePost } from "../../hooks/usePostQuery";
@@ -64,7 +64,9 @@ export default function CreatePost({ post, setPost }) {
         toast.success("Post created successfully");
       },
       onError: (error) => {
-        toast.errro();
+        toast.error(error.response?.data.message, {
+          icon: <CircleX size={18} />,
+        });
       },
     });
     reset();

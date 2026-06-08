@@ -19,7 +19,7 @@ export default function RootLayout() {
               className: "!bg-accent !text-white",
             },
             error: {
-              className: "!bg-red-400 !text-white",
+              className: "!bg-red-500 !text-white",
             },
           }}
         />

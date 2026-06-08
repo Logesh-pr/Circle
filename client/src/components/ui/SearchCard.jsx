@@ -8,7 +8,7 @@ export default function SearchCard({ user, setFollowings }) {
     <Link
       to={`/profile/${user?.username}`}
       onClick={() => setFollowings(false)}
-      className="w-full flex justify-between items-center cursor-pointer hover:bg-zinc-950 p-2"
+      className="w-full flex justify-between items-center cursor-pointer hover:bg-gray-100 hover:dark:bg-zinc-950 p-2"
     >
       <div className="flex gap-x-4">
         <ProfilePic avator={user?.avator} />
