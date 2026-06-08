@@ -19,6 +19,7 @@ export default function ProfileCard({ user }) {
   const { mutate: followUser } = useFollowUserQuery();
   const [followers, setFollowers] = useState(false);
   const [followings, setFollowings] = useState(false);
+  const { user: currentUser } = useAuthStore();
 
   return (
     <div className="flex flex-col items-center">
@@ -88,9 +89,7 @@ export default function ProfileCard({ user }) {
           </div>
         </div>
       </div>
-      <div>
-        <Logout />
-      </div>
+      <div>{currentUser.username === user?.username && <Logout />}</div>
     </div>
   );
 }
