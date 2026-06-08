@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 //react hook form
 import { useForm } from "react-hook-form";
 
@@ -24,19 +26,28 @@ export default function Login() {
   const {
     handleSubmit,
     register,
-    clearError,
+    clearErrors,
     reset,
     setError,
+    watch,
     formState: { errors },
   } = useForm();
 
+  const checkEmailValue = watch("email");
+
+  useEffect(() => {
+    if (checkEmailValue?.length > 2) {
+      clearErrors("common");
+    }
+  }, [checkEmailValue]);
   function onSubmit(data) {
-    reset();
     mutate(data, {
-      onSuccess: (data) => {
+      onSuccess: () => {
+        reset();
         navigate("/", { replace: true });
       },
       onError: (error) => {
+        reset();
         setError("common", {
           type: "manual",
           message: error.response?.data?.message,
