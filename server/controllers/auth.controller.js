@@ -292,7 +292,7 @@ export const setUsername = catchAsync(async (req, res, next) => {
     username,
     email: tempUser.email,
     avator:
-      "https://www.kindpng.com/picc/m/722-7221920_placeholder-profile-image-placeholder-png-transparent-png.png",
+      "https://api.dicebear.com/10.x/thumbs/svg?backgroundColor=0a5b83,1c799f,f1f4dc&seed=Felix",
     password: tempUser.password,
     isVerified: true,
     authType: "credentials",

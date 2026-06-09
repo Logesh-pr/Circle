@@ -81,7 +81,7 @@ export default function ProfileCard({ user }) {
             {user?.isFollowing && (
               <button
                 onClick={() => followUser(user?.username)}
-                className="bg-transparent border border-accent w-full px-4 py-2 rounded-lg text-light font-semibold text-sm  transition-colors cursor-pointer"
+                className="bg-transparent border border-accent w-full px-4 py-2 rounded-lg text-dark dark:text-light font-semibold text-sm  transition-colors cursor-pointer"
               >
                 Un follow
               </button>
