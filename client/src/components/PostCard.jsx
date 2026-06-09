@@ -57,12 +57,12 @@ export default function PostCard({ post }) {
         <div className="flex gap-x-5 select-none text-xs">
           <div
             onClick={() => !isPending && likeMutate(post._id)}
-            className="flex gap-x-2 items-center cursor-pointer transition-color hover:text-red-500  group"
+            className="flex gap-x-2 items-center cursor-pointer transition-color md:hover:text-red-500  group"
           >
             <Heart
               size={20}
               strokeWidth={post?.isLiked ? 0 : 2}
-              className={`transition-all duration-300 ease-out group-hover:scale-125 group-active:scale-90 ${
+              className={`transition-all duration-300 ease-out md:group-hover:scale-125 md:group-active:scale-90 ${
                 post?.isLiked
                   ? "scale-110 fill-red-500 text-red-500"
                   : "scale-100 "
