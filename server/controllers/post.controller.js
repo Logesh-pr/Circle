@@ -13,7 +13,9 @@ import Comment from "../models/comment.model.js";
 import Bookmark from "../models/bookmark.model.js";
 
 export const getAllPost = catchAsync(async (req, res, next) => {
-  const posts = await Post.find().populate("author", "name username avator");
+  const posts = await Post.find()
+    .sort({ createdAt: -1 })
+    .populate("author", "name username avator");
   if (!posts) {
     return next(new AppError("No post yet", 410));
   }
@@ -225,10 +227,12 @@ export const getAllBookmarks = catchAsync(async (req, res, next) => {
   const userId = req.user;
   const bookmarks = await Bookmark.find({
     user: userId,
-  }).populate({
-    path: "post",
-    populate: { path: "author", select: "name username avator" },
-  });
+  })
+    .sort({ createdAt: -1 })
+    .populate({
+      path: "post",
+      populate: { path: "author", select: "name username avator" },
+    });
 
   if (!bookmarks) {
     return next(new AppError("No bookmarks found", 404));
