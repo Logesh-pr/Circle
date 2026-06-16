@@ -28,6 +28,10 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
     if (error.response?.status === 401 && !originalRequest._retry) {
+      // Skip refresh attempt for requests that don't need it (e.g., initial auth check)
+      if (originalRequest._skipAuthRetry) {
+        return Promise.reject(error);
+      }
       // 3. If a refresh is already happening, PAUSE this request and add it to the queue
       if (isRefreshing) {
         return new Promise(function (resolve, reject) {
@@ -105,7 +109,7 @@ export const login = async (data) => {
 };
 
 export const fetchMe = async () => {
-  const res = await api.get("auth/fetch-me");
+  const res = await api.get("auth/fetch-me", { _skipAuthRetry: true });
   return res.data;
 };
 
