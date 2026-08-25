@@ -30,5 +30,9 @@
     "nodemailer": "^8.0.3",
     "sharp": "^0.34.5",
     "slugify": "^1.6.8"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "typescript": "^7.0.2"
   }
 }

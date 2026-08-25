@@ -1,6 +1,6 @@
 import { useState } from "react";
 //components
-import ProfilePic from "../components/ui/ProfilePic";
+import ProfilePic from "./ui/ProfilePic";
 import Modal from "./ui/Modal";
 import Comments from "./Comments";
 import CommentForm from "./CommentForm";

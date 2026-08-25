@@ -21,6 +21,9 @@ import updatePostInAllCaches from "../utils/updatePostInAllCaches";
 //toast
 import toast from "react-hot-toast";
 
+//types
+import Post from "@/types/post";
+
 export const useFetchAllPost = () => {
   return useQuery({
     queryKey: ["posts"],
@@ -29,7 +32,7 @@ export const useFetchAllPost = () => {
   });
 };
 
-export const useFetchAllPostByProfile = (username) => {
+export const useFetchAllPostByProfile = (username: string) => {
   return useQuery({
     queryKey: ["userPosts", username],
     queryFn: () => fetchPostByProfile(username),

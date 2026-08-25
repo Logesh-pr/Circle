@@ -1,8 +1,7 @@
-export default function formatCreatedAt(createdAt) {
-  const now = new Date();
-  const postDate = new Date(createdAt);
+export default function formatCreatedAt(createdAt: string) {
+  const postDate: Date = new Date(createdAt);
 
-  const diffInSeconds = Math.floor((now - postDate) / 1000);
+  const diffInSeconds = Math.floor((Date.now() - postDate.getTime()) / 1000);
 
   // Seconds
   if (diffInSeconds < 60) {

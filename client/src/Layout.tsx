@@ -1,11 +1,11 @@
 //components
-import NavBar from "./components/NavBar";
+import NavBar from "@/components/NavBar";
 
 //react router
 import { Outlet } from "react-router-dom";
 
 //components
-import ThemeBtn from "./components/ui/ThemeBtn";
+import ThemeBtn from "@/components/ui/ThemeBtn";
 
 export default function Layout() {
   return (

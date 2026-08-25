@@ -1,30 +1,30 @@
 //layout
-import RootLayout from "./RootLayout";
+import RootLayout from "@/RootLayout";
 
 //react router
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 //pages
-import Layout from "./Layout.jsx";
-import Home from "./pages/Home.jsx";
-import Signup from "./pages/Signup.jsx";
-import OTP from "./pages/OTP.jsx";
-import SignupProtect from "./protectRoutes/SignupProtect.jsx";
-import UsernameSelection from "./pages/UsernameSelection.jsx";
-import AuthLayout from "./pages/AuthLayout.jsx";
-import NotFound from "./pages/NotFound.jsx";
-import SearchPage from "./pages/SearchPage.jsx";
-import Notification from "./pages/Notification.jsx";
-import Profile from "./pages/Profile.jsx";
-import Login from "./pages/Login.jsx";
-import PublicLayout from "./protectRoutes/PublicLayout.jsx";
-import Bookmark from "./pages/Bookmark.jsx";
+import Layout from "@/Layout";
+import Home from "@/pages/Home";
+import Signup from "@/pages/Signup";
+import OTP from "@/pages/OTP";
+import SignupProtect from "@/protectRoutes/SignupProtect";
+import UsernameSelection from "@/pages/UsernameSelection";
+import AuthLayout from "@/pages/AuthLayout";
+import NotFound from "@/pages/NotFound";
+import SearchPage from "@/pages/SearchPage";
+import Notification from "@/pages/Notification";
+import Profile from "@/pages/Profile";
+import Login from "@/pages/Login";
+import PublicLayout from "@/protectRoutes/PublicLayout";
+import Bookmark from "@/pages/Bookmark";
 
 //components
 
 //react query
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
-import ProtectLayout from "./protectRoutes/ProtectLayout.jsx";
+import ProtectLayout from "./protectRoutes/ProtectLayout.js";
 
 const queryClient = new QueryClient({
   defaultOptions: {
